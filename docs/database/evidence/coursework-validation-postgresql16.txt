@@ -1,64 +1,585 @@
-Etapa 1: criação do modelo relacional
+-- Mantém o ponto de entrada acadêmico na raiz da pasta coursework.
+-- Execute com psql em um banco PostgreSQL vazio e dedicado.
+\set ON_ERROR_STOP on
+\ir academic/run_all.sql
+-- Orquestra a atividade acadêmica completa em um banco vazio e isolado.
+-- Execute a partir de database/coursework/run_all.sql com psql.
+\set ON_ERROR_STOP on
+\echo 'Etapa 1/7: criar tabelas, relações e restrições'
+Etapa 1/7: criar tabelas, relações e restrições
+\ir 01_schema.sql
+-- Cria o modelo relacional acadêmico em um banco PostgreSQL vazio e dedicado.
+-- Este schema didático usa identificadores bigint; o schema operacional usa UUID.
+-- Pessoas que submetem demandas e executam ações administrativas.
+CREATE TABLE users (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL,
+  email text NOT NULL UNIQUE,
+  password_hash text NOT NULL,
+  whatsapp text,
+  active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
 CREATE TABLE
+-- Catálogo de papéis aplicados aos usuários.
+CREATE TABLE roles (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code text NOT NULL UNIQUE,
+  name text NOT NULL
+);
 CREATE TABLE
+-- Catálogo de permissões que podem ser associadas aos papéis.
+CREATE TABLE permissions (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code text NOT NULL UNIQUE,
+  description text NOT NULL
+);
 CREATE TABLE
+-- Relação muitos-para-muitos entre usuários e papéis.
+CREATE TABLE user_roles (
+  user_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role_id bigint NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, role_id)
+);
 CREATE TABLE
+-- Relação muitos-para-muitos entre papéis e permissões.
+CREATE TABLE role_permissions (
+  role_id bigint NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+  permission_id bigint NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
+  PRIMARY KEY (role_id, permission_id)
+);
 CREATE TABLE
+-- Organizações associadas opcionalmente às demandas.
+CREATE TABLE organizations (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL,
+  economic_sector text NOT NULL,
+  contact_email text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
 CREATE TABLE
+-- Solicitações dos usuários; código, estado e campos obrigatórios são validados no banco.
+CREATE TABLE demands (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code text GENERATED ALWAYS AS ('ITES-' || lpad(id::text, 8, '0')) STORED UNIQUE,
+  requester_id bigint NOT NULL REFERENCES users(id),
+  organization_id bigint REFERENCES organizations(id),
+  capacity text NOT NULL CHECK (capacity IN ('GROUP','FORUM','PARTNER','OTHER')),
+  capacity_other text,
+  service text NOT NULL,
+  description text NOT NULL CHECK (length(btrim(description)) >= 10),
+  urgency text NOT NULL CHECK (urgency IN ('LOW','MEDIUM','HIGH')),
+  status text NOT NULL DEFAULT 'Pendente'
+    CHECK (status IN ('Pendente','Aceita para atendimento','Em atendimento','Concluída','Recusada','Cancelada')),
+  completion_note text,
+  review_notes text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT demands_capacity_other_check
+    CHECK (capacity <> 'OTHER' OR nullif(btrim(capacity_other), '') IS NOT NULL),
+  CONSTRAINT demands_completion_check
+    CHECK (status <> 'Concluída' OR nullif(btrim(completion_note), '') IS NOT NULL)
+);
 CREATE TABLE
+-- Índices apoiam as telas de acompanhamento, fila e consulta por organização.
+CREATE INDEX demands_requester_idx ON demands(requester_id, created_at DESC);
 CREATE INDEX
+CREATE INDEX demands_status_idx ON demands(status, created_at DESC);
 CREATE INDEX
+CREATE INDEX demands_organization_status_idx ON demands(organization_id, status);
 CREATE INDEX
+-- Histórico append-only de decisões e transições realizadas por usuários.
+CREATE TABLE demand_events (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  demand_id bigint NOT NULL REFERENCES demands(id),
+  actor_id bigint NOT NULL REFERENCES users(id),
+  old_status text NOT NULL CHECK (old_status IN ('Pendente','Aceita para atendimento','Em atendimento')),
+  new_status text NOT NULL CHECK (new_status IN ('Aceita para atendimento','Em atendimento','Concluída','Recusada','Cancelada')),
+  justification text NOT NULL CHECK (length(btrim(justification)) > 0),
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
 CREATE TABLE
+CREATE INDEX demand_events_demand_time_idx ON demand_events(demand_id, occurred_at DESC);
 CREATE INDEX
+CREATE INDEX demand_events_actor_time_idx ON demand_events(actor_id, occurred_at DESC);
 CREATE INDEX
+-- Página lógica com referência opcional à versão publicada.
+CREATE TABLE pages (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  slug text NOT NULL UNIQUE,
+  title text NOT NULL,
+  published_version_id bigint,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
 CREATE TABLE
+-- Snapshots imutáveis do documento editado no construtor visual.
+CREATE TABLE page_versions (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  page_id bigint NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+  revision integer NOT NULL CHECK (revision > 0),
+  document jsonb NOT NULL CHECK (jsonb_typeof(document) = 'object'),
+  author_id bigint NOT NULL REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (page_id, revision),
+  UNIQUE (page_id, id)
+);
 CREATE TABLE
+-- A chave composta garante que a versão publicada pertence à própria página.
+ALTER TABLE pages ADD CONSTRAINT pages_published_fk
+  FOREIGN KEY (id, published_version_id) REFERENCES page_versions(page_id, id);
 ALTER TABLE
+-- Eventos de publicação e retirada, vinculados ao ator responsável.
+CREATE TABLE page_events (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  page_id bigint NOT NULL REFERENCES pages(id),
+  version_id bigint,
+  actor_id bigint NOT NULL REFERENCES users(id),
+  action text NOT NULL CHECK (action IN ('PUBLISH','UNPUBLISH')),
+  occurred_at timestamptz NOT NULL DEFAULT now(),
+  FOREIGN KEY (page_id, version_id) REFERENCES page_versions(page_id, id)
+);
 CREATE TABLE
+CREATE INDEX page_events_page_time_idx ON page_events(page_id, occurred_at DESC);
 CREATE INDEX
+-- Trilha de concessão e revogação de papéis a usuários.
+CREATE TABLE grant_audit (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  actor_id bigint NOT NULL REFERENCES users(id),
+  subject_user_id bigint NOT NULL REFERENCES users(id),
+  role_id bigint NOT NULL REFERENCES roles(id),
+  action text NOT NULL CHECK (action IN ('GRANT','REVOKE')),
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
 CREATE TABLE
+CREATE INDEX grant_audit_subject_time_idx ON grant_audit(subject_user_id, occurred_at DESC);
 CREATE INDEX
-Etapa 2: criação de rotinas e gatilhos
+\echo 'Etapa 2/7: criar funções, procedimentos e gatilhos acadêmicos'
+Etapa 2/7: criar funções, procedimentos e gatilhos acadêmicos
+\ir 04_routines.sql
+-- Funções de leitura para indicadores do modelo acadêmico.
+-- As funções retornam métricas e não alteram os registros de negócio.
+CREATE FUNCTION demand_count(p_status text)
+RETURNS bigint
+LANGUAGE sql STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$ SELECT count(*) FROM demands WHERE status = p_status $$;
 CREATE FUNCTION
+-- Conta as demandas associadas ao identificador de um solicitante.
+CREATE FUNCTION requester_demand_count(p_user_id bigint)
+RETURNS bigint
+LANGUAGE sql STABLE
+AS $$ SELECT count(*) FROM demands WHERE requester_id = p_user_id $$;
 CREATE FUNCTION
+-- Conta páginas que apontam para uma versão publicada.
+CREATE FUNCTION published_page_count()
+RETURNS bigint
+LANGUAGE sql STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$ SELECT count(*) FROM pages WHERE published_version_id IS NOT NULL $$;
 CREATE FUNCTION
+-- Impede transições fora do fluxo definido e mantém a data de alteração.
+CREATE FUNCTION transition_guard()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.status <> OLD.status AND NOT (
+    (OLD.status = 'Pendente' AND NEW.status IN ('Aceita para atendimento','Recusada','Cancelada')) OR
+    (OLD.status = 'Aceita para atendimento' AND NEW.status IN ('Em atendimento','Cancelada')) OR
+    (OLD.status = 'Em atendimento' AND NEW.status IN ('Concluída','Cancelada'))
+  ) THEN
+    RAISE EXCEPTION 'transição de demanda inválida: % -> %', OLD.status, NEW.status;
+  END IF;
+  NEW.updated_at = now();
+  RETURN NEW;
+END
+$$;
 CREATE FUNCTION
+-- Executa a validação da transição antes de gravar a nova situação.
+CREATE TRIGGER transition_guard
+BEFORE UPDATE OF status ON demands
+FOR EACH ROW EXECUTE FUNCTION transition_guard();
 CREATE TRIGGER
+-- Mantém imutável o histórico de decisões.
+CREATE FUNCTION event_immutable()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RAISE EXCEPTION 'o histórico de decisões é imutável';
+END
+$$;
 CREATE FUNCTION
+-- Protege o histórico contra alteração ou remoção posterior.
+CREATE TRIGGER event_immutable
+BEFORE UPDATE OR DELETE ON demand_events
+FOR EACH ROW EXECUTE FUNCTION event_immutable();
 CREATE TRIGGER
+-- Registra publicação e retirada no mesmo commit da alteração da página.
+CREATE FUNCTION page_publish_audit()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  actor_id bigint;
+BEGIN
+  IF NEW.published_version_id IS DISTINCT FROM OLD.published_version_id THEN
+    actor_id := nullif(current_setting('ites.actor_id', true), '')::bigint;
+    IF actor_id IS NULL THEN
+      RAISE EXCEPTION 'ator obrigatório para publicar ou retirar uma página';
+    END IF;
+    INSERT INTO page_events(page_id, version_id, actor_id, action)
+    VALUES (
+      NEW.id,
+      NEW.published_version_id,
+      actor_id,
+      CASE WHEN NEW.published_version_id IS NULL THEN 'UNPUBLISH' ELSE 'PUBLISH' END
+    );
+  END IF;
+  RETURN NEW;
+END
+$$;
 CREATE FUNCTION
+-- Registra publicação e retirada na mesma transação da alteração da página.
+CREATE TRIGGER page_publish_audit
+AFTER UPDATE OF published_version_id ON pages
+FOR EACH ROW EXECUTE FUNCTION page_publish_audit();
 CREATE TRIGGER
+-- Procedimentos agrupam gravações relacionadas em uma única chamada transacional.
+-- Aplica uma decisão e seu evento de auditoria na mesma transação.
+CREATE PROCEDURE transition_demand(
+  p_demand_id bigint,
+  p_actor_id bigint,
+  p_status text,
+  p_justification text,
+  p_completion_note text DEFAULT NULL
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$
+DECLARE
+  previous_status text;
+BEGIN
+  IF nullif(btrim(p_justification), '') IS NULL THEN
+    RAISE EXCEPTION 'justificativa obrigatória';
+  END IF;
+  SELECT status INTO previous_status FROM demands WHERE id = p_demand_id FOR UPDATE;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'demanda não encontrada';
+  END IF;
+  IF p_status = previous_status THEN
+    RAISE EXCEPTION 'a demanda já está nessa situação';
+  END IF;
+  UPDATE demands
+  SET status = p_status,
+      completion_note = CASE WHEN p_status = 'Concluída' THEN p_completion_note ELSE completion_note END
+  WHERE id = p_demand_id;
+  INSERT INTO demand_events(demand_id, actor_id, old_status, new_status, justification)
+  VALUES (p_demand_id, p_actor_id, previous_status, p_status, btrim(p_justification));
+END
+$$;
 CREATE PROCEDURE
+-- Publica somente uma revisão pertencente à página e audita por gatilho.
+CREATE PROCEDURE publish_page(p_page_id bigint, p_version_id bigint, p_actor_id bigint)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM page_versions WHERE id = p_version_id AND page_id = p_page_id
+  ) THEN
+    RAISE EXCEPTION 'versão não pertence à página informada';
+  END IF;
+  PERFORM set_config('ites.actor_id', p_actor_id::text, true);
+  UPDATE pages SET published_version_id = p_version_id WHERE id = p_page_id;
+END
+$$;
 CREATE PROCEDURE
+-- Retira uma publicação e conserva a versão no histórico de auditoria.
+CREATE PROCEDURE unpublish_page(p_page_id bigint, p_actor_id bigint)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pages WHERE id = p_page_id) THEN
+    RAISE EXCEPTION 'página não encontrada';
+  END IF;
+  PERFORM set_config('ites.actor_id', p_actor_id::text, true);
+  UPDATE pages SET published_version_id = NULL WHERE id = p_page_id;
+END
+$$;
 CREATE PROCEDURE
+-- Concede um papel e registra somente concessões efetivamente novas.
+CREATE PROCEDURE assign_role(p_user_id bigint, p_role_id bigint, p_actor_id bigint)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$
+DECLARE
+  affected_rows integer;
+BEGIN
+  INSERT INTO user_roles(user_id, role_id)
+  VALUES (p_user_id, p_role_id)
+  ON CONFLICT DO NOTHING;
+  GET DIAGNOSTICS affected_rows = ROW_COUNT;
+  IF affected_rows > 0 THEN
+    INSERT INTO grant_audit(actor_id, subject_user_id, role_id, action)
+    VALUES (p_actor_id, p_user_id, p_role_id, 'GRANT');
+  END IF;
+END
+$$;
 CREATE PROCEDURE
+-- Revoga um papel e registra somente revogações efetivamente aplicadas.
+CREATE PROCEDURE revoke_role(p_user_id bigint, p_role_id bigint, p_actor_id bigint)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$
+DECLARE
+  affected_rows integer;
+BEGIN
+  DELETE FROM user_roles WHERE user_id = p_user_id AND role_id = p_role_id;
+  GET DIAGNOSTICS affected_rows = ROW_COUNT;
+  IF affected_rows > 0 THEN
+    INSERT INTO grant_audit(actor_id, subject_user_id, role_id, action)
+    VALUES (p_actor_id, p_user_id, p_role_id, 'REVOKE');
+  END IF;
+END
+$$;
 CREATE PROCEDURE
-Etapa 3: carga de dados fictícios
+\echo 'Etapa 3/7: inserir dados fictícios determinísticos'
+Etapa 3/7: inserir dados fictícios determinísticos
+\ir 02_seed.sql
+-- Popula o banco acadêmico com dados fictícios e determinísticos.
+-- As senhas são sentinelas não utilizáveis para autenticação.
+-- Cria identidades demonstrativas com endereços reservados para exemplos.
+INSERT INTO users(name, email, password_hash, whatsapp)
+SELECT 'Pessoa de Demonstração ' || n,
+       'pessoa' || lpad(n::text, 2, '0') || '@example.invalid',
+       '{DEMO_ONLY_NON_LOGINABLE}',
+       '000000' || lpad(n::text, 4, '0')
+FROM generate_series(1, 30) AS n;
 INSERT 0 30
+-- Define os quatro papéis funcionais do exercício.
+INSERT INTO roles(code, name) VALUES
+  ('REQUESTER', 'Solicitante'),
+  ('ADMINISTRATOR', 'Administrador'),
+  ('DEMAND_MANAGER', 'Gestor de demandas'),
+  ('COLLABORATOR', 'Colaborador');
 INSERT 0 4
+-- Define permissões reais; catálogos pequenos não são preenchidos artificialmente.
+INSERT INTO permissions(code, description) VALUES
+  ('profile.read_own', 'Consultar o próprio perfil'),
+  ('profile.manage_own', 'Atualizar o próprio perfil'),
+  ('users.read', 'Consultar contas de usuários'),
+  ('users.manage', 'Administrar contas de usuários'),
+  ('roles.manage', 'Conceder e revogar papéis'),
+  ('demands.read_own', 'Consultar as próprias demandas'),
+  ('demands.read', 'Consultar demandas para análise'),
+  ('demands.review', 'Classificar demandas'),
+  ('demands.decide', 'Decidir demandas'),
+  ('organizations.read', 'Consultar organizações'),
+  ('portal.content.manage', 'Administrar conteúdo institucional'),
+  ('builder.pages.edit', 'Editar páginas institucionais'),
+  ('builder.pages.publish', 'Publicar páginas institucionais');
 INSERT 0 13
+-- O papel administrativo recebe todo o catálogo de permissões.
+INSERT INTO role_permissions(role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r CROSS JOIN permissions p
+WHERE r.code = 'ADMINISTRATOR'
+ON CONFLICT DO NOTHING;
 INSERT 0 13
+-- O gestor recebe permissões necessárias para revisar e decidir demandas.
+INSERT INTO role_permissions(role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r JOIN permissions p ON p.code IN ('demands.read','demands.review','demands.decide','organizations.read')
+WHERE r.code = 'DEMAND_MANAGER'
+ON CONFLICT DO NOTHING;
 INSERT 0 4
+-- O colaborador recebe consulta sem poder administrativo amplo.
+INSERT INTO role_permissions(role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r JOIN permissions p ON p.code IN ('demands.read','organizations.read')
+WHERE r.code = 'COLLABORATOR'
+ON CONFLICT DO NOTHING;
 INSERT 0 2
+-- O solicitante pode consultar apenas seu perfil e suas próprias demandas.
+INSERT INTO role_permissions(role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r JOIN permissions p ON p.code IN ('profile.read_own','profile.manage_own','demands.read_own')
+WHERE r.code = 'REQUESTER'
+ON CONFLICT DO NOTHING;
 INSERT 0 3
+-- Registra organizações fictícias de diferentes setores econômicos.
+INSERT INTO organizations(name, economic_sector, contact_email)
+SELECT (ARRAY[
+  'Coletivo Raízes do Morro','Grupo Mãos da Baía','Associação Maré Viva','Rede de Costura Solidária',
+  'Cooperativa Sementes de Itaipu','Coletivo Cultura em Rede','Grupo Sabores de Niterói','Associação Artes da Região',
+  'Rede de Agricultura Urbana','Cooperativa de Reciclagem Horizonte','Coletivo Mulheres da Pesca','Grupo Tecendo Histórias',
+  'Associação Feira Popular','Coletivo Juventude Criativa','Rede de Alimentação Comunitária','Grupo Cerâmica da Costa',
+  'Cooperativa de Serviços do Leste','Coletivo Memória e Território','Associação Ecos da Serra','Rede de Produção Local'
+])[n],
+       (ARRAY['artesanato','agricultura','cultura','alimentação','serviços'])[(n % 5) + 1],
+       'contato' || lpad(n::text, 2, '0') || '@example.invalid'
+FROM generate_series(1, 20) AS n;
 INSERT 0 20
+-- Distribui demandas entre organizações, capacidades, serviços, urgências e situações.
+INSERT INTO demands(requester_id, organization_id, capacity, capacity_other, service, description, urgency, status, completion_note)
+SELECT u.id,
+       CASE WHEN n % 7 = 0 THEN NULL ELSE o.id END,
+       CASE (n % 4) WHEN 0 THEN 'OTHER' WHEN 1 THEN 'GROUP' WHEN 2 THEN 'FORUM' ELSE 'PARTNER' END,
+       CASE WHEN n % 4 = 0 THEN 'Representante comunitário' ELSE NULL END,
+       (ARRAY['formação','comunicação','comercialização','apoio administrativo','parceria'])[(n % 5) + 1],
+       'Solicitação demonstrativa de apoio institucional número ' || n,
+       (ARRAY['LOW','MEDIUM','HIGH'])[(n % 3) + 1],
+       (ARRAY['Pendente','Aceita para atendimento','Em atendimento','Concluída','Recusada','Cancelada'])[((n - 1) % 6) + 1],
+       CASE WHEN (n - 1) % 6 = 3 THEN 'Atividade concluída e registrada para demonstração' ELSE NULL END
+FROM generate_series(1, 30) AS n
+JOIN users u ON u.email = 'pessoa' || lpad((((n - 1) % 25) + 1)::text, 2, '0') || '@example.invalid'
+LEFT JOIN organizations o ON o.id = ((n - 1) % 20) + 1;
 INSERT 0 30
+-- Gera eventos ilustrativos para demandas que já passaram por análise.
+INSERT INTO demand_events(demand_id, actor_id, old_status, new_status, justification)
+SELECT d.id,
+       actor.id,
+       CASE d.status
+         WHEN 'Aceita para atendimento' THEN 'Pendente'
+         WHEN 'Em atendimento' THEN 'Aceita para atendimento'
+         WHEN 'Concluída' THEN 'Em atendimento'
+         ELSE 'Pendente'
+       END,
+       d.status,
+       'Decisão fictícia registrada para demonstrar o histórico da solicitação ' || d.code
+FROM demands d
+CROSS JOIN users actor
+WHERE actor.email = 'pessoa26@example.invalid'
+  AND d.status <> 'Pendente';
 INSERT 0 25
+-- Cria páginas institucionais com conteúdo demonstrativo.
+INSERT INTO pages(slug, title) VALUES
+  ('inicio','Início'),
+  ('quem-somos','Quem somos'),
+  ('como-atuamos','Como atuamos'),
+  ('projetos','Projetos apoiados'),
+  ('empreendimentos','Empreendimentos solidários'),
+  ('noticias','Notícias'),
+  ('agenda','Agenda de eventos'),
+  ('publicacoes','Publicações'),
+  ('biblioteca','Biblioteca'),
+  ('ferramentas','Aplicativos e ferramentas'),
+  ('contato','Contato'),
+  ('submeter-demanda','Solicitar apoio'),
+  ('formacao','Formação em economia solidária'),
+  ('comercializacao','Comercialização em rede'),
+  ('comunicacao','Comunicação comunitária'),
+  ('parcerias','Parcerias institucionais'),
+  ('feira-solidaria','Feira de economia solidária'),
+  ('memoria-territorial','Memória e território'),
+  ('tecnologia-social','Tecnologia social'),
+  ('perguntas-frequentes','Perguntas frequentes');
 INSERT 0 20
+-- Cria um documento JSONB inicial por página, usando a mesma revisão lógica.
+INSERT INTO page_versions(page_id, revision, document, author_id)
+SELECT p.id,
+       1,
+       jsonb_build_object(
+         'version', 1,
+         'name', p.title,
+         'pages', jsonb_build_array(jsonb_build_object(
+           'id', 'pagina-' || p.id,
+           'name', p.title,
+           'slug', p.slug,
+           'blocks', jsonb_build_array(jsonb_build_object(
+             'id', 'bloco-' || p.id,
+             'definitionId', 'hero-classic',
+             'props', jsonb_build_object('title', p.title, 'description', 'Conteúdo institucional demonstrativo da ITES.')
+           ))
+         ))
+       ),
+       u.id
+FROM pages p
+CROSS JOIN users u
+WHERE u.email = 'pessoa26@example.invalid';
 INSERT 0 20
+-- Atribui papéis pelo procedimento para preencher também a trilha de auditoria.
+DO $$
+DECLARE
+  user_row record;
+  requester_role bigint;
+  administrator_role bigint;
+  manager_role bigint;
+  collaborator_role bigint;
+  administrator_id bigint;
+BEGIN
+  SELECT id INTO requester_role FROM roles WHERE code = 'REQUESTER';
+  SELECT id INTO administrator_role FROM roles WHERE code = 'ADMINISTRATOR';
+  SELECT id INTO manager_role FROM roles WHERE code = 'DEMAND_MANAGER';
+  SELECT id INTO collaborator_role FROM roles WHERE code = 'COLLABORATOR';
+  SELECT id INTO administrator_id FROM users WHERE email = 'pessoa26@example.invalid';
+
+  FOR user_row IN SELECT id FROM users ORDER BY id LOOP
+    CALL assign_role(user_row.id, requester_role, administrator_id);
+  END LOOP;
+  FOR user_row IN SELECT id FROM users WHERE email BETWEEN 'pessoa26@example.invalid' AND 'pessoa30@example.invalid' ORDER BY id LOOP
+    CALL assign_role(user_row.id, administrator_role, administrator_id);
+  END LOOP;
+  FOR user_row IN SELECT id FROM users WHERE email BETWEEN 'pessoa01@example.invalid' AND 'pessoa05@example.invalid' ORDER BY id LOOP
+    CALL assign_role(user_row.id, manager_role, administrator_id);
+  END LOOP;
+  FOR user_row IN SELECT id FROM users WHERE email BETWEEN 'pessoa06@example.invalid' AND 'pessoa10@example.invalid' ORDER BY id LOOP
+    CALL assign_role(user_row.id, collaborator_role, administrator_id);
+  END LOOP;
+END
+$$;
 DO
+-- Publica as revisões por procedimento; o gatilho registra cada publicação.
+DO $$
+DECLARE
+  page_row record;
+  administrator_id bigint;
+BEGIN
+  SELECT id INTO administrator_id FROM users WHERE email = 'pessoa26@example.invalid';
+  FOR page_row IN
+    SELECT p.id AS page_id, v.id AS version_id
+    FROM pages p JOIN page_versions v ON v.page_id = p.id
+    ORDER BY p.id
+  LOOP
+    CALL publish_page(page_row.page_id, page_row.version_id, administrator_id);
+  END LOOP;
+END
+$$;
 DO
-Etapa 4: consultas de negócio
+\echo 'Etapa 4/7: executar consultas demonstrativas'
+Etapa 4/7: executar consultas demonstrativas
+\ir 03_queries.sql
+-- Consultas acadêmicas executáveis após 01_schema.sql e 02_seed.sql.
+-- Cada resultado demonstra uma operação relacional aplicada ao domínio da ITES.
+-- CONSULTAS SIMPLES
+-- 1. Mostra a fila de demandas que ainda aguarda análise.
+SELECT code, created_at
+FROM demands
+WHERE status = 'Pendente'
+ORDER BY created_at DESC;
      code      |          created_at
 ---------------+-------------------------------
- ITES-00000002 | 2026-11-18 16:34:56.401557+00
- ITES-00000009 | 2026-11-18 16:34:56.401557+00
- ITES-00000014 | 2026-11-18 16:34:56.401557+00
- ITES-00000023 | 2026-11-18 16:34:56.401557+00
- ITES-00000029 | 2026-11-18 16:34:56.401557+00
+ ITES-00000002 | 2026-11-19 22:11:43.108734+00
+ ITES-00000009 | 2026-11-19 22:11:43.108734+00
+ ITES-00000014 | 2026-11-19 22:11:43.108734+00
+ ITES-00000023 | 2026-11-19 22:11:43.108734+00
+ ITES-00000029 | 2026-11-19 22:11:43.108734+00
 (5 rows)
 
+-- 2. Prioriza as demandas classificadas com urgência alta.
+SELECT code, service
+FROM demands
+WHERE urgency = 'HIGH'
+ORDER BY code;
      code      |       service
 ---------------+----------------------
  ITES-00000004 | comercialização
@@ -73,6 +594,11 @@ Etapa 4: consultas de negócio
  ITES-00000030 | formação
 (10 rows)
 
+-- 3. Localiza organizações de artesanato, sem confundir setor com serviço solicitado.
+SELECT name, economic_sector
+FROM organizations
+WHERE economic_sector = 'artesanato'
+ORDER BY name;
                 name                 | economic_sector
 -------------------------------------+-----------------
  Cooperativa Sementes de Itaipu      | artesanato
@@ -81,6 +607,12 @@ Etapa 4: consultas de negócio
  Rede de Produção Local              | artesanato
 (4 rows)
 
+-- 4. Consulta demandas dentro de um intervalo de datas semiaberto.
+SELECT code, status
+FROM demands
+WHERE created_at >= DATE '2020-01-01'
+  AND created_at < DATE '2100-01-01'
+ORDER BY created_at;
      code      |         status
 ---------------+-------------------------
  ITES-00000001 | Em atendimento
@@ -115,6 +647,11 @@ Etapa 4: consultas de negócio
  ITES-00000030 | Aceita para atendimento
 (30 rows)
 
+-- 5. Lista páginas que possuem uma versão publicada.
+SELECT slug, title
+FROM pages
+WHERE published_version_id IS NOT NULL
+ORDER BY slug;
          slug         |             title
 ----------------------+--------------------------------
  agenda               | Agenda de eventos
@@ -139,6 +676,13 @@ Etapa 4: consultas de negócio
  tecnologia-social    | Tecnologia social
 (20 rows)
 
+-- CONSULTAS COM JOIN E AGREGAÇÃO
+-- 6. Conta demandas por organização e situação.
+SELECT o.name, d.status, count(*) AS total
+FROM organizations o
+JOIN demands d ON d.organization_id = o.id
+GROUP BY o.id, o.name, d.status
+ORDER BY o.name, d.status;
                 name                 |         status          | total
 -------------------------------------+-------------------------+-------
  Associação Artes da Região          | Aceita para atendimento |     1
@@ -169,11 +713,24 @@ Etapa 4: consultas de negócio
  Rede de Produção Local              | Aceita para atendimento |     1
 (26 rows)
 
+-- 7. Conta decisões de aceite e recusa por responsável.
+SELECT u.name, count(*) AS decisions
+FROM users u
+JOIN demand_events e ON e.actor_id = u.id
+WHERE e.new_status IN ('Aceita para atendimento', 'Recusada')
+GROUP BY u.id, u.name
+ORDER BY decisions DESC;
            name            | decisions
 ---------------------------+-----------
  Pessoa de Demonstração 26 |        10
 (1 row)
 
+-- 8. Compara o setor econômico das organizações com os serviços solicitados.
+SELECT o.economic_sector, d.service, count(*) AS total
+FROM organizations o
+JOIN demands d ON d.organization_id = o.id
+GROUP BY o.economic_sector, d.service
+ORDER BY total DESC;
  economic_sector |       service        | total
 -----------------+----------------------+-------
  artesanato      | formação             |     6
@@ -183,14 +740,41 @@ Etapa 4: consultas de negócio
  agricultura     | comunicação          |     5
 (5 rows)
 
+-- SUBCONSULTAS
+-- 9. Usa EXISTS para localizar organizações com alguma demanda aceita.
+SELECT o.name
+FROM organizations o
+WHERE EXISTS (
+    SELECT 1
+    FROM demands d
+    WHERE d.organization_id = o.id
+      AND d.status = 'Aceita para atendimento'
+)
+ORDER BY o.name;
             name
 ----------------------------
- Rede de Produção Local
- Grupo Mãos da Baía
  Associação Artes da Região
  Coletivo Cultura em Rede
+ Grupo Mãos da Baía
+ Rede de Produção Local
 (4 rows)
 
+-- 10. Compara o volume de cada solicitante com a média de demandas por solicitante.
+SELECT u.name
+FROM users u
+WHERE (
+    SELECT count(*)
+    FROM demands d
+    WHERE d.requester_id = u.id
+) > (
+    SELECT avg(requester_total)
+    FROM (
+        SELECT count(*) AS requester_total
+        FROM demands
+        GROUP BY requester_id
+    ) demand_totals
+)
+ORDER BY u.name;
            name
 --------------------------
  Pessoa de Demonstração 1
@@ -200,14 +784,196 @@ Etapa 4: consultas de negócio
  Pessoa de Demonstração 5
 (5 rows)
 
+-- 11. Usa IN aninhado para localizar pessoas com demanda urgente de artesanato.
+SELECT u.name
+FROM users u
+WHERE u.id IN (
+    SELECT d.requester_id
+    FROM demands d
+    WHERE d.urgency = 'HIGH'
+      AND d.organization_id IN (
+          SELECT o.id
+          FROM organizations o
+          WHERE o.economic_sector = 'artesanato'
+      )
+)
+ORDER BY u.name;
            name
 ---------------------------
- Pessoa de Demonstração 5
  Pessoa de Demonstração 20
+ Pessoa de Demonstração 5
 (2 rows)
 
-Etapa 5: validação de dados e automações
+\echo 'Etapa 5/7: validar integridade e automações'
+Etapa 5/7: validar integridade e automações
+\ir 06_validation.sql
+-- Verificações reexecutáveis da carga acadêmica, das restrições e das rotinas.
+-- Uma exceção ou resultado diferente do esperado encerra o script com erro.
+DO $$
+DECLARE
+  table_name text;
+  row_total bigint;
+  table_names text[] := ARRAY[
+    'users','user_roles','role_permissions','organizations','demands','demand_events',
+    'pages','page_versions','page_events','grant_audit'
+  ];
+BEGIN
+  -- Confere a quantidade mínima de registros nas tabelas de negócio e associação.
+  FOREACH table_name IN ARRAY table_names LOOP
+    EXECUTE format('SELECT count(*) FROM %I', table_name) INTO row_total;
+    IF row_total < 20 THEN
+      RAISE EXCEPTION 'a tabela % contém apenas % linhas', table_name, row_total;
+    END IF;
+  END LOOP;
+
+  -- Os catálogos mantêm somente papéis e permissões com significado funcional.
+  IF (SELECT count(*) FROM roles) <> 4 THEN
+    RAISE EXCEPTION 'o catálogo deve conter os quatro papéis de negócio definidos';
+  END IF;
+  IF (SELECT count(*) FROM permissions) <> 13 THEN
+    RAISE EXCEPTION 'o catálogo deve conter as treze permissões de negócio definidas';
+  END IF;
+  -- Confere valores positivos, inexistentes e contagens esperadas das funções.
+  IF demand_count('Pendente') < 1 OR published_page_count() <> 20 OR
+     requester_demand_count((SELECT id FROM users WHERE email = 'pessoa01@example.invalid')) < 1 OR
+     requester_demand_count(999999) <> 0 OR demand_count('SITUACAO_INEXISTENTE') <> 0 THEN
+    RAISE EXCEPTION 'indicadores retornaram valores incompatíveis com a carga';
+  END IF;
+
+  -- Testa decisão, avanço de atendimento e conclusão com justificativa.
+  DECLARE
+    pending_id bigint;
+    v_actor_id bigint;
+    v_page_id bigint;
+    v_version_id bigint;
+    rejected boolean;
+    event_total bigint;
+    audit_before bigint;
+    subject_id bigint;
+    requester_role_id bigint;
+  BEGIN
+    SELECT id INTO v_actor_id FROM users WHERE email = 'pessoa26@example.invalid';
+    SELECT id INTO pending_id FROM demands WHERE status = 'Pendente' ORDER BY id LIMIT 1;
+    CALL transition_demand(pending_id, v_actor_id, 'Aceita para atendimento', 'Demanda aceita no teste positivo');
+    CALL transition_demand(pending_id, v_actor_id, 'Em atendimento', 'Atendimento iniciado no teste positivo');
+
+    rejected := false;
+    BEGIN
+      CALL transition_demand(pending_id, v_actor_id, 'Concluída', 'Conclusão sem nota', NULL);
+    EXCEPTION WHEN check_violation THEN
+      rejected := true;
+    END;
+    IF NOT rejected THEN
+      RAISE EXCEPTION 'a conclusão sem nota deveria ser recusada';
+    END IF;
+
+    CALL transition_demand(pending_id, v_actor_id, 'Concluída', 'Atendimento finalizado', 'Atividade realizada e registrada');
+    rejected := false;
+    BEGIN
+      CALL transition_demand(pending_id, v_actor_id, 'Pendente', 'Tentativa de retrocesso', NULL);
+    EXCEPTION WHEN OTHERS THEN
+      rejected := true;
+    END;
+    IF NOT rejected THEN
+      RAISE EXCEPTION 'uma transição terminal inválida deveria ser recusada';
+    END IF;
+
+    rejected := false;
+    BEGIN
+      CALL transition_demand(
+        (SELECT id FROM demands WHERE status = 'Pendente' ORDER BY id LIMIT 1),
+        v_actor_id, 'Aceita para atendimento', '   ', NULL
+      );
+    EXCEPTION WHEN OTHERS THEN
+      rejected := true;
+    END;
+    IF NOT rejected THEN
+      RAISE EXCEPTION 'uma decisão sem justificativa deveria ser recusada';
+    END IF;
+
+    SELECT count(*) INTO event_total FROM demand_events WHERE demand_id = pending_id;
+    IF event_total <> 3 THEN
+      RAISE EXCEPTION 'eram esperados três eventos para a demanda de validação';
+    END IF;
+
+    rejected := false;
+    BEGIN
+      UPDATE demand_events SET justification = 'alterado'
+      WHERE id = (SELECT id FROM demand_events WHERE demand_id = pending_id ORDER BY id LIMIT 1);
+    EXCEPTION WHEN OTHERS THEN
+      rejected := true;
+    END;
+    IF NOT rejected THEN
+      RAISE EXCEPTION 'o gatilho deveria impedir alteração do histórico';
+    END IF;
+
+    SELECT id INTO v_page_id FROM pages ORDER BY id LIMIT 1;
+    INSERT INTO page_versions(page_id, revision, document, author_id)
+    SELECT v_page_id, 2, pv.document || jsonb_build_object('revisaoTeste', true), v_actor_id
+    FROM page_versions pv WHERE pv.page_id = v_page_id AND pv.revision = 1;
+    SELECT pv.id INTO v_version_id FROM page_versions pv WHERE pv.page_id = v_page_id AND pv.revision = 2;
+    CALL publish_page(v_page_id, v_version_id, v_actor_id);
+    CALL unpublish_page(v_page_id, v_actor_id);
+    IF (SELECT count(*) FROM page_events pe WHERE pe.page_id = v_page_id) < 3 THEN
+      RAISE EXCEPTION 'publicação e retirada não foram registradas pelo gatilho';
+    END IF;
+    IF published_page_count() <> 19 THEN
+      RAISE EXCEPTION 'retirada de publicação não atualizou o indicador';
+    END IF;
+
+    rejected := false;
+    BEGIN
+      CALL publish_page(v_page_id, v_version_id + 100000, v_actor_id);
+    EXCEPTION WHEN OTHERS THEN
+      rejected := true;
+    END;
+    IF NOT rejected THEN
+      RAISE EXCEPTION 'a publicação de versão inexistente deveria ser recusada';
+    END IF;
+
+    SELECT id INTO subject_id FROM users WHERE email = 'pessoa30@example.invalid';
+    SELECT id INTO requester_role_id FROM roles WHERE code = 'REQUESTER';
+    SELECT count(*) INTO audit_before FROM grant_audit
+      WHERE subject_user_id = subject_id AND role_id = requester_role_id;
+    CALL assign_role(subject_id, requester_role_id, v_actor_id);
+    IF (SELECT count(*) FROM grant_audit WHERE subject_user_id = subject_id AND role_id = requester_role_id) <> audit_before THEN
+      RAISE EXCEPTION 'concessão duplicada não deveria gerar auditoria';
+    END IF;
+    CALL revoke_role(subject_id, requester_role_id, v_actor_id);
+    CALL assign_role(subject_id, requester_role_id, v_actor_id);
+    IF NOT EXISTS (SELECT 1 FROM user_roles WHERE user_id = subject_id AND role_id = requester_role_id) OR
+       (SELECT count(*) FROM grant_audit WHERE subject_user_id = subject_id AND role_id = requester_role_id) <> audit_before + 2 THEN
+      RAISE EXCEPTION 'concessão e revogação deveriam alterar papel e trilha de auditoria';
+    END IF;
+
+    rejected := false;
+    BEGIN
+      INSERT INTO demands(requester_id, capacity, service, description, urgency)
+      VALUES (v_actor_id, 'OTHER', 'formação', 'Integridade de condição', 'LOW');
+    EXCEPTION WHEN check_violation THEN
+      rejected := true;
+    END;
+    IF NOT rejected THEN
+      RAISE EXCEPTION 'a condição OTHER sem descrição deveria ser recusada';
+    END IF;
+  END;
+END
+$$;
 DO
+-- Demonstra quantidades, catálogos intencionais e chaves estrangeiras.
+SELECT 'users' AS table_name, count(*) AS rows FROM users
+UNION ALL SELECT 'roles', count(*) FROM roles
+UNION ALL SELECT 'permissions', count(*) FROM permissions
+UNION ALL SELECT 'user_roles', count(*) FROM user_roles
+UNION ALL SELECT 'role_permissions', count(*) FROM role_permissions
+UNION ALL SELECT 'organizations', count(*) FROM organizations
+UNION ALL SELECT 'demands', count(*) FROM demands
+UNION ALL SELECT 'demand_events', count(*) FROM demand_events
+UNION ALL SELECT 'pages', count(*) FROM pages
+UNION ALL SELECT 'page_versions', count(*) FROM page_versions
+UNION ALL SELECT 'page_events', count(*) FROM page_events
+UNION ALL SELECT 'grant_audit', count(*) FROM grant_audit
+ORDER BY table_name;
     table_name    | rows
 ------------------+------
  demand_events    |   28
@@ -224,62 +990,203 @@ DO
  users            |   30
 (12 rows)
 
+SELECT 'roles_and_permissions_exception' AS verification,
+       (SELECT count(*) FROM roles) AS roles,
+       (SELECT count(*) FROM permissions) AS permissions;
           verification           | roles | permissions
 ---------------------------------+-------+-------------
  roles_and_permissions_exception |     4 |          13
 (1 row)
 
+SELECT 'constraints_and_foreign_keys' AS verification,
+       count(*) FILTER (WHERE convalidated) AS validated_constraints
+FROM pg_constraint
+WHERE connamespace = 'public'::regnamespace;
          verification         | validated_constraints
 ------------------------------+-----------------------
  constraints_and_foreign_keys |                    49
 (1 row)
 
-Etapa 6: configuração de papéis e privilégios
+\echo 'Etapa 6/7: criar papéis e atribuir privilégios'
+Etapa 6/7: criar papéis e atribuir privilégios
+\ir 05_security.sql
+-- Execute como proprietário do banco em um ambiente acadêmico isolado.
+-- Contas LOGIN são provisionadas pelo administrador fora do repositório.
+-- Cria papéis de grupo sem credenciais para separar responsabilidades técnicas.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ites_runtime') THEN
+    CREATE ROLE ites_runtime NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ites_reporting') THEN
+    CREATE ROLE ites_reporting NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ites_migration') THEN
+    CREATE ROLE ites_migration NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ites_database_admin') THEN
+    CREATE ROLE ites_database_admin NOLOGIN;
+  END IF;
+END
+$$;
 DO
+-- Retira privilégios padrão e concede somente acesso ao schema necessário.
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE
+GRANT USAGE ON SCHEMA public TO ites_runtime, ites_reporting;
 GRANT
+GRANT USAGE, CREATE ON SCHEMA public TO ites_migration, ites_database_admin;
 GRANT
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM PUBLIC;
 REVOKE
+REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM PUBLIC;
 REVOKE
+REVOKE ALL ON ALL ROUTINES IN SCHEMA public FROM PUBLIC;
 REVOKE
+-- O runtime recebe permissões operacionais limitadas por tabela e coluna.
+GRANT SELECT, INSERT ON users TO ites_runtime;
 GRANT
+GRANT UPDATE(name, whatsapp) ON users TO ites_runtime;
 GRANT
+GRANT SELECT, INSERT, UPDATE(name, economic_sector, contact_email) ON organizations TO ites_runtime;
 GRANT
+GRANT SELECT, INSERT(requester_id, organization_id, capacity, capacity_other, service, description, urgency)
+  ON demands TO ites_runtime;
 GRANT
+GRANT UPDATE(review_notes) ON demands TO ites_runtime;
 GRANT
+GRANT SELECT ON demands, demand_events, organizations, roles, permissions,
+  user_roles, role_permissions, grant_audit, pages, page_versions, page_events TO ites_runtime;
 GRANT
+GRANT INSERT(page_id, revision, document, author_id) ON page_versions TO ites_runtime;
 GRANT
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ites_runtime;
 GRANT
+-- Alterações protegidas são disponibilizadas por rotinas validadas.
+GRANT EXECUTE ON PROCEDURE transition_demand(bigint, bigint, text, text, text) TO ites_runtime;
 GRANT
+GRANT EXECUTE ON PROCEDURE publish_page(bigint, bigint, bigint) TO ites_runtime;
 GRANT
+GRANT EXECUTE ON PROCEDURE unpublish_page(bigint, bigint) TO ites_runtime;
 GRANT
+GRANT EXECUTE ON PROCEDURE assign_role(bigint, bigint, bigint) TO ites_runtime;
 GRANT
+GRANT EXECUTE ON PROCEDURE revoke_role(bigint, bigint, bigint) TO ites_runtime;
 GRANT
+GRANT EXECUTE ON FUNCTION demand_count(text) TO ites_runtime, ites_reporting;
 GRANT
+GRANT EXECUTE ON FUNCTION requester_demand_count(bigint) TO ites_runtime;
 GRANT
+GRANT EXECUTE ON FUNCTION published_page_count() TO ites_runtime, ites_reporting;
 GRANT
+-- Relatórios consultam somente agregações, sem acesso a identificadores pessoais.
+CREATE VIEW demand_reporting WITH (security_barrier = true) AS
+SELECT status, urgency, service, count(*) AS demand_total
+FROM demands
+GROUP BY status, urgency, service;
 CREATE VIEW
+GRANT SELECT ON demand_reporting TO ites_reporting;
 GRANT
+-- Migrações podem alterar o schema; administração fica reservada a manutenção controlada.
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ites_migration;
 GRANT
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO ites_migration;
 GRANT
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ites_database_admin;
 GRANT
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ites_database_admin;
 GRANT
+GRANT ALL PRIVILEGES ON ALL ROUTINES IN SCHEMA public TO ites_database_admin;
 GRANT
-Etapa 7: testes de autorização e integridade
+-- Após criar contas LOGIN fora do repositório, associe-as a um grupo apropriado:
+-- GRANT ites_runtime TO ites_app_login;
+-- GRANT ites_reporting TO ites_report_login;
+-- GRANT ites_migration TO ites_migration_login;
+-- Não conceda ites_database_admin à conta de execução da aplicação.
+\echo 'Etapa 7/7: testar acessos permitidos e negados'
+Etapa 7/7: testar acessos permitidos e negados
+\ir 07_security_tests.sql
+-- Executar depois de 05_security.sql no mesmo banco da carga demonstrativa.
+-- Os blocos capturam negações esperadas e falham se uma operação indevida for aceita.
+-- O runtime pode consultar e inserir demandas, mas alterações de estado exigem rotina.
+SET ROLE ites_runtime;
 SET
+SELECT count(*) AS leitura_autorizada FROM demands;
  leitura_autorizada
 --------------------
                  30
 (1 row)
 
+SELECT demand_count('Pendente') AS indicador_autorizado;
  indicador_autorizado
 ----------------------
                     4
 (1 row)
 
+DO $$
+DECLARE
+  actor_id bigint;
+  v_demand_id bigint;
+  denied boolean;
+BEGIN
+  SELECT id INTO actor_id FROM users WHERE email = 'pessoa26@example.invalid';
+  INSERT INTO demands(requester_id, capacity, service, description, urgency)
+  VALUES (actor_id, 'GROUP', 'formação', 'Registro autorizado de validação', 'MEDIUM')
+  RETURNING id INTO v_demand_id;
+  CALL transition_demand(v_demand_id, actor_id, 'Aceita para atendimento', 'Decisão via rotina autorizada');
+  IF (SELECT status FROM demands WHERE id = v_demand_id) <> 'Aceita para atendimento' THEN
+    RAISE EXCEPTION 'a escrita autorizada não persistiu a decisão';
+  END IF;
+
+  denied := false;
+  BEGIN
+    UPDATE demands SET status = 'Recusada' WHERE id = v_demand_id;
+  EXCEPTION WHEN insufficient_privilege THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'o papel runtime não deveria alterar a situação diretamente';
+  END IF;
+
+  denied := false;
+  BEGIN
+    DELETE FROM demand_events WHERE demand_events.demand_id = v_demand_id;
+  EXCEPTION WHEN insufficient_privilege THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'o papel runtime não deveria excluir histórico';
+  END IF;
+
+  denied := false;
+  BEGIN
+    INSERT INTO demands(requester_id, capacity, service, description, urgency)
+    VALUES (999999, 'GROUP', 'formação', 'Referência inexistente para teste', 'LOW');
+  EXCEPTION WHEN foreign_key_violation THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'a chave estrangeira deveria impedir solicitante inexistente';
+  END IF;
+
+  denied := false;
+  BEGIN
+    EXECUTE 'CREATE TABLE public.runtime_schema_bypass(id integer)';
+  EXCEPTION WHEN insufficient_privilege THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'o papel runtime não deveria criar objetos no schema';
+  END IF;
+END
+$$;
 DO
+-- Relatórios acessam somente dados agregados e não leem credenciais ou demandas completas.
+RESET ROLE;
 RESET
+SET ROLE ites_reporting;
 SET
+SELECT * FROM demand_reporting ORDER BY status, urgency, service;
          status          | urgency |       service        | demand_total
 -------------------------+---------+----------------------+--------------
  Aceita para atendimento | HIGH    | apoio administrativo |            1
@@ -314,22 +1221,77 @@ SET
  Recusada                | HIGH    | parceria             |            1
 (30 rows)
 
+SELECT published_page_count() AS published_pages_for_reporting;
  published_pages_for_reporting
 -------------------------------
                             19
 (1 row)
 
+DO $$
+DECLARE
+  denied boolean := false;
+BEGIN
+  BEGIN
+    PERFORM password_hash FROM users LIMIT 1;
+  EXCEPTION WHEN insufficient_privilege THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'o papel de relatórios não deveria ler credenciais';
+  END IF;
+
+  denied := false;
+  BEGIN
+    PERFORM 1 FROM demands LIMIT 1;
+  EXCEPTION WHEN insufficient_privilege THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'o papel de relatórios deveria consultar somente a visão agregada';
+  END IF;
+
+  denied := false;
+  BEGIN
+    CALL transition_demand(1, 26, 'Recusada', 'Decisão sem autorização');
+  EXCEPTION WHEN insufficient_privilege THEN
+    denied := true;
+  END;
+  IF NOT denied THEN
+    RAISE EXCEPTION 'o papel de relatórios não deveria executar rotinas de escrita';
+  END IF;
+END
+$$;
 DO
+-- O papel de migração pode criar e remover objetos temporários de validação.
+RESET ROLE;
 RESET
+SET ROLE ites_migration;
 SET
+CREATE TABLE public.migration_privilege_probe(id integer PRIMARY KEY);
 CREATE TABLE
+DROP TABLE public.migration_privilege_probe;
 DROP TABLE
+RESET ROLE;
 RESET
+SELECT 'security_tests_passed' AS result;
         result
 -----------------------
  security_tests_passed
 (1 row)
 
+SELECT 'users' AS table_name, count(*) AS rows FROM users
+UNION ALL SELECT 'roles', count(*) FROM roles
+UNION ALL SELECT 'permissions', count(*) FROM permissions
+UNION ALL SELECT 'user_roles', count(*) FROM user_roles
+UNION ALL SELECT 'role_permissions', count(*) FROM role_permissions
+UNION ALL SELECT 'organizations', count(*) FROM organizations
+UNION ALL SELECT 'demands', count(*) FROM demands
+UNION ALL SELECT 'demand_events', count(*) FROM demand_events
+UNION ALL SELECT 'pages', count(*) FROM pages
+UNION ALL SELECT 'page_versions', count(*) FROM page_versions
+UNION ALL SELECT 'page_events', count(*) FROM page_events
+UNION ALL SELECT 'grant_audit', count(*) FROM grant_audit
+ORDER BY table_name;
     table_name    | rows
 ------------------+------
  demand_events    |   29

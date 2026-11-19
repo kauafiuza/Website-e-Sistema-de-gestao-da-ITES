@@ -4,7 +4,7 @@
 
 A ITES, incubadora associada ao IFRJ Campus Niterói, recebe solicitações de grupos e organizações de economia solidária, acompanha decisões e publica informação institucional. A base relacional preserva pessoas, organizações, demandas, papéis, páginas publicadas e trilhas de auditoria.
 
-A proposta do banco foi validada pelo responsável do projeto nesta conversa. Esta pasta mantém dois percursos com propósitos distintos: `run_all.sql` reproduz o modelo acadêmico de 12 tabelas; `run_product.sql` aplica, em banco de estudo isolado, os mesmos arquivos de migração oficiais do produto. O segundo percurso não copia definições nem substitui o Flyway: sua lista de inclusões aponta diretamente para `server/src/main/resources/db/migration/` e atualmente chega à V28.
+A proposta do banco foi validada pelo responsável do projeto nesta conversa. `database/coursework/academic/` contém o modelo acadêmico de 12 tabelas; `database/coursework/product/` oferece acesso de estudo às migrações oficiais do produto. O segundo percurso não copia definições nem substitui o Flyway: sua lista de inclusões aponta diretamente para `server/src/main/resources/db/migration/` e atualmente chega à V28. Os comandos de entrada preservados na raiz são `run_all.sql` e `run_product.sql`.
 
 O SGBD é PostgreSQL, compatível com a infraestrutura do produto. A validação documentada aqui foi executada em PostgreSQL 16. O PDF original de requisitos e o template institucional não foram encontrados; os requisitos reproduzidos no pedido do projeto são a referência utilizada.
 
@@ -12,7 +12,7 @@ O SGBD é PostgreSQL, compatível com a infraestrutura do produto. A validação
 
 O schema operacional contém 35 tabelas da aplicação. A lista e as relações evoluem nas migrações Flyway, que são a fonte única das definições. Para inspecionar essas estruturas sem conectar a aplicação a um banco sem histórico Flyway, siga [database/coursework/README.md](../../database/coursework/README.md) e execute `run_product.sql` em uma instância PostgreSQL descartável.
 
-O carregamento foi organizado em uma transação por arquivo, como no comportamento padrão do Flyway. Isso é necessário para migrações que usam tabelas temporárias com `ON COMMIT DROP`. A validação verifica as 35 tabelas, as 17 permissões atuais, sua associação ao papel `ADMINISTRATOR`, as quatro declarações de gatilho, a restrição de unicidade do projeto `ROOT` e as páginas institucionais iniciais. As consultas sobre o schema operacional estão em `database/coursework/product_queries.sql`.
+O carregamento foi organizado em uma transação por arquivo, como no comportamento padrão do Flyway. Isso é necessário para migrações que usam tabelas temporárias com `ON COMMIT DROP`. A validação verifica as 35 tabelas, as 17 permissões atuais, sua associação ao papel `ADMINISTRATOR`, as quatro declarações de gatilho, a restrição de unicidade do projeto `ROOT` e as páginas institucionais iniciais. As consultas sobre o schema operacional estão em `database/coursework/product/03_queries.sql`.
 
 Esse banco de estudo não contém `flyway_schema_history` e não deve ser usado como banco de execução da aplicação. Para a aplicação real, o backend executa o Flyway e registra as migrações. A instância recém-migrada não tem dados de negócio: o provisionador cria a página inicial publicada e o projeto raiz depois que existem administrador e organização padrão.
 
@@ -72,7 +72,7 @@ As tabelas de negócio e associação contêm ao menos 20 linhas. Os catálogos 
 
 ## Consultas SQL — ADP1
 
-As 11 consultas acadêmicas estão em `database/coursework/03_queries.sql`. Cada comando tem uso operacional:
+As 11 consultas acadêmicas estão em `database/coursework/academic/03_queries.sql`. Cada comando tem uso operacional:
 
 ### Cinco consultas simples
 
@@ -94,11 +94,11 @@ As 11 consultas acadêmicas estão em `database/coursework/03_queries.sql`. Cada
 2. Subconsulta escalar com média: solicitantes cujo número de demandas supera a média entre solicitantes ativos.
 3. `IN` aninhado: solicitantes com demanda urgente associada a organização de artesanato.
 
-As três categorias de consultas são executadas pelo `run_all.sql`; seus resultados constam na evidência PostgreSQL 16. O arquivo `product_queries.sql` fornece as mesmas categorias com os nomes e relacionamentos do schema operacional, para ser executado depois de `run_product.sql`.
+As três categorias de consultas são executadas pelo percurso acadêmico `run_all.sql`; seus resultados constam na evidência PostgreSQL 16. O arquivo `product/03_queries.sql` fornece as mesmas categorias com os nomes e relacionamentos do schema operacional. O ponto de entrada `run_product.sql` aplica as migrações, executa a validação e roda as consultas.
 
 ## Rotinas e automações — ADP2
 
-As rotinas acadêmicas estão em `database/coursework/04_routines.sql`. No schema operacional, as regras executadas por gatilhos estão nas migrações oficiais e não são redefinidas por esse arquivo.
+As rotinas acadêmicas estão em `database/coursework/academic/04_routines.sql`. No schema operacional, as regras executadas por gatilhos estão nas migrações oficiais e não são redefinidas por esse arquivo.
 
 ### Funções
 
@@ -136,20 +136,20 @@ No schema operacional, as migrações instalam quatro gatilhos: sincronização 
 
 ## Administração, permissões e integridade — ADP3
 
-O script `database/coursework/05_security.sql` cria papéis de grupo sem login:
+O script `database/coursework/academic/05_security.sql` cria papéis de grupo sem login:
 
 - `ites_runtime`: leitura e escrita operacional; não pode mudar situação diretamente, excluir histórico, administrar schema ou conceder privilégios.
 - `ites_reporting`: leitura de uma visão agregada e de funções de métricas; não lê credenciais nem linhas detalhadas de demandas.
 - `ites_migration`: privilégios de alteração de schema para execução controlada de migrações.
 - `ites_database_admin`: administração dos objetos acadêmicos; não deve ser concedido à aplicação.
 
-O arquivo `database/coursework/08_provision_users.sql` cria contas LOGIN associadas aos quatro grupos com `\password`, que solicita senha sem registrá-la no repositório. Esse provisionamento foi executado interativamente em banco temporário com credenciais descartáveis; os quatro logins autenticaram e seus acessos foram testados. O banco do produto ainda usa a mesma conta para Flyway e runtime; a separação descrita aqui é do modelo acadêmico e continua pendente de aplicação à infraestrutura integrada.
+O arquivo `database/coursework/academic/08_provision_users.sql` cria contas LOGIN associadas aos quatro grupos com `\password`, que solicita senha sem registrá-la no repositório. Esse provisionamento foi executado interativamente em banco temporário com credenciais descartáveis; os quatro logins autenticaram e seus acessos foram testados. O banco do produto ainda usa a mesma conta para Flyway e runtime; a separação descrita aqui é do modelo acadêmico e continua pendente de aplicação à infraestrutura integrada.
 
 Aplicação, permissões de negócio e papéis do PostgreSQL são camadas diferentes. As permissões da aplicação determinam quem pode decidir demandas; as roles do banco limitam o que uma conexão técnica consegue fazer. Os scripts negam acesso PUBLIC, usam privilégios por coluna/tabela, restringem funções/procedimentos e disponibilizam relatórios somente por agregação. As verificações executam `SET ROLE` para testar acesso autorizado e negações de escrita, leitura sensível, DDL e integridade referencial.
 
 ## Evidências, limites e próximos passos
 
-A validação acadêmica limpa em `postgres:16-alpine` executou criação, carga, as 11 consultas, funções, procedimentos, gatilhos, privilégios, testes positivos/negativos e contagens. As evidências estão na [transcrição acadêmica](evidence/coursework-validation-postgresql16.txt) e na [validação das contas LOGIN](evidence/database-users-validation-postgresql16.txt). A execução adicional de `run_product.sql`, `product_validation.sql` e `product_queries.sql` contra PostgreSQL 16 está registrada em [evidence/product-schema-validation-postgresql16.md](evidence/product-schema-validation-postgresql16.md), com saída integral em TXT.
+A validação acadêmica limpa em `postgres:16-alpine` executou criação, carga, as 11 consultas, funções, procedimentos, gatilhos, privilégios, testes positivos/negativos e contagens. As evidências estão na [transcrição acadêmica](evidence/coursework-validation-postgresql16.txt) e na [validação das contas LOGIN](evidence/database-users-validation-postgresql16.txt). A execução adicional do percurso `database/coursework/run_product.sql` contra PostgreSQL 16 está registrada em [evidence/product-schema-validation-postgresql16.md](evidence/product-schema-validation-postgresql16.md), com saída integral em TXT.
 
 Pendências documentadas:
 

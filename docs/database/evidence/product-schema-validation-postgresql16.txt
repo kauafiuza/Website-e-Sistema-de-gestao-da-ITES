@@ -1,10 +1,23 @@
+-- Executa o percurso do schema operacional em um banco descartável.
+-- As migrações incluídas continuam sendo as fontes oficiais do Flyway.
+\set ON_ERROR_STOP on
+\ir product/run_all.sql
+-- Cria e verifica o schema operacional em um banco PostgreSQL descartável.
+-- A carga de dados de negócio permanece sob responsabilidade do backend.
+\set ON_ERROR_STOP on
+\echo 'Etapa 1/3: aplicar as migrações oficiais do produto'
+Etapa 1/3: aplicar as migrações oficiais do produto
+\ir 01_apply_migrations.sql
+-- Aplica a estrutura operacional sem copiar as definições das migrações Flyway.
+-- Execute somente em banco PostgreSQL vazio, descartável e isolado.
+-- Cada arquivo é confirmado em sua própria transação para respeitar ON COMMIT DROP.
 \set ON_ERROR_STOP on
 \set AUTOCOMMIT off
 \echo 'Aplicando as migrações oficiais do produto em banco de estudo isolado.'
 Aplicando as migrações oficiais do produto em banco de estudo isolado.
 \echo 'A ordem e o conteúdo abaixo são os mesmos usados pelo Flyway.'
 A ordem e o conteúdo abaixo são os mesmos usados pelo Flyway.
-\ir ../../server/src/main/resources/db/migration/V1__baseline.sql
+\ir ../../../server/src/main/resources/db/migration/V1__baseline.sql
 CREATE TABLE users (
     id uuid PRIMARY KEY,
     first_name varchar(80) NOT NULL,
@@ -42,7 +55,7 @@ CREATE INDEX idx_refresh_tokens_user ON refresh_tokens (user_id);
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V2__account_security.sql
+\ir ../../../server/src/main/resources/db/migration/V2__account_security.sql
 ALTER TABLE users ADD COLUMN email_verified_at timestamp with time zone;
 ALTER TABLE
 ALTER TABLE users ADD COLUMN password_changed_at timestamp with time zone;
@@ -110,7 +123,7 @@ CREATE INDEX idx_user_recovery_codes_user ON user_recovery_codes (user_id);
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V3__project_themes.sql
+\ir ../../../server/src/main/resources/db/migration/V3__project_themes.sql
 CREATE TABLE themes (
     id uuid PRIMARY KEY,
     owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -133,13 +146,13 @@ CREATE INDEX idx_projects_theme ON projects (theme_id) WHERE theme_id IS NOT NUL
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V4__project_route_blueprint.sql
+\ir ../../../server/src/main/resources/db/migration/V4__project_route_blueprint.sql
 ALTER TABLE projects
     ADD COLUMN route_blueprint jsonb NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V5__publications.sql
+\ir ../../../server/src/main/resources/db/migration/V5__publications.sql
 CREATE TABLE publications (
     id uuid PRIMARY KEY,
     project_id uuid NOT NULL UNIQUE REFERENCES projects(id) ON DELETE CASCADE,
@@ -175,7 +188,7 @@ CREATE INDEX idx_publication_events_stats ON publication_events(publication_id, 
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V6__publication_analytics.sql
+\ir ../../../server/src/main/resources/db/migration/V6__publication_analytics.sql
 ALTER TABLE publication_events ADD COLUMN page_path varchar(300);
 ALTER TABLE
 ALTER TABLE publication_events ADD COLUMN target varchar(160);
@@ -189,7 +202,7 @@ UPDATE publication_events SET event_type = 'click' WHERE event_type = 'interacti
 UPDATE 0
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V7__form_submissions.sql
+\ir ../../../server/src/main/resources/db/migration/V7__form_submissions.sql
 CREATE TABLE form_submissions (
     id uuid PRIMARY KEY,
     publication_id uuid NOT NULL REFERENCES publications(id) ON DELETE CASCADE,
@@ -205,12 +218,12 @@ CREATE INDEX idx_form_submissions_inbox ON form_submissions(publication_id, occu
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V8__form_submission_schema.sql
+\ir ../../../server/src/main/resources/db/migration/V8__form_submission_schema.sql
 ALTER TABLE form_submissions ADD COLUMN field_schema jsonb;
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V9__organizations_and_tenant_resources.sql
+\ir ../../../server/src/main/resources/db/migration/V9__organizations_and_tenant_resources.sql
 CREATE TABLE organizations (
     id uuid PRIMARY KEY,
     name varchar(150) NOT NULL,
@@ -293,7 +306,7 @@ CREATE INDEX idx_themes_organization_updated
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V10__organization_permission_grants.sql
+\ir ../../../server/src/main/resources/db/migration/V10__organization_permission_grants.sql
 CREATE TABLE organization_permission_grants (
     id uuid PRIMARY KEY,
     beneficiary_user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -353,7 +366,7 @@ WHERE m.role = 'OWNER' OR permission.action <> 'ORGANIZATION_GRANTS_MANAGE';
 INSERT 0 0
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V11__organization_membership_administration.sql
+\ir ../../../server/src/main/resources/db/migration/V11__organization_membership_administration.sql
 ALTER TABLE organization_memberships
     ADD COLUMN state varchar(16) NOT NULL DEFAULT 'ACTIVE'
         CHECK (state IN ('ACTIVE', 'REVOKED'));
@@ -383,7 +396,7 @@ CREATE INDEX idx_organization_invitations_org_state
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V12__explicit_submission_export_grants.sql
+\ir ../../../server/src/main/resources/db/migration/V12__explicit_submission_export_grants.sql
 ALTER TABLE organization_permission_grants
     ADD COLUMN authority_grant_id uuid;
 ALTER TABLE
@@ -419,7 +432,7 @@ CREATE INDEX idx_organization_grants_authority
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V13__organization_feature_availability.sql
+\ir ../../../server/src/main/resources/db/migration/V13__organization_feature_availability.sql
 CREATE TABLE organization_feature_catalog (
     feature_key varchar(64) NOT NULL,
     version integer NOT NULL CHECK (version > 0),
@@ -468,7 +481,7 @@ CREATE INDEX idx_organization_feature_availability_enabled
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V14__organization_page_templates.sql
+\ir ../../../server/src/main/resources/db/migration/V14__organization_page_templates.sql
 CREATE TABLE organization_page_templates (
     id uuid PRIMARY KEY,
     organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -516,7 +529,7 @@ CREATE INDEX idx_page_template_versions_history
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V15__retain_page_template_snapshots_after_author_removal.sql
+\ir ../../../server/src/main/resources/db/migration/V15__retain_page_template_snapshots_after_author_removal.sql
 ALTER TABLE organization_page_templates
     ALTER COLUMN created_by DROP NOT NULL,
     ALTER COLUMN updated_by DROP NOT NULL,
@@ -535,7 +548,7 @@ ALTER TABLE organization_page_template_versions
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V16__project_revision_history_and_publication_links.sql
+\ir ../../../server/src/main/resources/db/migration/V16__project_revision_history_and_publication_links.sql
 CREATE TABLE project_revisions (
     id uuid PRIMARY KEY,
     project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
@@ -592,7 +605,7 @@ CREATE INDEX idx_publication_versions_project_revision
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V17__publication_review_approvals.sql
+\ir ../../../server/src/main/resources/db/migration/V17__publication_review_approvals.sql
 ALTER TABLE organization_permission_grants
     DROP CONSTRAINT ck_organization_grant_action;
 ALTER TABLE
@@ -645,7 +658,7 @@ CREATE INDEX idx_publication_reviews_revision
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V18__tenant_form_versions.sql
+\ir ../../../server/src/main/resources/db/migration/V18__tenant_form_versions.sql
 ALTER TABLE projects
     ADD CONSTRAINT uq_projects_id_organization UNIQUE (id, organization_id);
 ALTER TABLE
@@ -821,7 +834,7 @@ CREATE INDEX idx_form_submissions_form_version ON form_submissions(form_version_
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V19__tenant_consistent_resource_associations.sql
+\ir ../../../server/src/main/resources/db/migration/V19__tenant_consistent_resource_associations.sql
 -- Permite que as FKs abaixo validem o projeto associado, além do UUID global.
 ALTER TABLE project_revisions
     ADD CONSTRAINT uq_project_revisions_project_id UNIQUE (project_id, id);
@@ -859,7 +872,7 @@ ALTER TABLE organization_permission_grants
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V20__tenant_consistent_form_submissions.sql
+\ir ../../../server/src/main/resources/db/migration/V20__tenant_consistent_form_submissions.sql
 ALTER TABLE publications
     ADD COLUMN organization_id uuid;
 ALTER TABLE
@@ -894,7 +907,7 @@ ALTER TABLE form_submissions
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V21__tenant_scoped_audit_events.sql
+\ir ../../../server/src/main/resources/db/migration/V21__tenant_scoped_audit_events.sql
 CREATE TABLE organization_audit_events (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     organization_id uuid NOT NULL,
@@ -963,7 +976,7 @@ ALTER TABLE organization_permission_grants
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V22__immutable_form_version_names.sql
+\ir ../../../server/src/main/resources/db/migration/V22__immutable_form_version_names.sql
 ALTER TABLE organization_form_versions
     ADD COLUMN name varchar(200);
 ALTER TABLE
@@ -1001,7 +1014,7 @@ ALTER TABLE organization_form_versions
 ALTER TABLE
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V23__ites_domain.sql
+\ir ../../../server/src/main/resources/db/migration/V23__ites_domain.sql
 ALTER TABLE organizations ADD COLUMN economic_sector varchar(120);
 ALTER TABLE
 CREATE TABLE app_roles (
@@ -1130,7 +1143,7 @@ FOR EACH ROW EXECUTE FUNCTION ites_demand_transition_guard();
 CREATE TRIGGER
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V24__administrator_permission_sync.sql
+\ir ../../../server/src/main/resources/db/migration/V24__administrator_permission_sync.sql
 CREATE FUNCTION ites_sync_administrator_permission() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -1153,7 +1166,7 @@ ON CONFLICT DO NOTHING;
 INSERT 0 0
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V25__analytics_permissions.sql
+\ir ../../../server/src/main/resources/db/migration/V25__analytics_permissions.sql
 INSERT INTO app_permissions(code, description) VALUES
   ('organizations.manage', 'Consultar e administrar organizações'),
   ('analytics.view', 'Consultar indicadores e dados agregados'),
@@ -1165,14 +1178,14 @@ ON CONFLICT (code) DO UPDATE SET description = EXCLUDED.description;
 INSERT 0 6
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V26__demand_dashboard_page.sql
+\ir ../../../server/src/main/resources/db/migration/V26__demand_dashboard_page.sql
 INSERT INTO institutional_pages(slug,title)
 VALUES ('painel-demandas','Painel de indicadores das demandas')
 ON CONFLICT (slug) DO NOTHING;
 INSERT 0 1
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V27__root_project.sql
+\ir ../../../server/src/main/resources/db/migration/V27__root_project.sql
 ALTER TABLE projects ADD COLUMN site_role varchar(12);
 ALTER TABLE
 ALTER TABLE projects ADD CONSTRAINT ck_projects_site_role CHECK (site_role IS NULL OR site_role = 'ROOT');
@@ -1181,7 +1194,7 @@ CREATE UNIQUE INDEX uq_projects_root_site ON projects(site_role) WHERE site_role
 CREATE INDEX
 COMMIT;
 COMMIT
-\ir ../../server/src/main/resources/db/migration/V28__root_page_navigation.sql
+\ir ../../../server/src/main/resources/db/migration/V28__root_page_navigation.sql
 -- Acrescenta a navegação editável ao projeto raiz existente sem alterar versões históricas.
 DO $$
 DECLARE
@@ -1248,6 +1261,12 @@ COMMIT
 \set AUTOCOMMIT on
 \echo 'Migrações oficiais aplicadas.'
 Migrações oficiais aplicadas.
+\echo 'Etapa 2/3: validar estrutura, grants e gatilhos'
+Etapa 2/3: validar estrutura, grants e gatilhos
+\ir 02_validate_schema.sql
+-- Confere o schema criado pelas migrações e exercita as proteções operacionais.
+-- Execute depois de 01_apply_migrations.sql, em banco descartável.
+-- O registro de auditoria de teste é preservado porque a tabela é imutável.
 \set ON_ERROR_STOP on
 DO $$
 DECLARE
@@ -1302,6 +1321,7 @@ BEGIN
         RAISE EXCEPTION 'Páginas institucionais iniciais não foram provisionadas';
     END IF;
 
+    -- Uma permissão temporária comprova a sincronização automática do administrador.
     INSERT INTO app_permissions(code, description)
     VALUES ('coursework.permission.sync.check', 'Permissão temporária para validar sincronização');
     IF NOT EXISTS (
@@ -1314,6 +1334,7 @@ BEGIN
     END IF;
     DELETE FROM app_permissions WHERE code = 'coursework.permission.sync.check';
 
+    -- Dados temporários verificam uma transição válida e uma transição proibida.
     INSERT INTO users(id, first_name, last_name, email, password_hash, active, created_at, updated_at)
     VALUES (validation_user_id, 'Usuário', 'Validação',
             'validation-' || validation_user_id || '@example.invalid',
@@ -1335,6 +1356,7 @@ BEGIN
     DELETE FROM demands WHERE id = validation_demand_id;
     DELETE FROM users WHERE id = validation_user_id;
 
+    -- Este evento de teste permanece na tabela para respeitar a imutabilidade auditável.
     INSERT INTO organization_audit_events
         (id, organization_id, actor_user_id, action, target_type, target_id)
     VALUES (validation_audit_id, gen_random_uuid(), validation_user_id,
@@ -1417,7 +1439,11 @@ ORDER BY c.relname, t.tgname;
  organization_audit_events | trg_organization_audit_events_no_truncate | CREATE TRIGGER trg_organization_audit_events_no_truncate BEFORE TRUNCATE ON public.organization_audit_events FOR EACH STATEMENT EXECUTE FUNCTION reject_organization_audit_event_mutation()
 (4 rows)
 
--- Consultas simples sobre o schema operacional do ITES.
+\echo 'Etapa 3/3: executar consultas de referência'
+Etapa 3/3: executar consultas de referência
+\ir 03_queries.sql
+-- Consultas simples: filtros e ordenação para tarefas operacionais frequentes.
+-- Lista a fila de demandas pendentes para acompanhamento da equipe.
 SELECT code, status, urgency, service, created_at
 FROM demands
 WHERE status = 'Pendente'
@@ -1426,6 +1452,7 @@ ORDER BY created_at DESC;
 ------+--------+---------+---------+------------
 (0 rows)
 
+-- Prioriza as solicitações classificadas com urgência alta.
 SELECT code, service, created_at
 FROM demands
 WHERE urgency = 'HIGH'
@@ -1434,6 +1461,7 @@ ORDER BY created_at DESC;
 ------+---------+------------
 (0 rows)
 
+-- Consulta organizações por setor econômico, sem confundir setor e serviço pedido.
 SELECT name, economic_sector
 FROM organizations
 WHERE economic_sector = 'artesanato'
@@ -1442,6 +1470,7 @@ ORDER BY name;
 ------+-----------------
 (0 rows)
 
+-- Localiza demandas registradas nos últimos 30 dias.
 SELECT code, status, created_at
 FROM demands
 WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
@@ -1451,6 +1480,7 @@ ORDER BY created_at;
 ------+--------+------------
 (0 rows)
 
+-- Lista as publicações que estão ativas.
 SELECT public_key, project_id, current_version
 FROM publications
 WHERE active
@@ -1459,7 +1489,8 @@ ORDER BY created_at DESC;
 ------------+------------+-----------------
 (0 rows)
 
--- Consultas com JOIN e agregações.
+-- Consultas com JOIN: relacionam entidades e agrupam resultados para análise.
+-- Conta demandas por organização e situação atual.
 SELECT o.name, d.status, count(*) AS total_demands
 FROM organizations o
 JOIN demands d ON d.organization_id = o.id
@@ -1469,6 +1500,7 @@ ORDER BY o.name, d.status;
 ------+--------+---------------
 (0 rows)
 
+-- Conta decisões de aceite e recusa por responsável.
 SELECT u.first_name, u.last_name, e.new_status, count(*) AS decisions
 FROM users u
 JOIN demand_events e ON e.actor_id = u.id
@@ -1479,6 +1511,7 @@ ORDER BY decisions DESC, u.last_name;
 ------------+-----------+------------+-----------
 (0 rows)
 
+-- Compara o setor das organizações com os serviços solicitados à ITES.
 SELECT o.economic_sector, d.service, count(*) AS total_demands
 FROM organizations o
 JOIN demands d ON d.organization_id = o.id
@@ -1488,7 +1521,8 @@ ORDER BY total_demands DESC, o.economic_sector;
 -----------------+---------+---------------
 (0 rows)
 
--- Subconsultas para identificar atividade e volume.
+-- Subconsultas: selecionam registros com base em resultados de outras consultas.
+-- Encontra organizações que já tiveram alguma demanda aceita.
 SELECT o.id, o.name
 FROM organizations o
 WHERE EXISTS (
@@ -1501,6 +1535,7 @@ ORDER BY o.name;
 ----+------
 (0 rows)
 
+-- Encontra solicitantes com volume acima da média por solicitante.
 SELECT u.id, u.first_name, u.last_name
 FROM users u
 WHERE (
@@ -1518,6 +1553,7 @@ ORDER BY u.last_name, u.first_name;
 ----+------------+-----------
 (0 rows)
 
+-- Encontra solicitantes com demandas urgentes de organizações de artesanato.
 SELECT u.id, u.first_name, u.last_name
 FROM users u
 WHERE u.id IN (

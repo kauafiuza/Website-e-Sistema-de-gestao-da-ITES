@@ -1,4 +1,7 @@
 -- Cria o modelo relacional acadêmico em um banco PostgreSQL vazio e dedicado.
+-- Este schema didático usa identificadores bigint; o schema operacional usa UUID.
+
+-- Pessoas que submetem demandas e executam ações administrativas.
 CREATE TABLE users (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL,
@@ -9,30 +12,35 @@ CREATE TABLE users (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+-- Catálogo de papéis aplicados aos usuários.
 CREATE TABLE roles (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code text NOT NULL UNIQUE,
   name text NOT NULL
 );
 
+-- Catálogo de permissões que podem ser associadas aos papéis.
 CREATE TABLE permissions (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code text NOT NULL UNIQUE,
   description text NOT NULL
 );
 
+-- Relação muitos-para-muitos entre usuários e papéis.
 CREATE TABLE user_roles (
   user_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   role_id bigint NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
   PRIMARY KEY (user_id, role_id)
 );
 
+-- Relação muitos-para-muitos entre papéis e permissões.
 CREATE TABLE role_permissions (
   role_id bigint NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
   permission_id bigint NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
   PRIMARY KEY (role_id, permission_id)
 );
 
+-- Organizações associadas opcionalmente às demandas.
 CREATE TABLE organizations (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL,
@@ -41,6 +49,7 @@ CREATE TABLE organizations (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+-- Solicitações dos usuários; código, estado e campos obrigatórios são validados no banco.
 CREATE TABLE demands (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code text GENERATED ALWAYS AS ('ITES-' || lpad(id::text, 8, '0')) STORED UNIQUE,
@@ -62,10 +71,12 @@ CREATE TABLE demands (
   CONSTRAINT demands_completion_check
     CHECK (status <> 'Concluída' OR nullif(btrim(completion_note), '') IS NOT NULL)
 );
+-- Índices apoiam as telas de acompanhamento, fila e consulta por organização.
 CREATE INDEX demands_requester_idx ON demands(requester_id, created_at DESC);
 CREATE INDEX demands_status_idx ON demands(status, created_at DESC);
 CREATE INDEX demands_organization_status_idx ON demands(organization_id, status);
 
+-- Histórico append-only de decisões e transições realizadas por usuários.
 CREATE TABLE demand_events (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id bigint NOT NULL REFERENCES demands(id),
@@ -78,6 +89,7 @@ CREATE TABLE demand_events (
 CREATE INDEX demand_events_demand_time_idx ON demand_events(demand_id, occurred_at DESC);
 CREATE INDEX demand_events_actor_time_idx ON demand_events(actor_id, occurred_at DESC);
 
+-- Página lógica com referência opcional à versão publicada.
 CREATE TABLE pages (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   slug text NOT NULL UNIQUE,
@@ -86,6 +98,7 @@ CREATE TABLE pages (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+-- Snapshots imutáveis do documento editado no construtor visual.
 CREATE TABLE page_versions (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   page_id bigint NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
@@ -97,9 +110,11 @@ CREATE TABLE page_versions (
   UNIQUE (page_id, id)
 );
 
+-- A chave composta garante que a versão publicada pertence à própria página.
 ALTER TABLE pages ADD CONSTRAINT pages_published_fk
   FOREIGN KEY (id, published_version_id) REFERENCES page_versions(page_id, id);
 
+-- Eventos de publicação e retirada, vinculados ao ator responsável.
 CREATE TABLE page_events (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   page_id bigint NOT NULL REFERENCES pages(id),
@@ -111,6 +126,7 @@ CREATE TABLE page_events (
 );
 CREATE INDEX page_events_page_time_idx ON page_events(page_id, occurred_at DESC);
 
+-- Trilha de concessão e revogação de papéis a usuários.
 CREATE TABLE grant_audit (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   actor_id bigint NOT NULL REFERENCES users(id),

@@ -1,5 +1,7 @@
 -- Popula o banco acadêmico com dados fictícios e determinísticos.
 -- As senhas são sentinelas não utilizáveis para autenticação.
+
+-- Cria identidades demonstrativas com endereços reservados para exemplos.
 INSERT INTO users(name, email, password_hash, whatsapp)
 SELECT 'Pessoa de Demonstração ' || n,
        'pessoa' || lpad(n::text, 2, '0') || '@example.invalid',
@@ -7,12 +9,14 @@ SELECT 'Pessoa de Demonstração ' || n,
        '000000' || lpad(n::text, 4, '0')
 FROM generate_series(1, 30) AS n;
 
+-- Define os quatro papéis funcionais do exercício.
 INSERT INTO roles(code, name) VALUES
   ('REQUESTER', 'Solicitante'),
   ('ADMINISTRATOR', 'Administrador'),
   ('DEMAND_MANAGER', 'Gestor de demandas'),
   ('COLLABORATOR', 'Colaborador');
 
+-- Define permissões reais; catálogos pequenos não são preenchidos artificialmente.
 INSERT INTO permissions(code, description) VALUES
   ('profile.read_own', 'Consultar o próprio perfil'),
   ('profile.manage_own', 'Atualizar o próprio perfil'),
@@ -28,30 +32,35 @@ INSERT INTO permissions(code, description) VALUES
   ('builder.pages.edit', 'Editar páginas institucionais'),
   ('builder.pages.publish', 'Publicar páginas institucionais');
 
+-- O papel administrativo recebe todo o catálogo de permissões.
 INSERT INTO role_permissions(role_id, permission_id)
 SELECT r.id, p.id
 FROM roles r CROSS JOIN permissions p
 WHERE r.code = 'ADMINISTRATOR'
 ON CONFLICT DO NOTHING;
 
+-- O gestor recebe permissões necessárias para revisar e decidir demandas.
 INSERT INTO role_permissions(role_id, permission_id)
 SELECT r.id, p.id
 FROM roles r JOIN permissions p ON p.code IN ('demands.read','demands.review','demands.decide','organizations.read')
 WHERE r.code = 'DEMAND_MANAGER'
 ON CONFLICT DO NOTHING;
 
+-- O colaborador recebe consulta sem poder administrativo amplo.
 INSERT INTO role_permissions(role_id, permission_id)
 SELECT r.id, p.id
 FROM roles r JOIN permissions p ON p.code IN ('demands.read','organizations.read')
 WHERE r.code = 'COLLABORATOR'
 ON CONFLICT DO NOTHING;
 
+-- O solicitante pode consultar apenas seu perfil e suas próprias demandas.
 INSERT INTO role_permissions(role_id, permission_id)
 SELECT r.id, p.id
 FROM roles r JOIN permissions p ON p.code IN ('profile.read_own','profile.manage_own','demands.read_own')
 WHERE r.code = 'REQUESTER'
 ON CONFLICT DO NOTHING;
 
+-- Registra organizações fictícias de diferentes setores econômicos.
 INSERT INTO organizations(name, economic_sector, contact_email)
 SELECT (ARRAY[
   'Coletivo Raízes do Morro','Grupo Mãos da Baía','Associação Maré Viva','Rede de Costura Solidária',
@@ -64,6 +73,7 @@ SELECT (ARRAY[
        'contato' || lpad(n::text, 2, '0') || '@example.invalid'
 FROM generate_series(1, 20) AS n;
 
+-- Distribui demandas entre organizações, capacidades, serviços, urgências e situações.
 INSERT INTO demands(requester_id, organization_id, capacity, capacity_other, service, description, urgency, status, completion_note)
 SELECT u.id,
        CASE WHEN n % 7 = 0 THEN NULL ELSE o.id END,
@@ -78,6 +88,7 @@ FROM generate_series(1, 30) AS n
 JOIN users u ON u.email = 'pessoa' || lpad((((n - 1) % 25) + 1)::text, 2, '0') || '@example.invalid'
 LEFT JOIN organizations o ON o.id = ((n - 1) % 20) + 1;
 
+-- Gera eventos ilustrativos para demandas que já passaram por análise.
 INSERT INTO demand_events(demand_id, actor_id, old_status, new_status, justification)
 SELECT d.id,
        actor.id,
@@ -94,6 +105,7 @@ CROSS JOIN users actor
 WHERE actor.email = 'pessoa26@example.invalid'
   AND d.status <> 'Pendente';
 
+-- Cria páginas institucionais com conteúdo demonstrativo.
 INSERT INTO pages(slug, title) VALUES
   ('inicio','Início'),
   ('quem-somos','Quem somos'),
@@ -116,6 +128,7 @@ INSERT INTO pages(slug, title) VALUES
   ('tecnologia-social','Tecnologia social'),
   ('perguntas-frequentes','Perguntas frequentes');
 
+-- Cria um documento JSONB inicial por página, usando a mesma revisão lógica.
 INSERT INTO page_versions(page_id, revision, document, author_id)
 SELECT p.id,
        1,

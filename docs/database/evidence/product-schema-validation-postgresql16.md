@@ -2,9 +2,9 @@
 
 ## Ambiente
 
-As migrações oficiais foram aplicadas em um contêiner descartável `postgres:16-alpine`, com banco vazio e sem porta de rede publicada. O contêiner recebeu o repositório em modo somente leitura. A execução usou `database/coursework/run_product.sql`, que inclui os arquivos Flyway de V1 a V28 em ordem e confirma cada migração em sua própria transação.
+As migrações oficiais foram aplicadas em um contêiner descartável `postgres:16-alpine`, com banco vazio e sem porta de rede publicada. O contêiner recebeu o repositório em modo somente leitura. A execução usou `database/coursework/run_product.sql`, que delega a `product/01_apply_migrations.sql`, inclui os arquivos Flyway de V1 a V28 em ordem e confirma cada migração em sua própria transação.
 
-Em seguida foram executados `product_validation.sql` e `product_queries.sql`, ambos com `psql -v ON_ERROR_STOP=1`. A saída capturada integralmente está em [product-schema-validation-postgresql16.txt](product-schema-validation-postgresql16.txt).
+O mesmo percurso executou `product/02_validate_schema.sql` e `product/03_queries.sql`, ambos com `psql -v ON_ERROR_STOP=1`. A saída capturada integralmente após a reorganização está em [product-schema-validation-postgresql16.txt](product-schema-validation-postgresql16.txt).
 
 ## Resultado
 

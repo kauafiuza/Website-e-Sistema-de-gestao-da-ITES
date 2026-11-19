@@ -1,6 +1,6 @@
 # Índice da documentação — ITES
 
-**Situação:** o percurso acadêmico e o schema operacional têm execuções separadas em PostgreSQL 16. `database/coursework/run_product.sql` aplica as migrações Flyway oficiais até a V28, sem duplicar definições; sua validação confirma as 35 tabelas operacionais e os gatilhos. O modelo acadêmico mantém a exceção semântica dos catálogos pequenos. O PDF original de requisitos e o modelo institucional não foram localizados; a especificação reproduzida no pedido é a fonte utilizada.
+**Situação:** os scripts SQL estão organizados em `database/coursework/academic/` e `database/coursework/product/`. O ponto de entrada `run_product.sql` aplica as migrações Flyway oficiais até a V28, sem duplicar definições; a validação confirma as 35 tabelas operacionais e os gatilhos. O modelo acadêmico mantém a exceção semântica dos catálogos pequenos. O PDF original de requisitos e o modelo institucional não foram localizados; a especificação reproduzida no pedido é a fonte utilizada.
 
 - [Auditoria do repositório](architecture/audit.md)
 - [Especificação de requisitos](requirements/specification.md)

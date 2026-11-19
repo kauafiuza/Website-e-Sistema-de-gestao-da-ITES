@@ -1,3 +1,6 @@
+-- Confere o schema criado pelas migrações e exercita as proteções operacionais.
+-- Execute depois de 01_apply_migrations.sql, em banco descartável.
+-- O registro de auditoria de teste é preservado porque a tabela é imutável.
 \set ON_ERROR_STOP on
 
 DO $$
@@ -53,6 +56,7 @@ BEGIN
         RAISE EXCEPTION 'Páginas institucionais iniciais não foram provisionadas';
     END IF;
 
+    -- Uma permissão temporária comprova a sincronização automática do administrador.
     INSERT INTO app_permissions(code, description)
     VALUES ('coursework.permission.sync.check', 'Permissão temporária para validar sincronização');
     IF NOT EXISTS (
@@ -65,6 +69,7 @@ BEGIN
     END IF;
     DELETE FROM app_permissions WHERE code = 'coursework.permission.sync.check';
 
+    -- Dados temporários verificam uma transição válida e uma transição proibida.
     INSERT INTO users(id, first_name, last_name, email, password_hash, active, created_at, updated_at)
     VALUES (validation_user_id, 'Usuário', 'Validação',
             'validation-' || validation_user_id || '@example.invalid',
@@ -86,6 +91,7 @@ BEGIN
     DELETE FROM demands WHERE id = validation_demand_id;
     DELETE FROM users WHERE id = validation_user_id;
 
+    -- Este evento de teste permanece na tabela para respeitar a imutabilidade auditável.
     INSERT INTO organization_audit_events
         (id, organization_id, actor_user_id, action, target_type, target_id)
     VALUES (validation_audit_id, gen_random_uuid(), validation_user_id,

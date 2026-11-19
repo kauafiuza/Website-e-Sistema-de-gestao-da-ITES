@@ -1,5 +1,7 @@
 -- Executar depois de 05_security.sql no mesmo banco da carga demonstrativa.
 -- Os blocos capturam negações esperadas e falham se uma operação indevida for aceita.
+
+-- O runtime pode consultar e inserir demandas, mas alterações de estado exigem rotina.
 SET ROLE ites_runtime;
 
 SELECT count(*) AS leitura_autorizada FROM demands;
@@ -63,6 +65,7 @@ BEGIN
 END
 $$;
 
+-- Relatórios acessam somente dados agregados e não leem credenciais ou demandas completas.
 RESET ROLE;
 SET ROLE ites_reporting;
 
@@ -104,6 +107,7 @@ BEGIN
 END
 $$;
 
+-- O papel de migração pode criar e remover objetos temporários de validação.
 RESET ROLE;
 SET ROLE ites_migration;
 CREATE TABLE public.migration_privilege_probe(id integer PRIMARY KEY);

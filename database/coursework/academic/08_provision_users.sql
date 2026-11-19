@@ -1,5 +1,6 @@
 -- Execute no banco validado por uma conta administradora.
 -- Os comandos \password solicitam credenciais sem exibi-las ou armazená-las no repositório.
+-- Rode depois de academic/run_all.sql; não inclua este arquivo em automações não interativas.
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ites_app_login') THEN
@@ -17,6 +18,7 @@ BEGIN
 END
 $$;
 
+-- Vincula cada login à role de grupo correspondente após definir sua senha.
 \password ites_app_login
 ALTER ROLE ites_app_login LOGIN;
 GRANT ites_runtime TO ites_app_login;

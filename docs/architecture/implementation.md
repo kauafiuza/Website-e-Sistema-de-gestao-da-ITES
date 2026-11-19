@@ -25,7 +25,7 @@ flowchart LR
 - `database/`: scripts acadêmicos, consultas, rotinas administrativas, privilégios e verificações reproduzíveis.
 - `docs/`: requisitos, decisões técnicas, modelo de dados, implantação e validações.
 
-Flyway em `server/src/main/resources/db/migration/` é a única fonte operacional das migrações. `database/coursework/run_product.sql` inclui esses mesmos arquivos, em ordem, para permitir inspeção isolada do schema atualizado; não mantém uma cópia das tabelas nem registra um histórico Flyway. `database/coursework/run_all.sql` preserva o exercício acadêmico independente e não substitui as migrações da aplicação.
+Flyway em `server/src/main/resources/db/migration/` é a única fonte operacional das migrações. `database/coursework/product/01_apply_migrations.sql` inclui esses mesmos arquivos, em ordem, para permitir inspeção isolada do schema atualizado; não mantém uma cópia das tabelas nem registra um histórico Flyway. `database/coursework/run_all.sql` preserva o exercício acadêmico independente e `run_product.sql` orquestra a inspeção do schema operacional. Nenhum deles substitui as migrações da aplicação.
 
 ## Identidade e autorização
 

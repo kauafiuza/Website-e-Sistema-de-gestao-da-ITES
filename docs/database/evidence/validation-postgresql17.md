@@ -1,6 +1,6 @@
 # Validação exploratória da proposta SQL — PostgreSQL 17
 
-Ambiente: contêiner temporário `postgres:17-alpine`, sem volume ou porta publicada. Comandos executados, em ordem, com `psql -v ON_ERROR_STOP=1`: `01_schema.sql`, `04_routines.sql`, `02_seed.sql`, `03_queries.sql`, `05_security.sql`. Todos terminaram sem erro. A saída integral das consultas está em `queries-postgresql17.txt`. O projeto prevê PostgreSQL 16; esta execução não substitui a validação na versão de implantação.
+Ambiente: contêiner temporário `postgres:17-alpine`, sem volume ou porta publicada. Comandos executados, em ordem, com `psql -v ON_ERROR_STOP=1`: `academic/01_schema.sql`, `academic/04_routines.sql`, `academic/02_seed.sql`, `academic/03_queries.sql` e `academic/05_security.sql`. Todos terminaram sem erro. A saída integral das consultas está em `queries-postgresql17.txt`. O projeto prevê PostgreSQL 16; esta execução não substitui a validação na versão de implantação.
 
 Contagens antes dos testes de mutação: `users=25`; `roles`, `permissions`, `user_roles`, `role_permissions`, `organizations`, `demands`, `demand_events`, `pages`, `page_versions`, `page_events` e `grant_audit` = 20 cada. Funções: `demand_count('Pendente')=3`, `requester_demand_count(1)=1`, `published_page_count()=20`.
 

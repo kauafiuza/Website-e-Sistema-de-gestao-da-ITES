@@ -1,4 +1,5 @@
--- Verificações reexecutáveis de integridade, rotinas e automações.
+-- Verificações reexecutáveis da carga acadêmica, das restrições e das rotinas.
+-- Uma exceção ou resultado diferente do esperado encerra o script com erro.
 DO $$
 DECLARE
   table_name text;
@@ -8,6 +9,7 @@ DECLARE
     'pages','page_versions','page_events','grant_audit'
   ];
 BEGIN
+  -- Confere a quantidade mínima de registros nas tabelas de negócio e associação.
   FOREACH table_name IN ARRAY table_names LOOP
     EXECUTE format('SELECT count(*) FROM %I', table_name) INTO row_total;
     IF row_total < 20 THEN
@@ -15,12 +17,14 @@ BEGIN
     END IF;
   END LOOP;
 
+  -- Os catálogos mantêm somente papéis e permissões com significado funcional.
   IF (SELECT count(*) FROM roles) <> 4 THEN
     RAISE EXCEPTION 'o catálogo deve conter os quatro papéis de negócio definidos';
   END IF;
   IF (SELECT count(*) FROM permissions) <> 13 THEN
     RAISE EXCEPTION 'o catálogo deve conter as treze permissões de negócio definidas';
   END IF;
+  -- Confere valores positivos, inexistentes e contagens esperadas das funções.
   IF demand_count('Pendente') < 1 OR published_page_count() <> 20 OR
      requester_demand_count((SELECT id FROM users WHERE email = 'pessoa01@example.invalid')) < 1 OR
      requester_demand_count(999999) <> 0 OR demand_count('SITUACAO_INEXISTENTE') <> 0 THEN

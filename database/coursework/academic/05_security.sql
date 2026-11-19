@@ -1,5 +1,7 @@
 -- Execute como proprietário do banco em um ambiente acadêmico isolado.
 -- Contas LOGIN são provisionadas pelo administrador fora do repositório.
+
+-- Cria papéis de grupo sem credenciais para separar responsabilidades técnicas.
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ites_runtime') THEN
@@ -17,6 +19,7 @@ BEGIN
 END
 $$;
 
+-- Retira privilégios padrão e concede somente acesso ao schema necessário.
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO ites_runtime, ites_reporting;
 GRANT USAGE, CREATE ON SCHEMA public TO ites_migration, ites_database_admin;
@@ -25,6 +28,7 @@ REVOKE ALL ON ALL TABLES IN SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL ROUTINES IN SCHEMA public FROM PUBLIC;
 
+-- O runtime recebe permissões operacionais limitadas por tabela e coluna.
 GRANT SELECT, INSERT ON users TO ites_runtime;
 GRANT UPDATE(name, whatsapp) ON users TO ites_runtime;
 GRANT SELECT, INSERT, UPDATE(name, economic_sector, contact_email) ON organizations TO ites_runtime;
@@ -36,6 +40,7 @@ GRANT SELECT ON demands, demand_events, organizations, roles, permissions,
 GRANT INSERT(page_id, revision, document, author_id) ON page_versions TO ites_runtime;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO ites_runtime;
 
+-- Alterações protegidas são disponibilizadas por rotinas validadas.
 GRANT EXECUTE ON PROCEDURE transition_demand(bigint, bigint, text, text, text) TO ites_runtime;
 GRANT EXECUTE ON PROCEDURE publish_page(bigint, bigint, bigint) TO ites_runtime;
 GRANT EXECUTE ON PROCEDURE unpublish_page(bigint, bigint) TO ites_runtime;
@@ -45,12 +50,14 @@ GRANT EXECUTE ON FUNCTION demand_count(text) TO ites_runtime, ites_reporting;
 GRANT EXECUTE ON FUNCTION requester_demand_count(bigint) TO ites_runtime;
 GRANT EXECUTE ON FUNCTION published_page_count() TO ites_runtime, ites_reporting;
 
+-- Relatórios consultam somente agregações, sem acesso a identificadores pessoais.
 CREATE VIEW demand_reporting WITH (security_barrier = true) AS
 SELECT status, urgency, service, count(*) AS demand_total
 FROM demands
 GROUP BY status, urgency, service;
 GRANT SELECT ON demand_reporting TO ites_reporting;
 
+-- Migrações podem alterar o schema; administração fica reservada a manutenção controlada.
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ites_migration;
 GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO ites_migration;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ites_database_admin;

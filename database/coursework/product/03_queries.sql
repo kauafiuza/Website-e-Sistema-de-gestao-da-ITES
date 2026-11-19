@@ -1,3 +1,4 @@
+-- Consultas simples: filtros e ordenação para tarefas operacionais frequentes.
 -- Lista a fila de demandas pendentes para acompanhamento da equipe.
 SELECT code, status, urgency, service, created_at
 FROM demands
@@ -29,6 +30,7 @@ FROM publications
 WHERE active
 ORDER BY created_at DESC;
 
+-- Consultas com JOIN: relacionam entidades e agrupam resultados para análise.
 -- Conta demandas por organização e situação atual.
 SELECT o.name, d.status, count(*) AS total_demands
 FROM organizations o
@@ -51,6 +53,7 @@ JOIN demands d ON d.organization_id = o.id
 GROUP BY o.economic_sector, d.service
 ORDER BY total_demands DESC, o.economic_sector;
 
+-- Subconsultas: selecionam registros com base em resultados de outras consultas.
 -- Encontra organizações que já tiveram alguma demanda aceita.
 SELECT o.id, o.name
 FROM organizations o

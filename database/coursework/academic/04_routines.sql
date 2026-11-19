@@ -1,4 +1,5 @@
--- Funções de leitura para indicadores do sistema.
+-- Funções de leitura para indicadores do modelo acadêmico.
+-- As funções retornam métricas e não alteram os registros de negócio.
 CREATE FUNCTION demand_count(p_status text)
 RETURNS bigint
 LANGUAGE sql STABLE
@@ -6,11 +7,13 @@ SECURITY DEFINER
 SET search_path = pg_catalog, public
 AS $$ SELECT count(*) FROM demands WHERE status = p_status $$;
 
+-- Conta as demandas associadas ao identificador de um solicitante.
 CREATE FUNCTION requester_demand_count(p_user_id bigint)
 RETURNS bigint
 LANGUAGE sql STABLE
 AS $$ SELECT count(*) FROM demands WHERE requester_id = p_user_id $$;
 
+-- Conta páginas que apontam para uma versão publicada.
 CREATE FUNCTION published_page_count()
 RETURNS bigint
 LANGUAGE sql STABLE
@@ -36,6 +39,7 @@ BEGIN
 END
 $$;
 
+-- Executa a validação da transição antes de gravar a nova situação.
 CREATE TRIGGER transition_guard
 BEFORE UPDATE OF status ON demands
 FOR EACH ROW EXECUTE FUNCTION transition_guard();
@@ -50,6 +54,7 @@ BEGIN
 END
 $$;
 
+-- Protege o histórico contra alteração ou remoção posterior.
 CREATE TRIGGER event_immutable
 BEFORE UPDATE OR DELETE ON demand_events
 FOR EACH ROW EXECUTE FUNCTION event_immutable();
@@ -79,10 +84,12 @@ BEGIN
 END
 $$;
 
+-- Registra publicação e retirada na mesma transação da alteração da página.
 CREATE TRIGGER page_publish_audit
 AFTER UPDATE OF published_version_id ON pages
 FOR EACH ROW EXECUTE FUNCTION page_publish_audit();
 
+-- Procedimentos agrupam gravações relacionadas em uma única chamada transacional.
 -- Aplica uma decisão e seu evento de auditoria na mesma transação.
 CREATE PROCEDURE transition_demand(
   p_demand_id bigint,

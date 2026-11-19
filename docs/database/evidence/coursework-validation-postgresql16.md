@@ -4,7 +4,7 @@
 
 Execução em contêiner descartável `postgres:16-alpine`, banco novo `ites_coursework`, sem volume persistente nem porta de rede publicada. Os scripts foram montados somente para leitura e executados com `psql -v ON_ERROR_STOP=1` por meio de `database/coursework/run_all.sql`.
 
-Sequência efetiva: `01_schema.sql`, `04_routines.sql`, `02_seed.sql`, `03_queries.sql`, `06_validation.sql`, `05_security.sql` e `07_security_tests.sql`. Todos os passos terminaram com código zero; os blocos de teste confirmaram as negações esperadas. A transcrição integral, com resultados das consultas e mensagens do psql, está em [coursework-validation-postgresql16.txt](coursework-validation-postgresql16.txt).
+Sequência efetiva: `academic/01_schema.sql`, `academic/04_routines.sql`, `academic/02_seed.sql`, `academic/03_queries.sql`, `academic/06_validation.sql`, `academic/05_security.sql` e `academic/07_security_tests.sql`, orquestrados pelo ponto de entrada `run_all.sql`. Após a reorganização, o fluxo completo foi executado novamente em banco vazio PostgreSQL 16; todos os passos terminaram com código zero e os testes confirmaram as negações esperadas. A transcrição atualizada está em [coursework-validation-postgresql16.txt](coursework-validation-postgresql16.txt).
 
 ## Resultados observados
 
@@ -32,6 +32,6 @@ Os testes de segurança confirmaram leitura e inclusão permitidas pelo papel `i
 ## Limites da evidência
 
 - A carga é demonstrativa, não contém usuários autenticáveis e não deve ser carregada em produção.
-- Os testes fazem `SET ROLE` em papéis sem login; não validam senhas de usuários LOGIN. `08_provision_users.sql` é interativo e não foi executado nesta evidência.
+- Os testes fazem `SET ROLE` em papéis sem login; não validam senhas de usuários LOGIN. `academic/08_provision_users.sql` é interativo e não foi executado nesta evidência.
 - Esta execução valida o schema acadêmico independente. Não prova equivalência com as 35 tabelas operacionais do Flyway nem executa consultas acadêmicas sobre o banco de produção.
 - A transcrição inclui saída real; não foram inseridos resultados fabricados.
