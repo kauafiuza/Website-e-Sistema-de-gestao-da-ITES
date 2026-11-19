@@ -4,13 +4,21 @@
 
 A ITES, incubadora associada ao IFRJ Campus Niterói, recebe solicitações de grupos e organizações de economia solidária, acompanha decisões e publica informação institucional. A base relacional preserva pessoas, organizações, demandas, papéis, páginas publicadas e trilhas de auditoria.
 
-A proposta do banco foi validada pelo responsável do projeto nesta conversa. O modelo acadêmico desta pasta é executável em PostgreSQL e independente do schema de produção aplicado pelo Flyway em `server/src/main/resources/db/migration/`. Ele não é uma migração concorrente nem é usado pela aplicação. A proposta e o modelo acadêmico precisam ser reconciliados com as 35 tabelas do produto antes de se declarar um único modelo físico final.
+A proposta do banco foi validada pelo responsável do projeto nesta conversa. Esta pasta mantém dois percursos com propósitos distintos: `run_all.sql` reproduz o modelo acadêmico de 12 tabelas; `run_product.sql` aplica, em banco de estudo isolado, os mesmos arquivos de migração oficiais do produto. O segundo percurso não copia definições nem substitui o Flyway: sua lista de inclusões aponta diretamente para `server/src/main/resources/db/migration/` e atualmente chega à V28.
 
 O SGBD é PostgreSQL, compatível com a infraestrutura do produto. A validação documentada aqui foi executada em PostgreSQL 16. O PDF original de requisitos e o template institucional não foram encontrados; os requisitos reproduzidos no pedido do projeto são a referência utilizada.
 
-## Modelo lógico
+## Acesso ao schema operacional
 
-O modelo contém 12 tabelas. `users` e `organizations` se relacionam com demandas e páginas; papéis e permissões formam relações N:N por tabelas de associação; eventos preservam decisões, concessões e publicações. [Abrir o diagrama lógico em SVG](logical-model.svg).
+O schema operacional contém 35 tabelas da aplicação. A lista e as relações evoluem nas migrações Flyway, que são a fonte única das definições. Para inspecionar essas estruturas sem conectar a aplicação a um banco sem histórico Flyway, siga [database/coursework/README.md](../../database/coursework/README.md) e execute `run_product.sql` em uma instância PostgreSQL descartável.
+
+O carregamento foi organizado em uma transação por arquivo, como no comportamento padrão do Flyway. Isso é necessário para migrações que usam tabelas temporárias com `ON COMMIT DROP`. A validação verifica as 35 tabelas, as 17 permissões atuais, sua associação ao papel `ADMINISTRATOR`, as quatro declarações de gatilho, a restrição de unicidade do projeto `ROOT` e as páginas institucionais iniciais. As consultas sobre o schema operacional estão em `database/coursework/product_queries.sql`.
+
+Esse banco de estudo não contém `flyway_schema_history` e não deve ser usado como banco de execução da aplicação. Para a aplicação real, o backend executa o Flyway e registra as migrações. A instância recém-migrada não tem dados de negócio: o provisionador cria a página inicial publicada e o projeto raiz depois que existem administrador e organização padrão.
+
+## Modelo lógico acadêmico
+
+O modelo acadêmico contém 12 tabelas. `users` e `organizations` se relacionam com demandas e páginas; papéis e permissões formam relações N:N por tabelas de associação; eventos preservam decisões, concessões e publicações. [Abrir o diagrama lógico acadêmico em SVG](logical-model.svg). Ele permanece como material da atividade acadêmica e não deve ser interpretado como o diagrama completo das 35 tabelas operacionais.
 
 Relacionamentos e cardinalidades:
 
@@ -40,11 +48,11 @@ Tipos abaixo são PostgreSQL. Campos sem indicação de nulabilidade são `NOT N
 | `page_events` | `id bigint` identity, PK; `page_id bigint` FK `pages`; `version_id bigint` NULL; `actor_id bigint` FK `users`; `action text` CHECK `PUBLISH` ou `UNPUBLISH`; `occurred_at timestamptz` DEFAULT `now()`. FK composta (`page_id`,`version_id`) impede associar versão de outra página. Índice cobre página/data. |
 | `grant_audit` | `id bigint` identity, PK; `actor_id`, `subject_user_id bigint` FK `users`; `role_id bigint` FK `roles`; `action text` CHECK `GRANT` ou `REVOKE`; `occurred_at timestamptz` DEFAULT `now()`. Índice cobre pessoa/data. |
 
-As migrações V1–V23 do produto têm outras entidades do editor e não são substituídas por esse schema acadêmico. O diagrama desta seção corresponde somente aos 12 objetos definidos em `01_schema.sql`.
+Os tipos e identificadores acadêmicos, como `bigint` e `pages`, não correspondem necessariamente aos tipos e nomes operacionais, que usam UUIDs e também incluem `projects`, publicações, sessões, organizações, formulários e páginas institucionais.
 
 ## Instalação e carga de demonstração
 
-`database/coursework/run_all.sql` é o caminho reproduzível para um banco vazio e dedicado. Ele executa, nesta ordem, schema, rotinas, dados, consultas, validações funcionais, privilégios e testes de segurança. A instalação usa PostgreSQL 16 e psql:
+`database/coursework/run_all.sql` é o caminho reproduzível do modelo acadêmico em um banco vazio e dedicado. Ele executa schema, rotinas, dados, consultas, validações funcionais, privilégios e testes de segurança. A instalação usa PostgreSQL 16 e psql:
 
 ```sh
 docker run -d --name ites-db-academico \
@@ -58,13 +66,13 @@ docker exec ites-db-academico psql -v ON_ERROR_STOP=1 \
 docker rm -f ites-db-academico
 ```
 
-O comando `pg_isready` pode imprimir tentativas recusadas até o serviço iniciar. A saída real da execução está em [evidence/coursework-validation-postgresql16.txt](evidence/coursework-validation-postgresql16.txt). O arquivo de carga usa somente identidades `example.invalid` e hashes sentinela não autenticáveis.
+O comando `pg_isready` pode imprimir tentativas recusadas até o serviço iniciar. A saída real da execução está em [evidence/coursework-validation-postgresql16.txt](evidence/coursework-validation-postgresql16.txt). O arquivo de carga usa somente identidades `example.invalid` e hashes sentinela não autenticáveis. Para executar as migrações operacionais em banco separado, use os comandos do README desta pasta.
 
 As tabelas de negócio e associação contêm ao menos 20 linhas. Os catálogos têm 4 papéis (`REQUESTER`, `ADMINISTRATOR`, `DEMAND_MANAGER`, `COLLABORATOR`) e 13 permissões com significado funcional. Não foram inventados papéis/permissões artificiais para alcançar 20 linhas: essa exceção semântica ao requisito acadêmico de contagem está registrada e requer aceite do orientador.
 
 ## Consultas SQL — ADP1
 
-As consultas estão em `database/coursework/03_queries.sql`. Cada comando tem uso operacional:
+As 11 consultas acadêmicas estão em `database/coursework/03_queries.sql`. Cada comando tem uso operacional:
 
 ### Cinco consultas simples
 
@@ -86,11 +94,11 @@ As consultas estão em `database/coursework/03_queries.sql`. Cada comando tem us
 2. Subconsulta escalar com média: solicitantes cujo número de demandas supera a média entre solicitantes ativos.
 3. `IN` aninhado: solicitantes com demanda urgente associada a organização de artesanato.
 
-As três categorias de consultas são executadas pelo `run_all.sql`; seus resultados constam na evidência PostgreSQL 16.
+As três categorias de consultas são executadas pelo `run_all.sql`; seus resultados constam na evidência PostgreSQL 16. O arquivo `product_queries.sql` fornece as mesmas categorias com os nomes e relacionamentos do schema operacional, para ser executado depois de `run_product.sql`.
 
 ## Rotinas e automações — ADP2
 
-As definições estão em `database/coursework/04_routines.sql`.
+As rotinas acadêmicas estão em `database/coursework/04_routines.sql`. No schema operacional, as regras executadas por gatilhos estão nas migrações oficiais e não são redefinidas por esse arquivo.
 
 ### Funções
 
@@ -114,7 +122,7 @@ As funções executam consultas agregadas sem modificar dados. Os testes verific
 
 Os procedimentos de escrita usam `SECURITY DEFINER` com `search_path` fixo. Em PostgreSQL, cada `CALL` é transacional: falha em validação, FK ou trigger desfaz também o registro correspondente de auditoria. Os testes exercitam fluxos válidos e inválidos.
 
-### Gatilhos
+### Gatilhos do modelo acadêmico
 
 | Gatilho | Tabela e evento | Regra |
 |---|---|---|
@@ -122,7 +130,9 @@ Os procedimentos de escrita usam `SECURITY DEFINER` com `search_path` fixo. Em P
 | `event_immutable` | `demand_events`, antes de UPDATE/DELETE | Impede adulterar o histórico de decisão. |
 | `page_publish_audit` | `pages`, após alterar versão publicada | Exige ator transacional e registra publicação ou retirada. |
 
-Além dos objetos acadêmicos, a migration operacional `V24__administrator_permission_sync.sql` instala `ites_sync_administrator_permission` e o gatilho `ites_sync_administrator_permission` em `app_permissions`. A migration associa os grants atuais ao papel `ADMINISTRATOR`; cada permissão inserida depois é associada ao papel automaticamente, sem incluir os demais papéis. V25 registra as permissões de organizações, indicadores, dashboards e relatórios; o gatilho aplica esses novos grants na mesma transação.
+### Gatilhos operacionais
+
+No schema operacional, as migrações instalam quatro gatilhos: sincronização de novas permissões com o papel `ADMINISTRATOR`; validação de transições em `demands`; bloqueio de `UPDATE`/`DELETE` e de `TRUNCATE` em `organization_audit_events`. A V24 também sincroniza as permissões existentes; cada nova linha inserida em `app_permissions` é associada ao papel administrativo na mesma transação. A validação de transição não grava sozinha uma linha em `demand_events`; o serviço da aplicação atualiza a demanda e registra o evento na mesma transação.
 
 ## Administração, permissões e integridade — ADP3
 
@@ -139,12 +149,12 @@ Aplicação, permissões de negócio e papéis do PostgreSQL são camadas difere
 
 ## Evidências, limites e próximos passos
 
-A validação limpa em `postgres:16-alpine` executou criação, carga, as 11 consultas, funções, procedimentos, gatilhos, grants, testes positivos/negativos e contagens. As evidências estão na [transcrição de execução](evidence/coursework-validation-postgresql16.txt) e na [validação das contas LOGIN](evidence/database-users-validation-postgresql16.txt). As contagens finais após smoke de segurança foram: users 30; roles 4; permissions 13; user_roles 45; role_permissions 22; organizations 20; demands 31; demand_events 29; pages 20; page_versions 21; page_events 22; grant_audit 47. O conjunto possui 49 constraints validadas.
+A validação acadêmica limpa em `postgres:16-alpine` executou criação, carga, as 11 consultas, funções, procedimentos, gatilhos, privilégios, testes positivos/negativos e contagens. As evidências estão na [transcrição acadêmica](evidence/coursework-validation-postgresql16.txt) e na [validação das contas LOGIN](evidence/database-users-validation-postgresql16.txt). A execução adicional de `run_product.sql`, `product_validation.sql` e `product_queries.sql` contra PostgreSQL 16 está registrada em [evidence/product-schema-validation-postgresql16.md](evidence/product-schema-validation-postgresql16.md), com saída integral em TXT.
 
 Pendências documentadas:
 
 - O número de papéis e permissões é menor que 20 por razões semânticas; falta aprovação acadêmica dessa exceção.
-- `database/coursework/` ainda é independente das 35 tabelas físicas da aplicação e não deve ser aplicado no banco operacional.
+- O diagrama lógico exportado continua descrevendo o modelo acadêmico de 12 tabelas; o schema operacional possui 35 tabelas e deve ser consultado pelas migrações Flyway ou pelo percurso isolado `run_product.sql`.
 - As contas LOGIN foram exercitadas somente em banco descartável, com senhas temporárias que não foram preservadas; isso não valida a gestão de segredos de produção.
 - O modelo lógico nesta pasta representa o schema acadêmico; falta diagrama abrangente e sincronizado do schema real do produto.
 - O runtime da aplicação ainda precisa ser separado da identidade proprietária usada pelas migrações.

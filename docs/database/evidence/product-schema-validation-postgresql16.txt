@@ -1,0 +1,1535 @@
+\set ON_ERROR_STOP on
+\set AUTOCOMMIT off
+\echo 'Aplicando as migrações oficiais do produto em banco de estudo isolado.'
+Aplicando as migrações oficiais do produto em banco de estudo isolado.
+\echo 'A ordem e o conteúdo abaixo são os mesmos usados pelo Flyway.'
+A ordem e o conteúdo abaixo são os mesmos usados pelo Flyway.
+\ir ../../server/src/main/resources/db/migration/V1__baseline.sql
+CREATE TABLE users (
+    id uuid PRIMARY KEY,
+    first_name varchar(80) NOT NULL,
+    last_name varchar(80) NOT NULL,
+    email varchar(254) NOT NULL,
+    password_hash text NOT NULL,
+    company_name varchar(150),
+    active boolean NOT NULL DEFAULT true,
+    created_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL,
+    CONSTRAINT uk_users_email UNIQUE (email)
+);
+CREATE TABLE
+CREATE TABLE projects (
+    id uuid PRIMARY KEY,
+    owner_id uuid NOT NULL CONSTRAINT fk_projects_owner REFERENCES users(id),
+    name varchar(150) NOT NULL,
+    document jsonb NOT NULL,
+    revision bigint NOT NULL DEFAULT 1,
+    created_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL
+);
+CREATE TABLE
+CREATE INDEX idx_projects_owner_updated ON projects (owner_id, updated_at DESC, id DESC);
+CREATE INDEX
+CREATE TABLE refresh_tokens (
+    id uuid PRIMARY KEY,
+    user_id uuid NOT NULL REFERENCES users(id),
+    token_hash varchar(64) NOT NULL UNIQUE,
+    expires_at timestamp with time zone NOT NULL,
+    revoked_at timestamp with time zone
+);
+CREATE TABLE
+CREATE INDEX idx_refresh_tokens_user ON refresh_tokens (user_id);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V2__account_security.sql
+ALTER TABLE users ADD COLUMN email_verified_at timestamp with time zone;
+ALTER TABLE
+ALTER TABLE users ADD COLUMN password_changed_at timestamp with time zone;
+ALTER TABLE
+ALTER TABLE users ADD COLUMN terms_accepted_at timestamp with time zone;
+ALTER TABLE
+CREATE UNIQUE INDEX uk_users_email_lower ON users (lower(email));
+CREATE INDEX
+CREATE TABLE email_tokens (
+    id uuid PRIMARY KEY,
+    purpose varchar(24) NOT NULL,
+    token_hash varchar(64) NOT NULL UNIQUE,
+    email varchar(254) NOT NULL,
+    user_id uuid REFERENCES users(id) ON DELETE CASCADE,
+    created_at timestamp with time zone NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    consumed_at timestamp with time zone,
+    request_ip varchar(45),
+    attempts integer NOT NULL DEFAULT 0
+);
+CREATE TABLE
+CREATE INDEX idx_email_tokens_email_purpose ON email_tokens (email, purpose, created_at DESC);
+CREATE INDEX
+CREATE INDEX idx_email_tokens_expires ON email_tokens (expires_at);
+CREATE INDEX
+CREATE TABLE user_sessions (
+    id uuid PRIMARY KEY,
+    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at timestamp with time zone NOT NULL,
+    last_seen_at timestamp with time zone NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    absolute_expires_at timestamp with time zone NOT NULL,
+    revoked_at timestamp with time zone,
+    revoke_reason varchar(32),
+    user_agent varchar(255),
+    ip varchar(45)
+);
+CREATE TABLE
+CREATE INDEX idx_user_sessions_user ON user_sessions (user_id, revoked_at);
+CREATE INDEX
+ALTER TABLE refresh_tokens ADD COLUMN session_id uuid REFERENCES user_sessions(id) ON DELETE CASCADE;
+ALTER TABLE
+ALTER TABLE refresh_tokens ADD COLUMN created_at timestamp with time zone;
+ALTER TABLE
+ALTER TABLE refresh_tokens ADD COLUMN rotated_at timestamp with time zone;
+ALTER TABLE
+CREATE INDEX idx_refresh_tokens_session ON refresh_tokens (session_id);
+CREATE INDEX
+CREATE TABLE user_two_factor (
+    user_id uuid PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    secret_enc text NOT NULL,
+    enabled_at timestamp with time zone,
+    last_step bigint,
+    created_at timestamp with time zone NOT NULL
+);
+CREATE TABLE
+CREATE TABLE user_recovery_codes (
+    id uuid PRIMARY KEY,
+    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    code_hash varchar(64) NOT NULL,
+    used_at timestamp with time zone
+);
+CREATE TABLE
+CREATE INDEX idx_user_recovery_codes_user ON user_recovery_codes (user_id);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V3__project_themes.sql
+CREATE TABLE themes (
+    id uuid PRIMARY KEY,
+    owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name varchar(80) NOT NULL,
+    configuration jsonb NOT NULL,
+    created_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL,
+    CONSTRAINT uk_themes_owner_name UNIQUE (owner_id, name),
+    CONSTRAINT uk_themes_id_owner UNIQUE (id, owner_id)
+);
+CREATE TABLE
+CREATE INDEX idx_themes_owner_updated ON themes (owner_id, updated_at DESC, id DESC);
+CREATE INDEX
+ALTER TABLE projects ADD COLUMN theme_id uuid;
+ALTER TABLE
+ALTER TABLE projects ADD CONSTRAINT fk_projects_theme_owner
+    FOREIGN KEY (theme_id, owner_id) REFERENCES themes(id, owner_id);
+ALTER TABLE
+CREATE INDEX idx_projects_theme ON projects (theme_id) WHERE theme_id IS NOT NULL;
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V4__project_route_blueprint.sql
+ALTER TABLE projects
+    ADD COLUMN route_blueprint jsonb NOT NULL DEFAULT '[]'::jsonb;
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V5__publications.sql
+CREATE TABLE publications (
+    id uuid PRIMARY KEY,
+    project_id uuid NOT NULL UNIQUE REFERENCES projects(id) ON DELETE CASCADE,
+    public_key varchar(190) NOT NULL UNIQUE,
+    active boolean NOT NULL DEFAULT true,
+    current_version integer NOT NULL DEFAULT 0,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+CREATE TABLE publication_versions (
+    id uuid PRIMARY KEY,
+    publication_id uuid NOT NULL REFERENCES publications(id) ON DELETE CASCADE,
+    version_number integer NOT NULL,
+    document jsonb NOT NULL,
+    route_blueprint jsonb NOT NULL,
+    project_revision bigint NOT NULL,
+    published_at timestamptz NOT NULL DEFAULT now(),
+    expires_at timestamptz,
+    UNIQUE (publication_id, version_number)
+);
+CREATE TABLE
+CREATE INDEX idx_publication_versions_retention ON publication_versions(publication_id, version_number DESC);
+CREATE INDEX
+CREATE TABLE publication_events (
+    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    publication_id uuid NOT NULL REFERENCES publications(id) ON DELETE CASCADE,
+    version_number integer NOT NULL,
+    event_type varchar(20) NOT NULL CHECK (event_type IN ('view', 'interaction')),
+    occurred_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+CREATE INDEX idx_publication_events_stats ON publication_events(publication_id, occurred_at);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V6__publication_analytics.sql
+ALTER TABLE publication_events ADD COLUMN page_path varchar(300);
+ALTER TABLE
+ALTER TABLE publication_events ADD COLUMN target varchar(160);
+ALTER TABLE
+ALTER TABLE publication_events DROP CONSTRAINT publication_events_event_type_check;
+ALTER TABLE
+ALTER TABLE publication_events ADD CONSTRAINT publication_events_event_type_check
+    CHECK (event_type IN ('view', 'click', 'interaction'));
+ALTER TABLE
+UPDATE publication_events SET event_type = 'click' WHERE event_type = 'interaction';
+UPDATE 0
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V7__form_submissions.sql
+CREATE TABLE form_submissions (
+    id uuid PRIMARY KEY,
+    publication_id uuid NOT NULL REFERENCES publications(id) ON DELETE CASCADE,
+    version_number integer NOT NULL,
+    page_id varchar(100) NOT NULL,
+    block_id varchar(100) NOT NULL,
+    form_name varchar(200) NOT NULL,
+    fields jsonb NOT NULL,
+    occurred_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+CREATE INDEX idx_form_submissions_inbox ON form_submissions(publication_id, occurred_at DESC);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V8__form_submission_schema.sql
+ALTER TABLE form_submissions ADD COLUMN field_schema jsonb;
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V9__organizations_and_tenant_resources.sql
+CREATE TABLE organizations (
+    id uuid PRIMARY KEY,
+    name varchar(150) NOT NULL,
+    created_at timestamp NOT NULL
+);
+CREATE TABLE
+CREATE TABLE organization_memberships (
+    organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role varchar(20) NOT NULL CHECK (role IN ('OWNER', 'MEMBER')),
+    is_default boolean NOT NULL DEFAULT false,
+    created_at timestamp NOT NULL,
+    PRIMARY KEY (organization_id, user_id)
+);
+CREATE TABLE
+CREATE UNIQUE INDEX uk_organization_memberships_default_user
+    ON organization_memberships (user_id) WHERE is_default;
+CREATE INDEX
+CREATE INDEX idx_organization_memberships_user
+    ON organization_memberships (user_id, is_default);
+CREATE INDEX
+CREATE TEMPORARY TABLE legacy_user_organizations ON COMMIT DROP AS
+SELECT id AS user_id, gen_random_uuid() AS organization_id
+FROM users;
+SELECT 0
+INSERT INTO organizations (id, name, created_at)
+SELECT legacy.organization_id,
+       left(COALESCE(NULLIF(btrim(u.company_name), ''), u.first_name || ' ' || u.last_name || ' workspace'), 150),
+       u.created_at
+FROM users u
+JOIN legacy_user_organizations legacy ON legacy.user_id = u.id;
+INSERT 0 0
+INSERT INTO organization_memberships (organization_id, user_id, role, is_default, created_at)
+SELECT legacy.organization_id, u.id, 'OWNER', true, u.created_at
+FROM users u
+JOIN legacy_user_organizations legacy ON legacy.user_id = u.id;
+INSERT 0 0
+ALTER TABLE projects ADD COLUMN organization_id uuid;
+ALTER TABLE
+UPDATE projects p
+SET organization_id = m.organization_id
+FROM organization_memberships m
+WHERE m.user_id = p.owner_id AND m.is_default;
+UPDATE 0
+ALTER TABLE projects ALTER COLUMN organization_id SET NOT NULL;
+ALTER TABLE
+ALTER TABLE projects ADD CONSTRAINT fk_projects_organization
+    FOREIGN KEY (organization_id) REFERENCES organizations(id);
+ALTER TABLE
+CREATE INDEX idx_projects_organization_updated
+    ON projects (organization_id, updated_at DESC, id DESC);
+CREATE INDEX
+ALTER TABLE themes ADD COLUMN organization_id uuid;
+ALTER TABLE
+UPDATE themes t
+SET organization_id = m.organization_id
+FROM organization_memberships m
+WHERE m.user_id = t.owner_id AND m.is_default;
+UPDATE 0
+ALTER TABLE themes ALTER COLUMN organization_id SET NOT NULL;
+ALTER TABLE
+ALTER TABLE themes ADD CONSTRAINT fk_themes_organization
+    FOREIGN KEY (organization_id) REFERENCES organizations(id);
+ALTER TABLE
+ALTER TABLE projects DROP CONSTRAINT fk_projects_theme_owner;
+ALTER TABLE
+ALTER TABLE themes DROP CONSTRAINT uk_themes_owner_name;
+ALTER TABLE
+ALTER TABLE themes ADD CONSTRAINT uk_themes_id_organization UNIQUE (id, organization_id);
+ALTER TABLE
+ALTER TABLE projects ADD CONSTRAINT fk_projects_theme_organization
+    FOREIGN KEY (theme_id, organization_id) REFERENCES themes(id, organization_id)
+    ON DELETE SET NULL (theme_id);
+ALTER TABLE
+CREATE UNIQUE INDEX uk_themes_organization_name
+    ON themes (organization_id, lower(name));
+CREATE INDEX
+CREATE INDEX idx_themes_organization_updated
+    ON themes (organization_id, updated_at DESC, id DESC);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V10__organization_permission_grants.sql
+CREATE TABLE organization_permission_grants (
+    id uuid PRIMARY KEY,
+    beneficiary_user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    action varchar(48) NOT NULL,
+    scope_type varchar(20) NOT NULL CHECK (scope_type IN ('ORGANIZATION', 'PROJECT', 'THEME')),
+    scope_id uuid NOT NULL,
+    issuer_user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    valid_until timestamptz,
+    state varchar(16) NOT NULL DEFAULT 'ACTIVE' CHECK (state IN ('ACTIVE', 'REVOKED')),
+    can_delegate boolean NOT NULL DEFAULT false,
+    parent_grant_id uuid REFERENCES organization_permission_grants(id) ON DELETE CASCADE,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    revoked_at timestamptz,
+    CONSTRAINT ck_organization_grant_action CHECK (action IN (
+        'PROJECT_READ', 'PROJECT_CREATE', 'PROJECT_UPDATE', 'PROJECT_DELETE',
+        'THEME_READ', 'THEME_CREATE', 'THEME_UPDATE', 'THEME_DELETE',
+        'PUBLICATION_READ', 'PUBLICATION_MANAGE', 'PUBLICATION_ANALYTICS_READ',
+        'PUBLICATION_SUBMISSIONS_READ', 'PUBLICATION_ACTIVITY_READ',
+        'ORGANIZATION_GRANTS_READ', 'ORGANIZATION_GRANTS_MANAGE'
+    )),
+    CONSTRAINT ck_organization_grant_scope CHECK (
+        (scope_type = 'ORGANIZATION' AND scope_id = organization_id)
+        OR (scope_type IN ('PROJECT', 'THEME') AND scope_id <> organization_id)
+    ),
+    CONSTRAINT ck_organization_grant_parent_not_self CHECK (parent_grant_id IS NULL OR parent_grant_id <> id)
+);
+CREATE TABLE
+CREATE INDEX idx_organization_grants_beneficiary
+    ON organization_permission_grants (beneficiary_user_id, organization_id, action, state);
+CREATE INDEX
+CREATE INDEX idx_organization_grants_parent
+    ON organization_permission_grants (parent_grant_id) WHERE parent_grant_id IS NOT NULL;
+CREATE INDEX
+CREATE INDEX idx_organization_grants_scope
+    ON organization_permission_grants (organization_id, scope_type, scope_id, action, state);
+CREATE INDEX
+INSERT INTO organization_permission_grants
+    (id, beneficiary_user_id, organization_id, action, scope_type, scope_id, issuer_user_id,
+     valid_until, state, can_delegate, parent_grant_id, created_at)
+SELECT gen_random_uuid(), m.user_id, m.organization_id, permission.action, 'ORGANIZATION',
+       m.organization_id, owner.user_id, NULL, 'ACTIVE', m.role = 'OWNER', NULL, now()
+FROM organization_memberships m
+JOIN LATERAL (
+    SELECT user_id FROM organization_memberships
+    WHERE organization_id = m.organization_id AND role = 'OWNER'
+    ORDER BY created_at, user_id LIMIT 1
+) owner ON true
+CROSS JOIN (VALUES
+    ('PROJECT_READ'), ('PROJECT_CREATE'), ('PROJECT_UPDATE'), ('PROJECT_DELETE'),
+    ('THEME_READ'), ('THEME_CREATE'), ('THEME_UPDATE'), ('THEME_DELETE'),
+    ('PUBLICATION_READ'), ('PUBLICATION_MANAGE'), ('PUBLICATION_ANALYTICS_READ'),
+    ('PUBLICATION_SUBMISSIONS_READ'), ('PUBLICATION_ACTIVITY_READ'),
+    ('ORGANIZATION_GRANTS_READ'), ('ORGANIZATION_GRANTS_MANAGE')
+) AS permission(action)
+WHERE m.role = 'OWNER' OR permission.action <> 'ORGANIZATION_GRANTS_MANAGE';
+INSERT 0 0
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V11__organization_membership_administration.sql
+ALTER TABLE organization_memberships
+    ADD COLUMN state varchar(16) NOT NULL DEFAULT 'ACTIVE'
+        CHECK (state IN ('ACTIVE', 'REVOKED'));
+ALTER TABLE
+CREATE TABLE organization_invitations (
+    id uuid PRIMARY KEY,
+    organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    email varchar(254) NOT NULL,
+    role varchar(20) NOT NULL DEFAULT 'MEMBER' CHECK (role = 'MEMBER'),
+    token_hash varchar(64) NOT NULL UNIQUE,
+    state varchar(16) NOT NULL DEFAULT 'PENDING'
+        CHECK (state IN ('PENDING', 'ACCEPTED', 'EXPIRED', 'REVOKED')),
+    invited_by_user_id uuid NOT NULL REFERENCES users(id),
+    accepted_user_id uuid REFERENCES users(id),
+    created_at timestamptz NOT NULL DEFAULT now(),
+    expires_at timestamptz NOT NULL,
+    accepted_at timestamptz,
+    revoked_at timestamptz
+);
+CREATE TABLE
+CREATE UNIQUE INDEX uk_organization_invitations_pending_email
+    ON organization_invitations (organization_id, lower(email))
+    WHERE state = 'PENDING';
+CREATE INDEX
+CREATE INDEX idx_organization_invitations_org_state
+    ON organization_invitations (organization_id, state, created_at DESC);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V12__explicit_submission_export_grants.sql
+ALTER TABLE organization_permission_grants
+    ADD COLUMN authority_grant_id uuid;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT uq_organization_grant_id_org UNIQUE (id, organization_id);
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT fk_organization_grant_authority
+        FOREIGN KEY (authority_grant_id, organization_id)
+        REFERENCES organization_permission_grants (id, organization_id)
+        ON DELETE CASCADE;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    DROP CONSTRAINT ck_organization_grant_action;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT ck_organization_grant_action CHECK (action IN (
+        'PROJECT_READ', 'PROJECT_CREATE', 'PROJECT_UPDATE', 'PROJECT_DELETE',
+        'THEME_READ', 'THEME_CREATE', 'THEME_UPDATE', 'THEME_DELETE',
+        'PUBLICATION_READ', 'PUBLICATION_MANAGE', 'PUBLICATION_ANALYTICS_READ',
+        'PUBLICATION_SUBMISSIONS_READ', 'PUBLICATION_SUBMISSIONS_EXPORT',
+        'PUBLICATION_ACTIVITY_READ', 'ORGANIZATION_GRANTS_READ', 'ORGANIZATION_GRANTS_MANAGE'
+    ));
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT ck_organization_grant_authority_origin CHECK (
+        (authority_grant_id IS NULL OR (action = 'PUBLICATION_SUBMISSIONS_EXPORT' AND parent_grant_id IS NULL))
+        AND (action <> 'PUBLICATION_SUBMISSIONS_EXPORT' OR parent_grant_id IS NOT NULL OR authority_grant_id IS NOT NULL)
+    );
+ALTER TABLE
+CREATE INDEX idx_organization_grants_authority
+    ON organization_permission_grants (authority_grant_id) WHERE authority_grant_id IS NOT NULL;
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V13__organization_feature_availability.sql
+CREATE TABLE organization_feature_catalog (
+    feature_key varchar(64) NOT NULL,
+    version integer NOT NULL CHECK (version > 0),
+    name varchar(100) NOT NULL,
+    description varchar(500) NOT NULL,
+    is_current boolean NOT NULL DEFAULT false,
+    default_enabled_for_new_organizations boolean NOT NULL DEFAULT false,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    PRIMARY KEY (feature_key, version)
+);
+CREATE TABLE
+CREATE UNIQUE INDEX uk_organization_feature_catalog_current
+    ON organization_feature_catalog (feature_key) WHERE is_current;
+CREATE INDEX
+CREATE TABLE organization_feature_availability (
+    organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    feature_key varchar(64) NOT NULL,
+    feature_version integer NOT NULL,
+    enabled boolean NOT NULL DEFAULT false,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    updated_at timestamptz NOT NULL DEFAULT now(),
+    PRIMARY KEY (organization_id, feature_key),
+    CONSTRAINT fk_organization_feature_catalog_version
+        FOREIGN KEY (feature_key, feature_version)
+        REFERENCES organization_feature_catalog (feature_key, version)
+);
+CREATE TABLE
+INSERT INTO organization_feature_catalog
+    (feature_key, version, name, description, is_current, default_enabled_for_new_organizations)
+VALUES
+    ('PROJECTS', 1, 'Projetos', 'Criação, edição e leitura de projetos.', true, true),
+    ('THEMES', 1, 'Temas', 'Criação, edição e leitura de temas visuais.', true, true),
+    ('PUBLICATIONS', 1, 'Publicações', 'Publicação, leitura, métricas e atividade.', true, true),
+    ('FORM_RESPONSES', 1, 'Respostas de formulários', 'Leitura e exportação de respostas recebidas.', true, true);
+INSERT 0 4
+-- Organizações existentes mantêm acesso aos recursos que já utilizavam.
+INSERT INTO organization_feature_availability
+    (organization_id, feature_key, feature_version, enabled)
+SELECT organization.id, feature.feature_key, feature.version, true
+FROM organizations organization
+CROSS JOIN organization_feature_catalog feature
+WHERE feature.is_current AND feature.default_enabled_for_new_organizations;
+INSERT 0 0
+CREATE INDEX idx_organization_feature_availability_enabled
+    ON organization_feature_availability (organization_id, feature_key, enabled);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V14__organization_page_templates.sql
+CREATE TABLE organization_page_templates (
+    id uuid PRIMARY KEY,
+    organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    created_by uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    updated_by uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name varchar(150) NOT NULL,
+    current_version_id uuid,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    updated_at timestamptz NOT NULL DEFAULT now(),
+    archived_at timestamptz,
+    CONSTRAINT uq_organization_page_templates_id_org UNIQUE (id, organization_id)
+);
+CREATE TABLE
+CREATE UNIQUE INDEX uq_organization_page_templates_name
+    ON organization_page_templates (organization_id, lower(name))
+    WHERE archived_at IS NULL;
+CREATE INDEX
+CREATE INDEX idx_organization_page_templates_listing
+    ON organization_page_templates (organization_id, updated_at DESC, id)
+    WHERE archived_at IS NULL;
+CREATE INDEX
+CREATE TABLE organization_page_template_versions (
+    id uuid PRIMARY KEY,
+    template_id uuid NOT NULL,
+    organization_id uuid NOT NULL,
+    version_number integer NOT NULL CHECK (version_number > 0),
+    content jsonb NOT NULL,
+    created_by uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT fk_page_template_version_template
+        FOREIGN KEY (template_id, organization_id)
+        REFERENCES organization_page_templates (id, organization_id) ON DELETE CASCADE,
+    CONSTRAINT uq_page_template_version_number UNIQUE (template_id, version_number),
+    CONSTRAINT uq_page_template_version_id_template UNIQUE (id, template_id)
+);
+CREATE TABLE
+ALTER TABLE organization_page_templates
+    ADD CONSTRAINT fk_page_template_current_version
+    FOREIGN KEY (current_version_id, id)
+    REFERENCES organization_page_template_versions (id, template_id)
+    DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE
+CREATE INDEX idx_page_template_versions_history
+    ON organization_page_template_versions (template_id, version_number DESC);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V15__retain_page_template_snapshots_after_author_removal.sql
+ALTER TABLE organization_page_templates
+    ALTER COLUMN created_by DROP NOT NULL,
+    ALTER COLUMN updated_by DROP NOT NULL,
+    DROP CONSTRAINT organization_page_templates_created_by_fkey,
+    DROP CONSTRAINT organization_page_templates_updated_by_fkey,
+    ADD CONSTRAINT organization_page_templates_created_by_fkey
+        FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+    ADD CONSTRAINT organization_page_templates_updated_by_fkey
+        FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL;
+ALTER TABLE
+ALTER TABLE organization_page_template_versions
+    ALTER COLUMN created_by DROP NOT NULL,
+    DROP CONSTRAINT organization_page_template_versions_created_by_fkey,
+    ADD CONSTRAINT organization_page_template_versions_created_by_fkey
+        FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL;
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V16__project_revision_history_and_publication_links.sql
+CREATE TABLE project_revisions (
+    id uuid PRIMARY KEY,
+    project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    revision_number bigint NOT NULL,
+    revision_kind varchar(24) NOT NULL CHECK (revision_kind IN ('DRAFT', 'PUBLICATION_SNAPSHOT')),
+    document jsonb NOT NULL,
+    route_blueprint jsonb NOT NULL,
+    created_by uuid REFERENCES users(id) ON DELETE SET NULL,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+CREATE UNIQUE INDEX uq_project_draft_revision_number
+    ON project_revisions(project_id, revision_number)
+    WHERE revision_kind = 'DRAFT';
+CREATE INDEX
+CREATE INDEX idx_project_revisions_history
+    ON project_revisions(project_id, revision_number DESC, id DESC)
+    WHERE revision_kind = 'DRAFT';
+CREATE INDEX
+INSERT INTO project_revisions
+    (id, project_id, revision_number, revision_kind, document, route_blueprint, created_by, created_at)
+SELECT gen_random_uuid(), p.id, p.revision, 'DRAFT', p.document, p.route_blueprint, p.owner_id,
+       COALESCE(p.updated_at AT TIME ZONE 'UTC', now())
+FROM projects p;
+INSERT 0 0
+-- Remove publication versions already outside the exposed retention window.
+DELETE FROM publication_versions v
+USING publications p
+WHERE p.id = v.publication_id
+  AND ((v.expires_at IS NOT NULL AND v.expires_at <= now())
+       OR v.version_number < GREATEST(p.current_version - 2, 1));
+DELETE 0
+-- Preserve an identified immutable snapshot for every retained legacy publication version.
+INSERT INTO project_revisions
+    (id, project_id, revision_number, revision_kind, document, route_blueprint, created_by, created_at)
+SELECT v.id, p.project_id, v.project_revision, 'PUBLICATION_SNAPSHOT',
+       v.document, v.route_blueprint, pr.owner_id, v.published_at
+FROM publication_versions v
+JOIN publications p ON p.id = v.publication_id
+JOIN projects pr ON pr.id = p.project_id;
+INSERT 0 0
+ALTER TABLE publication_versions ADD COLUMN project_revision_id uuid;
+ALTER TABLE
+UPDATE publication_versions SET project_revision_id = id;
+UPDATE 0
+ALTER TABLE publication_versions ALTER COLUMN project_revision_id SET NOT NULL;
+ALTER TABLE
+ALTER TABLE publication_versions
+    ADD CONSTRAINT fk_publication_version_project_revision
+        FOREIGN KEY (project_revision_id) REFERENCES project_revisions(id) ON DELETE CASCADE;
+ALTER TABLE
+CREATE INDEX idx_publication_versions_project_revision
+    ON publication_versions(project_revision_id);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V17__publication_review_approvals.sql
+ALTER TABLE organization_permission_grants
+    DROP CONSTRAINT ck_organization_grant_action;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT ck_organization_grant_action CHECK (action IN (
+        'PROJECT_READ', 'PROJECT_CREATE', 'PROJECT_UPDATE', 'PROJECT_DELETE',
+        'THEME_READ', 'THEME_CREATE', 'THEME_UPDATE', 'THEME_DELETE',
+        'PUBLICATION_READ', 'PUBLICATION_MANAGE', 'PUBLICATION_APPROVE',
+        'PUBLICATION_ANALYTICS_READ', 'PUBLICATION_SUBMISSIONS_READ',
+        'PUBLICATION_SUBMISSIONS_EXPORT', 'PUBLICATION_ACTIVITY_READ',
+        'ORGANIZATION_GRANTS_READ', 'ORGANIZATION_GRANTS_MANAGE'
+    ));
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    DROP CONSTRAINT ck_organization_grant_authority_origin;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT ck_organization_grant_authority_origin CHECK (
+        (authority_grant_id IS NULL OR (action IN ('PUBLICATION_SUBMISSIONS_EXPORT', 'PUBLICATION_APPROVE') AND parent_grant_id IS NULL))
+        AND (action <> 'PUBLICATION_SUBMISSIONS_EXPORT' OR parent_grant_id IS NOT NULL OR authority_grant_id IS NOT NULL)
+        AND (action <> 'PUBLICATION_APPROVE' OR (parent_grant_id IS NULL AND authority_grant_id IS NOT NULL))
+    );
+ALTER TABLE
+CREATE TABLE publication_review_requests (
+    id uuid PRIMARY KEY,
+    project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    project_revision_id uuid NOT NULL REFERENCES project_revisions(id) ON DELETE CASCADE,
+    operation varchar(16) NOT NULL CHECK (operation IN ('PUBLISH', 'RESTORE')),
+    target_version integer,
+    requester_user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    approver_user_id uuid REFERENCES users(id) ON DELETE SET NULL,
+    state varchar(16) NOT NULL DEFAULT 'PENDING' CHECK (state IN ('PENDING', 'APPROVED', 'REJECTED')),
+    created_at timestamptz NOT NULL DEFAULT now(),
+    decided_at timestamptz,
+    consumed_at timestamptz,
+    CONSTRAINT ck_publication_review_target CHECK (
+        (operation = 'PUBLISH' AND target_version IS NULL)
+        OR (operation = 'RESTORE' AND target_version IS NOT NULL AND target_version > 0)
+    ),
+    CONSTRAINT ck_publication_review_approver CHECK (
+        state = 'PENDING' OR decided_at IS NOT NULL
+    )
+);
+CREATE TABLE
+CREATE INDEX idx_publication_reviews_project_state
+    ON publication_review_requests(project_id, state, created_at DESC);
+CREATE INDEX
+CREATE INDEX idx_publication_reviews_revision
+    ON publication_review_requests(project_revision_id, operation, target_version, state);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V18__tenant_form_versions.sql
+ALTER TABLE projects
+    ADD CONSTRAINT uq_projects_id_organization UNIQUE (id, organization_id);
+ALTER TABLE
+CREATE TABLE organization_forms (
+    id uuid PRIMARY KEY,
+    organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    project_id uuid NOT NULL,
+    source_page_id varchar(100) NOT NULL,
+    source_block_id varchar(100) NOT NULL,
+    name varchar(200) NOT NULL,
+    definition_id varchar(100) NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    updated_at timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_organization_form_project_source UNIQUE (project_id, source_page_id, source_block_id),
+    CONSTRAINT uq_organization_form_id_tenant UNIQUE (id, organization_id),
+    CONSTRAINT fk_organization_form_project_tenant FOREIGN KEY (project_id, organization_id)
+        REFERENCES projects(id, organization_id) ON DELETE CASCADE
+);
+CREATE TABLE
+CREATE INDEX idx_organization_forms_tenant_updated
+    ON organization_forms (organization_id, updated_at DESC, id);
+CREATE INDEX
+CREATE TABLE organization_form_versions (
+    id uuid PRIMARY KEY,
+    form_id uuid NOT NULL,
+    organization_id uuid NOT NULL,
+    version_number integer NOT NULL CHECK (version_number > 0),
+    definition_id varchar(100) NOT NULL,
+    field_schema jsonb NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_organization_form_version_number UNIQUE (form_id, version_number),
+    CONSTRAINT uq_organization_form_version_tenant UNIQUE (id, organization_id),
+    CONSTRAINT fk_organization_form_version_tenant FOREIGN KEY (form_id, organization_id)
+        REFERENCES organization_forms(id, organization_id) ON DELETE CASCADE
+);
+CREATE TABLE
+ALTER TABLE publication_versions
+    ADD COLUMN form_references jsonb NOT NULL DEFAULT '[]'::jsonb;
+ALTER TABLE
+CREATE TEMPORARY TABLE form_backfill_sources ON COMMIT DROP AS
+SELECT p.project_id, pr.organization_id, v.publication_id, v.version_number AS publication_version,
+       page.value ->> 'id' AS page_id, block.value ->> 'id' AS block_id,
+       block.value ->> 'definitionId' AS definition_id,
+       left(COALESCE(NULLIF(btrim(block.value #>> '{props,title}'), ''), block.value ->> 'definitionId'), 200) AS form_name,
+       COALESCE(block.value #> '{props,formFields}', CASE block.value ->> 'definitionId'
+           WHEN 'form-classic' THEN '[{"id":"name","label":"Seu nome","type":"text","required":true},{"id":"email","label":"E-mail","type":"email","required":true}]'::jsonb
+           WHEN 'contact-classic' THEN '[{"id":"name","label":"Seu nome","type":"text","required":true},{"id":"email","label":"E-mail","type":"email","required":true},{"id":"message","label":"Mensagem","type":"textarea","required":true}]'::jsonb
+           WHEN 'contact-panel' THEN '[{"id":"email","label":"E-mail","type":"email","required":true},{"id":"message","label":"Mensagem","type":"textarea","required":true}]'::jsonb
+           WHEN 'waitlist-classic' THEN '[{"id":"email","label":"E-mail","type":"email","required":true}]'::jsonb
+           WHEN 'demo-request' THEN '[{"id":"firstName","label":"Nome","type":"text","required":true},{"id":"lastName","label":"Sobrenome","type":"text","required":true},{"id":"email","label":"E-mail profissional","type":"email","required":true},{"id":"role","label":"Cargo","type":"text","required":false},{"id":"project","label":"O que você quer desenvolver?","type":"textarea","required":false}]'::jsonb
+       END) AS field_schema
+FROM publication_versions v
+JOIN publications p ON p.id = v.publication_id
+JOIN projects pr ON pr.id = p.project_id
+CROSS JOIN LATERAL jsonb_array_elements(v.document -> 'pages') page(value)
+CROSS JOIN LATERAL jsonb_array_elements(page.value -> 'blocks') block(value)
+WHERE block.value ->> 'definitionId' IN ('form-classic', 'contact-classic', 'contact-panel', 'waitlist-classic', 'demo-request');
+SELECT 0
+CREATE TEMPORARY TABLE form_backfill_resources ON COMMIT DROP AS
+SELECT DISTINCT ON (project_id, page_id, block_id)
+       gen_random_uuid() AS form_id, project_id, organization_id, page_id, block_id,
+       form_name, definition_id
+FROM form_backfill_sources
+ORDER BY project_id, page_id, block_id, publication_version;
+SELECT 0
+INSERT INTO organization_forms (id, organization_id, project_id, source_page_id, source_block_id, name, definition_id)
+SELECT form_id, organization_id, project_id, page_id, block_id, form_name, definition_id
+FROM form_backfill_resources;
+INSERT 0 0
+CREATE TEMPORARY TABLE form_backfill_variants ON COMMIT DROP AS
+SELECT gen_random_uuid() AS form_version_id, resource.form_id, resource.organization_id,
+       source.definition_id, source.field_schema, min(source.publication_version) AS first_publication_version
+FROM form_backfill_sources source
+JOIN form_backfill_resources resource
+  ON resource.project_id = source.project_id AND resource.page_id = source.page_id
+ AND resource.block_id = source.block_id
+GROUP BY resource.form_id, resource.organization_id, source.definition_id, source.field_schema;
+SELECT 0
+CREATE TEMPORARY TABLE form_backfill_versions ON COMMIT DROP AS
+SELECT form_version_id, form_id, organization_id, definition_id, field_schema,
+       row_number() OVER (PARTITION BY form_id ORDER BY first_publication_version, definition_id, field_schema)::integer AS form_version
+FROM form_backfill_variants;
+SELECT 0
+INSERT INTO organization_form_versions (id, form_id, organization_id, version_number, definition_id, field_schema)
+SELECT form_version_id, form_id, organization_id, form_version, definition_id, field_schema
+FROM form_backfill_versions;
+INSERT 0 0
+UPDATE publication_versions publication
+SET form_references = COALESCE(form_refs.value, '[]'::jsonb)
+FROM (
+    SELECT source.publication_id, source.publication_version,
+       jsonb_agg(jsonb_build_object(
+               'pageId', source.page_id,
+               'blockId', source.block_id,
+               'formId', resource.form_id,
+               'formVersionId', version.form_version_id,
+               'formVersion', version.form_version
+           ) ORDER BY source.page_id, source.block_id) AS value
+    FROM form_backfill_sources source
+    JOIN form_backfill_resources resource
+      ON resource.project_id = source.project_id AND resource.page_id = source.page_id
+     AND resource.block_id = source.block_id
+    JOIN form_backfill_variants variant
+      ON variant.form_id = resource.form_id
+     AND variant.definition_id = source.definition_id AND variant.field_schema = source.field_schema
+    JOIN form_backfill_versions version ON version.form_version_id = variant.form_version_id
+    GROUP BY source.publication_id, source.publication_version
+) form_refs
+WHERE publication.publication_id = form_refs.publication_id
+  AND publication.version_number = form_refs.publication_version;
+UPDATE 0
+ALTER TABLE form_submissions ADD COLUMN form_version_id uuid;
+ALTER TABLE
+UPDATE form_submissions submission
+SET form_version_id = (reference.value ->> 'formVersionId')::uuid
+FROM publication_versions publication
+CROSS JOIN LATERAL jsonb_array_elements(publication.form_references) reference(value)
+WHERE publication.publication_id = submission.publication_id
+  AND publication.version_number = submission.version_number
+  AND reference.value ->> 'pageId' = submission.page_id
+  AND reference.value ->> 'blockId' = submission.block_id;
+UPDATE 0
+INSERT INTO organization_forms (id, organization_id, project_id, source_page_id, source_block_id, name, definition_id)
+SELECT gen_random_uuid(), project.organization_id, publication.project_id, submission.page_id,
+       submission.block_id, left(submission.form_name, 200), 'legacy-form'
+FROM form_submissions submission
+JOIN publications publication ON publication.id = submission.publication_id
+JOIN projects project ON project.id = publication.project_id
+WHERE submission.form_version_id IS NULL
+ON CONFLICT (project_id, source_page_id, source_block_id) DO NOTHING;
+INSERT 0 0
+INSERT INTO organization_form_versions (id, form_id, organization_id, version_number, definition_id, field_schema)
+SELECT gen_random_uuid(), variants.form_id, variants.organization_id,
+       COALESCE((SELECT max(existing.version_number) FROM organization_form_versions existing
+                 WHERE existing.form_id = variants.form_id), 0)
+           + row_number() OVER (PARTITION BY variants.form_id ORDER BY variants.field_schema)::integer,
+       variants.definition_id, variants.field_schema
+FROM (
+    SELECT DISTINCT form.id AS form_id, form.organization_id, form.definition_id,
+           COALESCE(submission.field_schema, '[]'::jsonb) AS field_schema
+    FROM form_submissions submission
+    JOIN publications publication ON publication.id = submission.publication_id
+    JOIN organization_forms form ON form.project_id = publication.project_id
+        AND form.source_page_id = submission.page_id AND form.source_block_id = submission.block_id
+    WHERE submission.form_version_id IS NULL
+) variants
+WHERE NOT EXISTS (
+    SELECT 1 FROM organization_form_versions existing
+    WHERE existing.form_id = variants.form_id
+      AND existing.definition_id = variants.definition_id
+      AND existing.field_schema = variants.field_schema
+)
+ON CONFLICT (form_id, version_number) DO NOTHING;
+INSERT 0 0
+UPDATE form_submissions submission
+SET form_version_id = form_version.id
+FROM publications publication
+JOIN organization_forms form ON form.project_id = publication.project_id
+JOIN organization_form_versions form_version ON form_version.form_id = form.id
+WHERE publication.id = submission.publication_id
+  AND form.source_page_id = submission.page_id AND form.source_block_id = submission.block_id
+  AND form_version.definition_id = form.definition_id
+  AND form_version.field_schema = COALESCE(submission.field_schema, '[]'::jsonb)
+  AND submission.form_version_id IS NULL;
+UPDATE 0
+ALTER TABLE form_submissions
+    ADD CONSTRAINT fk_form_submission_version FOREIGN KEY (form_version_id)
+        REFERENCES organization_form_versions(id);
+ALTER TABLE
+ALTER TABLE form_submissions ALTER COLUMN form_version_id SET NOT NULL;
+ALTER TABLE
+CREATE INDEX idx_form_submissions_form_version ON form_submissions(form_version_id, occurred_at DESC);
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V19__tenant_consistent_resource_associations.sql
+-- Permite que as FKs abaixo validem o projeto associado, além do UUID global.
+ALTER TABLE project_revisions
+    ADD CONSTRAINT uq_project_revisions_project_id UNIQUE (project_id, id);
+ALTER TABLE
+ALTER TABLE publications
+    ADD CONSTRAINT uq_publications_id_project UNIQUE (id, project_id);
+ALTER TABLE
+ALTER TABLE publication_versions
+    ADD COLUMN project_id uuid;
+ALTER TABLE
+UPDATE publication_versions version
+SET project_id = publication.project_id
+FROM publications publication
+WHERE publication.id = version.publication_id;
+UPDATE 0
+ALTER TABLE publication_versions
+    ALTER COLUMN project_id SET NOT NULL,
+    ADD CONSTRAINT fk_publication_version_publication_project
+        FOREIGN KEY (publication_id, project_id)
+        REFERENCES publications (id, project_id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_publication_version_revision_project
+        FOREIGN KEY (project_id, project_revision_id)
+        REFERENCES project_revisions (project_id, id) ON DELETE CASCADE;
+ALTER TABLE
+ALTER TABLE publication_review_requests
+    ADD CONSTRAINT fk_publication_review_revision_project
+        FOREIGN KEY (project_id, project_revision_id)
+        REFERENCES project_revisions (project_id, id) ON DELETE CASCADE;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    DROP CONSTRAINT organization_permission_grants_parent_grant_id_fkey,
+    ADD CONSTRAINT fk_organization_grant_parent_tenant
+        FOREIGN KEY (parent_grant_id, organization_id)
+        REFERENCES organization_permission_grants (id, organization_id) ON DELETE CASCADE;
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V20__tenant_consistent_form_submissions.sql
+ALTER TABLE publications
+    ADD COLUMN organization_id uuid;
+ALTER TABLE
+UPDATE publications publication
+SET organization_id = project.organization_id
+FROM projects project
+WHERE project.id = publication.project_id;
+UPDATE 0
+ALTER TABLE publications
+    ALTER COLUMN organization_id SET NOT NULL,
+    ADD CONSTRAINT uq_publications_id_organization UNIQUE (id, organization_id),
+    ADD CONSTRAINT fk_publications_project_organization
+        FOREIGN KEY (project_id, organization_id)
+        REFERENCES projects (id, organization_id) ON DELETE CASCADE;
+ALTER TABLE
+ALTER TABLE form_submissions
+    ADD COLUMN organization_id uuid;
+ALTER TABLE
+UPDATE form_submissions submission
+SET organization_id = publication.organization_id
+FROM publications publication
+WHERE publication.id = submission.publication_id;
+UPDATE 0
+ALTER TABLE form_submissions
+    ALTER COLUMN organization_id SET NOT NULL,
+    ADD CONSTRAINT fk_form_submission_publication_tenant
+        FOREIGN KEY (publication_id, organization_id)
+        REFERENCES publications (id, organization_id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_form_submission_version_tenant
+        FOREIGN KEY (form_version_id, organization_id)
+        REFERENCES organization_form_versions (id, organization_id);
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V21__tenant_scoped_audit_events.sql
+CREATE TABLE organization_audit_events (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id uuid NOT NULL,
+    actor_user_id uuid NOT NULL,
+    action varchar(64) NOT NULL,
+    target_type varchar(32) NOT NULL,
+    target_id uuid NOT NULL,
+    occurred_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    CONSTRAINT ck_organization_audit_action CHECK (action IN (
+        'INVITATION_CREATED', 'INVITATION_REVOKED', 'MEMBERSHIP_ACCEPTED', 'MEMBERSHIP_REVOKED',
+        'PERMISSION_GRANTED', 'PERMISSION_REVOKED', 'REVIEW_REQUESTED', 'REVIEW_APPROVED', 'REVIEW_REJECTED',
+        'PUBLICATION_PUBLISHED', 'PUBLICATION_ACTIVATED', 'PUBLICATION_DEACTIVATED',
+        'PUBLICATION_RESTORED', 'PROJECT_REVISION_RESTORED', 'PROJECT_DELETED', 'THEME_DELETED',
+        'SUBMISSIONS_READ', 'SUBMISSIONS_EXPORTED', 'PAGE_TEMPLATE_CREATED',
+        'PAGE_TEMPLATE_VERSION_CREATED', 'PAGE_TEMPLATE_ARCHIVED'
+    )),
+    CONSTRAINT ck_organization_audit_target_type CHECK (target_type IN (
+        'INVITATION', 'MEMBERSHIP', 'PERMISSION_GRANT', 'PUBLICATION_REVIEW',
+        'PUBLICATION', 'PROJECT', 'THEME', 'SUBMISSIONS', 'PAGE_TEMPLATE'
+    ))
+);
+CREATE TABLE
+CREATE INDEX idx_organization_audit_events_tenant_page
+    ON organization_audit_events (organization_id, occurred_at DESC, id DESC);
+CREATE INDEX
+CREATE FUNCTION reject_organization_audit_event_mutation()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RAISE EXCEPTION 'organization audit events are append-only';
+END;
+$$;
+CREATE FUNCTION
+CREATE TRIGGER trg_organization_audit_events_immutable
+    BEFORE UPDATE OR DELETE ON organization_audit_events
+    FOR EACH ROW EXECUTE FUNCTION reject_organization_audit_event_mutation();
+CREATE TRIGGER
+CREATE TRIGGER trg_organization_audit_events_no_truncate
+    BEFORE TRUNCATE ON organization_audit_events
+    FOR EACH STATEMENT EXECUTE FUNCTION reject_organization_audit_event_mutation();
+CREATE TRIGGER
+ALTER TABLE organization_permission_grants
+    DROP CONSTRAINT ck_organization_grant_action;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT ck_organization_grant_action CHECK (action IN (
+        'PROJECT_READ', 'PROJECT_CREATE', 'PROJECT_UPDATE', 'PROJECT_DELETE',
+        'THEME_READ', 'THEME_CREATE', 'THEME_UPDATE', 'THEME_DELETE',
+        'PUBLICATION_READ', 'PUBLICATION_MANAGE', 'PUBLICATION_APPROVE',
+        'PUBLICATION_ANALYTICS_READ', 'PUBLICATION_SUBMISSIONS_READ',
+        'PUBLICATION_SUBMISSIONS_EXPORT', 'PUBLICATION_ACTIVITY_READ',
+        'ORGANIZATION_GRANTS_READ', 'ORGANIZATION_GRANTS_MANAGE', 'ORGANIZATION_AUDIT_READ'
+    ));
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    DROP CONSTRAINT ck_organization_grant_authority_origin;
+ALTER TABLE
+ALTER TABLE organization_permission_grants
+    ADD CONSTRAINT ck_organization_grant_authority_origin CHECK (
+        (authority_grant_id IS NULL OR (action IN ('PUBLICATION_SUBMISSIONS_EXPORT', 'PUBLICATION_APPROVE', 'ORGANIZATION_AUDIT_READ') AND parent_grant_id IS NULL))
+        AND (action <> 'PUBLICATION_SUBMISSIONS_EXPORT' OR parent_grant_id IS NOT NULL OR authority_grant_id IS NOT NULL)
+        AND (action <> 'PUBLICATION_APPROVE' OR (parent_grant_id IS NULL AND authority_grant_id IS NOT NULL))
+        AND (action <> 'ORGANIZATION_AUDIT_READ' OR (scope_type = 'ORGANIZATION' AND scope_id = organization_id AND parent_grant_id IS NULL AND authority_grant_id IS NOT NULL AND can_delegate = false))
+    );
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V22__immutable_form_version_names.sql
+ALTER TABLE organization_form_versions
+    ADD COLUMN name varchar(200);
+ALTER TABLE
+WITH historical_names AS (
+    SELECT version.id AS form_version_id,
+           left(COALESCE(NULLIF(block.value #>> '{props,title}', ''),
+                         block.value ->> 'definitionId'), 200) AS form_name,
+           row_number() OVER (PARTITION BY version.id ORDER BY publication.version_number) AS position
+    FROM organization_form_versions version
+    JOIN organization_forms form ON form.id = version.form_id
+    JOIN publication_versions publication
+      ON EXISTS (
+          SELECT 1 FROM jsonb_array_elements(publication.form_references) reference(value)
+          WHERE reference.value ->> 'formVersionId' = version.id::text
+            AND reference.value ->> 'pageId' = form.source_page_id
+            AND reference.value ->> 'blockId' = form.source_block_id
+      )
+    CROSS JOIN LATERAL jsonb_array_elements(publication.document -> 'pages') page(value)
+    CROSS JOIN LATERAL jsonb_array_elements(page.value -> 'blocks') block(value)
+    WHERE page.value ->> 'id' = form.source_page_id
+      AND block.value ->> 'id' = form.source_block_id
+)
+UPDATE organization_form_versions version
+SET name = historical.form_name
+FROM historical_names historical
+WHERE historical.form_version_id = version.id AND historical.position = 1;
+UPDATE 0
+UPDATE organization_form_versions version
+SET name = form.name
+FROM organization_forms form
+WHERE form.id = version.form_id AND version.name IS NULL;
+UPDATE 0
+ALTER TABLE organization_form_versions
+    ALTER COLUMN name SET NOT NULL;
+ALTER TABLE
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V23__ites_domain.sql
+ALTER TABLE organizations ADD COLUMN economic_sector varchar(120);
+ALTER TABLE
+CREATE TABLE app_roles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  code varchar(48) NOT NULL UNIQUE,
+  name varchar(100) NOT NULL
+);
+CREATE TABLE
+CREATE TABLE app_permissions (
+  code varchar(80) PRIMARY KEY,
+  description varchar(240) NOT NULL
+);
+CREATE TABLE
+CREATE TABLE app_user_roles (
+  user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role_id uuid NOT NULL REFERENCES app_roles(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, role_id)
+);
+CREATE TABLE
+CREATE TABLE app_role_permissions (
+  role_id uuid NOT NULL REFERENCES app_roles(id) ON DELETE CASCADE,
+  permission_code varchar(80) NOT NULL REFERENCES app_permissions(code) ON DELETE CASCADE,
+  PRIMARY KEY (role_id, permission_code)
+);
+CREATE TABLE
+CREATE TABLE app_grant_events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  actor_id uuid NOT NULL REFERENCES users(id),
+  subject_id uuid NOT NULL REFERENCES users(id),
+  role_id uuid NOT NULL REFERENCES app_roles(id),
+  action varchar(12) NOT NULL CHECK (action IN ('GRANT','REVOKE')),
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+INSERT INTO app_roles(code,name) VALUES ('REQUESTER','Solicitante'),('ADMINISTRATOR','Administrador'),('DEMAND_MANAGER','Gestor de demandas'),('COLLABORATOR','Colaborador');
+INSERT 0 4
+INSERT INTO app_permissions(code,description) VALUES
+('users.read','Consultar usuários'),('users.manage','Gerenciar usuários'),('roles.manage','Gerenciar papéis'),
+('demands.read','Consultar demandas'),('demands.review','Classificar demandas'),('demands.decide','Decidir demandas'),
+('portal.content.manage','Gerenciar conteúdo'),('builder.access','Abrir editor'),('builder.pages.edit','Editar páginas'),
+('builder.pages.publish','Publicar páginas'),('builder.templates.manage','Gerenciar modelos');
+INSERT 0 11
+INSERT INTO app_role_permissions(role_id,permission_code)
+SELECT r.id,p.code FROM app_roles r CROSS JOIN app_permissions p WHERE r.code='ADMINISTRATOR';
+INSERT 0 11
+CREATE TABLE demands (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  code varchar(32) NOT NULL UNIQUE DEFAULT ('ITES-' || upper(substr(replace(gen_random_uuid()::text,'-',''),1,12))),
+  requester_id uuid NOT NULL REFERENCES users(id),
+  organization_id uuid REFERENCES organizations(id),
+  capacity varchar(16) NOT NULL CHECK (capacity IN ('GROUP','FORUM','PARTNER','OTHER')),
+  capacity_other text,
+  service varchar(100) NOT NULL,
+  description text NOT NULL CHECK (length(btrim(description)) >= 10),
+  urgency varchar(8) NOT NULL CHECK (urgency IN ('LOW','MEDIUM','HIGH')),
+  status varchar(32) NOT NULL DEFAULT 'Pendente' CHECK (status IN ('Pendente','Aceita para atendimento','Em atendimento','Concluída','Recusada','Cancelada')),
+  completion_note text,
+  review_notes text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT demands_capacity_other_check CHECK (capacity <> 'OTHER' OR nullif(btrim(capacity_other),'') IS NOT NULL),
+  CONSTRAINT demands_completion_check CHECK (status <> 'Concluída' OR nullif(btrim(completion_note),'') IS NOT NULL)
+);
+CREATE TABLE
+CREATE INDEX demands_requester_created_idx ON demands(requester_id,created_at DESC);
+CREATE INDEX
+CREATE INDEX demands_status_created_idx ON demands(status,created_at DESC);
+CREATE INDEX
+CREATE TABLE demand_events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  demand_id uuid NOT NULL REFERENCES demands(id),
+  actor_id uuid NOT NULL REFERENCES users(id),
+  old_status varchar(32) NOT NULL,
+  new_status varchar(32) NOT NULL,
+  justification text NOT NULL CHECK (length(btrim(justification)) > 0),
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+CREATE TABLE institutional_pages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug varchar(100) NOT NULL UNIQUE,
+  title varchar(180) NOT NULL,
+  published_version_id uuid,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+CREATE TABLE institutional_page_versions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  page_id uuid NOT NULL REFERENCES institutional_pages(id),
+  revision integer NOT NULL CHECK (revision > 0),
+  document jsonb NOT NULL CHECK (jsonb_typeof(document)='object'),
+  author_id uuid NOT NULL REFERENCES users(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE(page_id,revision), UNIQUE(page_id,id)
+);
+CREATE TABLE
+CREATE TABLE institutional_page_events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  page_id uuid NOT NULL REFERENCES institutional_pages(id),
+  version_id uuid REFERENCES institutional_page_versions(id),
+  actor_id uuid NOT NULL REFERENCES users(id),
+  action varchar(12) NOT NULL CHECK (action IN ('PUBLISH','UNPUBLISH')),
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE
+ALTER TABLE institutional_pages ADD CONSTRAINT institutional_page_published_fk
+FOREIGN KEY(id,published_version_id) REFERENCES institutional_page_versions(page_id,id);
+ALTER TABLE
+INSERT INTO institutional_pages(slug,title) VALUES
+('inicio','Início'),('quem-somos','Quem somos'),('projetos','Projetos e empreendimentos'),('noticias','Notícias e agenda'),
+('publicacoes','Publicações e biblioteca'),('ferramentas','Aplicativos e ferramentas'),('contato','Redes sociais e contato');
+INSERT 0 7
+CREATE FUNCTION ites_demand_transition_guard() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+ IF NEW.status <> OLD.status AND NOT (
+   (OLD.status='Pendente' AND NEW.status IN ('Aceita para atendimento','Recusada','Cancelada')) OR
+   (OLD.status='Aceita para atendimento' AND NEW.status IN ('Em atendimento','Cancelada')) OR
+   (OLD.status='Em atendimento' AND NEW.status IN ('Concluída','Cancelada'))
+ ) THEN RAISE EXCEPTION 'transição de demanda inválida'; END IF;
+ NEW.updated_at=now();
+ RETURN NEW;
+END $$;
+CREATE FUNCTION
+CREATE TRIGGER ites_demand_transition_guard BEFORE UPDATE ON demands
+FOR EACH ROW EXECUTE FUNCTION ites_demand_transition_guard();
+CREATE TRIGGER
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V24__administrator_permission_sync.sql
+CREATE FUNCTION ites_sync_administrator_permission() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  INSERT INTO app_role_permissions(role_id, permission_code)
+  SELECT id, NEW.code FROM app_roles WHERE code = 'ADMINISTRATOR'
+  ON CONFLICT DO NOTHING;
+  RETURN NEW;
+END;
+$$;
+CREATE FUNCTION
+CREATE TRIGGER ites_sync_administrator_permission
+AFTER INSERT ON app_permissions
+FOR EACH ROW EXECUTE FUNCTION ites_sync_administrator_permission();
+CREATE TRIGGER
+INSERT INTO app_role_permissions(role_id, permission_code)
+SELECT r.id, p.code
+FROM app_roles r CROSS JOIN app_permissions p
+WHERE r.code = 'ADMINISTRATOR'
+ON CONFLICT DO NOTHING;
+INSERT 0 0
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V25__analytics_permissions.sql
+INSERT INTO app_permissions(code, description) VALUES
+  ('organizations.manage', 'Consultar e administrar organizações'),
+  ('analytics.view', 'Consultar indicadores e dados agregados'),
+  ('dashboards.manage', 'Criar e gerenciar painéis analíticos'),
+  ('reports.generate', 'Gerar relatórios administrativos'),
+  ('reports.export', 'Exportar relatórios e dados autorizados'),
+  ('platform.configure', 'Configurar a plataforma')
+ON CONFLICT (code) DO UPDATE SET description = EXCLUDED.description;
+INSERT 0 6
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V26__demand_dashboard_page.sql
+INSERT INTO institutional_pages(slug,title)
+VALUES ('painel-demandas','Painel de indicadores das demandas')
+ON CONFLICT (slug) DO NOTHING;
+INSERT 0 1
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V27__root_project.sql
+ALTER TABLE projects ADD COLUMN site_role varchar(12);
+ALTER TABLE
+ALTER TABLE projects ADD CONSTRAINT ck_projects_site_role CHECK (site_role IS NULL OR site_role = 'ROOT');
+ALTER TABLE
+CREATE UNIQUE INDEX uq_projects_root_site ON projects(site_role) WHERE site_role = 'ROOT';
+CREATE INDEX
+COMMIT;
+COMMIT
+\ir ../../server/src/main/resources/db/migration/V28__root_page_navigation.sql
+-- Acrescenta a navegação editável ao projeto raiz existente sem alterar versões históricas.
+DO $$
+DECLARE
+    root_record record;
+    updated_document jsonb;
+    navigation jsonb := $navigation$ {"id":"ites-navigation","definitionId":"navbar-classic","props":{"title":"ITES · IFRJ Niterói","imageUrl":"","imageAlt":"","logoHref":"/","showThemeToggle":false,"items":[{"id":"home","title":"Início","description":"","href":"/","value":"","features":[]},{"id":"about","title":"Quem somos","description":"","href":"/institucional/quem-somos","value":"","features":[]},{"id":"projects","title":"Projetos","description":"","href":"/institucional/projetos","value":"","features":[]},{"id":"news","title":"Notícias","description":"","href":"/institucional/noticias","value":"","features":[]},{"id":"publications","title":"Publicações","description":"","href":"/institucional/publicacoes","value":"","features":[]},{"id":"access","title":"Acessar","description":"","href":"/entrar","value":"","features":[]}]}} $navigation$::jsonb;
+    revision_id uuid;
+    references_snapshot jsonb;
+BEGIN
+    FOR root_record IN
+        SELECT p.id, p.owner_id, p.document, p.route_blueprint, p.revision,
+               publication.id AS publication_id, publication.current_version
+        FROM projects p
+        JOIN publications publication ON publication.project_id = p.id
+        WHERE p.site_role = 'ROOT'
+        FOR UPDATE OF p, publication
+    LOOP
+        updated_document := root_record.document;
+        IF NOT updated_document ? 'navbar' THEN
+            updated_document := jsonb_set(updated_document, '{navbar}', navigation, true);
+        END IF;
+        IF NOT updated_document ? 'rootPageId' THEN
+            updated_document := jsonb_set(updated_document, '{rootPageId}', updated_document #> '{pages,0,id}', true);
+        END IF;
+        updated_document := jsonb_set(updated_document, '{pages}', (
+            SELECT jsonb_agg(
+                CASE WHEN block_page.value ->> 'id' = 'ites-inicio'
+                    THEN jsonb_set(block_page.value, '{blocks}', (
+                        SELECT jsonb_agg(
+                            CASE WHEN block.value ->> 'id' = 'ites-projetos'
+                                  AND block.value ->> 'definitionId' = 'portfolio-classic'
+                                THEN jsonb_set(block.value, '{definitionId}', '"features-classic"'::jsonb)
+                                WHEN block.value ->> 'id' IN ('ites-publicacoes', 'ites-contato')
+                                  AND block.value ->> 'definitionId' IN ('download-classic', 'contact-classic')
+                                THEN jsonb_set(block.value, '{definitionId}', '"cta-classic"'::jsonb)
+                                ELSE block.value END ORDER BY block.ordinal)
+                        FROM jsonb_array_elements(block_page.value -> 'blocks') WITH ORDINALITY block(value, ordinal)
+                    ))
+                    ELSE block_page.value END ORDER BY block_page.ordinal)
+            FROM jsonb_array_elements(updated_document -> 'pages') WITH ORDINALITY block_page(value, ordinal)
+        ), true);
+        IF updated_document = root_record.document THEN CONTINUE; END IF;
+        revision_id := gen_random_uuid();
+        UPDATE projects SET document = updated_document, revision = revision + 1, updated_at = now()
+        WHERE id = root_record.id;
+        INSERT INTO project_revisions(id, project_id, revision_number, revision_kind, document,
+                                      route_blueprint, created_by)
+        VALUES(revision_id, root_record.id, root_record.revision + 1, 'DRAFT',
+               updated_document, root_record.route_blueprint, root_record.owner_id);
+        SELECT form_references INTO references_snapshot FROM publication_versions
+        WHERE publication_id = root_record.publication_id AND version_number = root_record.current_version;
+        INSERT INTO publication_versions(id, publication_id, project_id, version_number, document,
+                                         route_blueprint, project_revision, project_revision_id, form_references)
+        VALUES(gen_random_uuid(), root_record.publication_id, root_record.id,
+               root_record.current_version + 1, updated_document, root_record.route_blueprint,
+               root_record.revision + 1, revision_id, COALESCE(references_snapshot, '[]'::jsonb));
+        UPDATE publications SET current_version = current_version + 1
+        WHERE id = root_record.publication_id;
+    END LOOP;
+END $$;
+DO
+COMMIT;
+COMMIT
+\set AUTOCOMMIT on
+\echo 'Migrações oficiais aplicadas.'
+Migrações oficiais aplicadas.
+\set ON_ERROR_STOP on
+DO $$
+DECLARE
+    product_table_count integer;
+    administrator_permission_count integer;
+    permission_count integer;
+    validation_user_id uuid := gen_random_uuid();
+    validation_demand_id uuid := gen_random_uuid();
+    validation_audit_id uuid := gen_random_uuid();
+    rejected boolean;
+BEGIN
+    SELECT count(*) INTO product_table_count
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_type = 'BASE TABLE'
+      AND table_name <> 'flyway_schema_history';
+
+    IF product_table_count <> 35 THEN
+        RAISE EXCEPTION 'Esperadas 35 tabelas do produto; encontradas %', product_table_count;
+    END IF;
+
+    SELECT count(*) INTO permission_count FROM app_permissions;
+    SELECT count(*) INTO administrator_permission_count
+    FROM app_role_permissions rp
+    JOIN app_roles r ON r.id = rp.role_id
+    WHERE r.code = 'ADMINISTRATOR';
+
+    IF permission_count < 17 OR administrator_permission_count <> permission_count THEN
+        RAISE EXCEPTION 'As permissões do administrador não foram sincronizadas: % de %',
+            administrator_permission_count, permission_count;
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_indexes
+        WHERE schemaname = 'public' AND indexname = 'uq_projects_root_site'
+    ) THEN
+        RAISE EXCEPTION 'Índice que limita o projeto ROOT não encontrado';
+    END IF;
+
+    IF (SELECT count(*) FROM pg_trigger t
+        JOIN pg_class c ON c.oid = t.tgrelid
+        JOIN pg_namespace n ON n.oid = c.relnamespace
+        WHERE n.nspname = 'public' AND NOT t.tgisinternal) <> 4 THEN
+        RAISE EXCEPTION 'A quantidade esperada de gatilhos operacionais é 4';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM institutional_pages WHERE slug = 'inicio'
+    ) OR NOT EXISTS (
+        SELECT 1 FROM institutional_pages WHERE slug = 'painel-demandas'
+    ) THEN
+        RAISE EXCEPTION 'Páginas institucionais iniciais não foram provisionadas';
+    END IF;
+
+    INSERT INTO app_permissions(code, description)
+    VALUES ('coursework.permission.sync.check', 'Permissão temporária para validar sincronização');
+    IF NOT EXISTS (
+        SELECT 1 FROM app_role_permissions rp
+        JOIN app_roles r ON r.id = rp.role_id
+        WHERE r.code = 'ADMINISTRATOR'
+          AND rp.permission_code = 'coursework.permission.sync.check'
+    ) THEN
+        RAISE EXCEPTION 'O gatilho não sincronizou a nova permissão administrativa';
+    END IF;
+    DELETE FROM app_permissions WHERE code = 'coursework.permission.sync.check';
+
+    INSERT INTO users(id, first_name, last_name, email, password_hash, active, created_at, updated_at)
+    VALUES (validation_user_id, 'Usuário', 'Validação',
+            'validation-' || validation_user_id || '@example.invalid',
+            '{HASH_SENTINELA_NAO_AUTENTICAVEL}', true, now(), now());
+    INSERT INTO demands(id, requester_id, capacity, service, description, urgency)
+    VALUES (validation_demand_id, validation_user_id, 'GROUP', 'formação',
+            'Demanda temporária para validar o gatilho de situação', 'LOW');
+    UPDATE demands SET status = 'Aceita para atendimento' WHERE id = validation_demand_id;
+
+    rejected := false;
+    BEGIN
+        UPDATE demands SET status = 'Pendente' WHERE id = validation_demand_id;
+    EXCEPTION WHEN raise_exception THEN
+        rejected := true;
+    END;
+    IF NOT rejected THEN
+        RAISE EXCEPTION 'O gatilho aceitou uma transição de demanda inválida';
+    END IF;
+    DELETE FROM demands WHERE id = validation_demand_id;
+    DELETE FROM users WHERE id = validation_user_id;
+
+    INSERT INTO organization_audit_events
+        (id, organization_id, actor_user_id, action, target_type, target_id)
+    VALUES (validation_audit_id, gen_random_uuid(), validation_user_id,
+            'REVIEW_REQUESTED', 'PUBLICATION_REVIEW', gen_random_uuid());
+
+    rejected := false;
+    BEGIN
+        UPDATE organization_audit_events
+        SET action = 'REVIEW_APPROVED'
+        WHERE id = validation_audit_id;
+    EXCEPTION WHEN raise_exception THEN
+        rejected := true;
+    END;
+    IF NOT rejected THEN
+        RAISE EXCEPTION 'O gatilho permitiu alterar um evento de auditoria';
+    END IF;
+
+    rejected := false;
+    BEGIN
+        TRUNCATE organization_audit_events;
+    EXCEPTION WHEN raise_exception THEN
+        rejected := true;
+    END;
+    IF NOT rejected THEN
+        RAISE EXCEPTION 'O gatilho permitiu TRUNCATE na auditoria';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE connamespace = 'public'::regnamespace AND NOT convalidated
+    ) THEN
+        RAISE EXCEPTION 'Há restrições de integridade ainda não validadas';
+    END IF;
+END
+$$;
+DO
+SELECT 'product_tables' AS verification, count(*) AS total
+FROM information_schema.tables
+WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+  AND table_name <> 'flyway_schema_history'
+UNION ALL
+SELECT 'application_permissions', count(*) FROM app_permissions
+UNION ALL
+SELECT 'administrator_permissions', count(*)
+FROM app_role_permissions rp JOIN app_roles r ON r.id = rp.role_id
+WHERE r.code = 'ADMINISTRATOR'
+UNION ALL
+SELECT 'root_project_unique_index', count(*)
+FROM pg_indexes WHERE schemaname = 'public' AND indexname = 'uq_projects_root_site'
+UNION ALL
+SELECT 'institutional_pages', count(*) FROM institutional_pages;
+       verification        | total
+---------------------------+-------
+ product_tables            |    35
+ application_permissions   |    17
+ administrator_permissions |    17
+ root_project_unique_index |     1
+ institutional_pages       |     8
+(5 rows)
+
+SELECT 'immutable_audit_test_record' AS verification, count(*) AS total
+FROM organization_audit_events;
+        verification         | total
+-----------------------------+-------
+ immutable_audit_test_record |     1
+(1 row)
+
+SELECT c.relname AS table_name, t.tgname AS trigger_name,
+       pg_get_triggerdef(t.oid) AS trigger_definition
+FROM pg_trigger t
+JOIN pg_class c ON c.oid = t.tgrelid
+JOIN pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = 'public' AND NOT t.tgisinternal
+ORDER BY c.relname, t.tgname;
+        table_name         |               trigger_name                |                                                                                     trigger_definition
+---------------------------+-------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ app_permissions           | ites_sync_administrator_permission        | CREATE TRIGGER ites_sync_administrator_permission AFTER INSERT ON public.app_permissions FOR EACH ROW EXECUTE FUNCTION ites_sync_administrator_permission()
+ demands                   | ites_demand_transition_guard              | CREATE TRIGGER ites_demand_transition_guard BEFORE UPDATE ON public.demands FOR EACH ROW EXECUTE FUNCTION ites_demand_transition_guard()
+ organization_audit_events | trg_organization_audit_events_immutable   | CREATE TRIGGER trg_organization_audit_events_immutable BEFORE DELETE OR UPDATE ON public.organization_audit_events FOR EACH ROW EXECUTE FUNCTION reject_organization_audit_event_mutation()
+ organization_audit_events | trg_organization_audit_events_no_truncate | CREATE TRIGGER trg_organization_audit_events_no_truncate BEFORE TRUNCATE ON public.organization_audit_events FOR EACH STATEMENT EXECUTE FUNCTION reject_organization_audit_event_mutation()
+(4 rows)
+
+-- Consultas simples sobre o schema operacional do ITES.
+SELECT code, status, urgency, service, created_at
+FROM demands
+WHERE status = 'Pendente'
+ORDER BY created_at DESC;
+ code | status | urgency | service | created_at
+------+--------+---------+---------+------------
+(0 rows)
+
+SELECT code, service, created_at
+FROM demands
+WHERE urgency = 'HIGH'
+ORDER BY created_at DESC;
+ code | service | created_at
+------+---------+------------
+(0 rows)
+
+SELECT name, economic_sector
+FROM organizations
+WHERE economic_sector = 'artesanato'
+ORDER BY name;
+ name | economic_sector
+------+-----------------
+(0 rows)
+
+SELECT code, status, created_at
+FROM demands
+WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
+  AND created_at < CURRENT_DATE + INTERVAL '1 day'
+ORDER BY created_at;
+ code | status | created_at
+------+--------+------------
+(0 rows)
+
+SELECT public_key, project_id, current_version
+FROM publications
+WHERE active
+ORDER BY created_at DESC;
+ public_key | project_id | current_version
+------------+------------+-----------------
+(0 rows)
+
+-- Consultas com JOIN e agregações.
+SELECT o.name, d.status, count(*) AS total_demands
+FROM organizations o
+JOIN demands d ON d.organization_id = o.id
+GROUP BY o.id, o.name, d.status
+ORDER BY o.name, d.status;
+ name | status | total_demands
+------+--------+---------------
+(0 rows)
+
+SELECT u.first_name, u.last_name, e.new_status, count(*) AS decisions
+FROM users u
+JOIN demand_events e ON e.actor_id = u.id
+WHERE e.new_status IN ('Aceita para atendimento', 'Recusada')
+GROUP BY u.id, u.first_name, u.last_name, e.new_status
+ORDER BY decisions DESC, u.last_name;
+ first_name | last_name | new_status | decisions
+------------+-----------+------------+-----------
+(0 rows)
+
+SELECT o.economic_sector, d.service, count(*) AS total_demands
+FROM organizations o
+JOIN demands d ON d.organization_id = o.id
+GROUP BY o.economic_sector, d.service
+ORDER BY total_demands DESC, o.economic_sector;
+ economic_sector | service | total_demands
+-----------------+---------+---------------
+(0 rows)
+
+-- Subconsultas para identificar atividade e volume.
+SELECT o.id, o.name
+FROM organizations o
+WHERE EXISTS (
+    SELECT 1 FROM demands d
+    WHERE d.organization_id = o.id
+      AND d.status = 'Aceita para atendimento'
+)
+ORDER BY o.name;
+ id | name
+----+------
+(0 rows)
+
+SELECT u.id, u.first_name, u.last_name
+FROM users u
+WHERE (
+    SELECT count(*) FROM demands d WHERE d.requester_id = u.id
+) > (
+    SELECT avg(requester_total)
+    FROM (
+        SELECT count(*) AS requester_total
+        FROM demands
+        GROUP BY requester_id
+    ) demand_totals
+)
+ORDER BY u.last_name, u.first_name;
+ id | first_name | last_name
+----+------------+-----------
+(0 rows)
+
+SELECT u.id, u.first_name, u.last_name
+FROM users u
+WHERE u.id IN (
+    SELECT d.requester_id
+    FROM demands d
+    WHERE d.urgency = 'HIGH'
+      AND d.organization_id IN (
+          SELECT o.id FROM organizations o
+          WHERE o.economic_sector = 'artesanato'
+      )
+)
+ORDER BY u.last_name, u.first_name;
+ id | first_name | last_name
+----+------------+-----------
+(0 rows)
