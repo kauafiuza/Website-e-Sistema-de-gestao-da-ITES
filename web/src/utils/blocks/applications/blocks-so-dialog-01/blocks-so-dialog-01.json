@@ -1,0 +1,23 @@
+{
+  "id": "blocks-so-dialog-01",
+  "name": "Dialog — confirmação concluída (Blocks.so 01)",
+  "category": "blocks-so-dialog",
+  "categoryName": "Dialogs Blocks.so",
+  "variant": "dialog-01",
+  "description": "Diálogo compacto de confirmação com ícone de sucesso e ação para fechar.",
+  "defaults": {
+    "title": "Ação concluída",
+    "description": "Esta demonstração é local. Nenhum pagamento ou dado foi enviado.",
+    "button": "Abrir confirmação",
+    "href": "#",
+    "eyebrow": "Demonstração"
+  },
+  "editableProperties": ["title", "description", "button"],
+  "export": {
+    "componentName": "BlocksSoDialog01Block",
+    "sourceFile": "applications/blocks-so-dialog-01/blocks-so-dialog-01.tsx",
+    "dependencies": ["react", "lucide-react", "@base-ui/react", "shadcn/ui (local Dialog and Button)"],
+    "tailwindVersion": 4
+  },
+  "order": 228
+}

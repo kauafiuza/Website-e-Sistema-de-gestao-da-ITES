@@ -1,0 +1,88 @@
+{
+  "id": "blog-classic",
+  "name": "Blog — Clássico",
+  "category": "blog",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "BlogClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/blog-classic/blog-classic.tsx"
+  },
+  "defaults": {
+    "title": "Conteúdos para compartilhar",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "post-1",
+        "title": "Artigo de exemplo 1",
+        "description": "Um resumo breve do tema e dos pontos principais deste conteúdo.",
+        "href": "#",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-2-16x9.jpg",
+        "features": [
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+          "Recurso de exemplo",
+          "Recurso de exemplo"
+        ]
+      },
+      {
+        "id": "post-2",
+        "title": "Artigo de exemplo 2",
+        "description": "Um resumo breve do tema e dos pontos principais deste conteúdo.",
+        "href": "#",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-3-16x9.jpg",
+        "features": [
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar2.webp",
+          "Recurso de exemplo",
+          "Recurso de exemplo"
+        ]
+      },
+      {
+        "id": "post-3",
+        "title": "Artigo de exemplo 3",
+        "description": "Um resumo breve do tema e dos pontos principais deste conteúdo.",
+        "href": "#",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-4-16x9.jpg",
+        "features": [
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "Recurso de exemplo",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp",
+          "Recurso de exemplo",
+          "Recurso de exemplo"
+        ]
+      }
+    ]
+  },
+  "categoryName": "Blog",
+  "order": 16
+}

@@ -1,0 +1,37 @@
+{
+  "id": "hero-basic-product",
+  "name": "Cabeçalho — Produto básico",
+  "category": "hero",
+  "categoryName": "Cabeçalho",
+  "variant": "product-basic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Apresente sua próxima ideia.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-details/saas-detail-1-16x9.png",
+    "imageAlt": "Imagem ilustrativa do conteúdo."
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "href",
+    "eyebrow",
+    "imageUrl",
+    "imageAlt"
+  ],
+  "export": {
+    "componentName": "HeroProductBasicBlock",
+    "sourceFile": "sections/hero-basic-product/hero-basic-product.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 80
+}

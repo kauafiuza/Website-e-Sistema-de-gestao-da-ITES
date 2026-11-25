@@ -1,0 +1,61 @@
+{
+  "id": "features-split",
+  "name": "Recursos — Dividido",
+  "category": "features",
+  "variant": "split",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "items",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "FeaturesSplitBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/features-split/features-split.tsx"
+  },
+  "defaults": {
+    "title": "Recursos pensados para o seu dia a dia.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "feature-0",
+        "title": "Recurso 1",
+        "description": "Uma descrição breve do recurso e de como ele ajuda no trabalho.",
+        "href": "#",
+        "value": "Foco",
+        "features": []
+      },
+      {
+        "id": "feature-1",
+        "title": "Recurso 2",
+        "description": "Uma descrição breve do recurso e de como ele ajuda no trabalho.",
+        "href": "#",
+        "value": "Conexão",
+        "features": []
+      },
+      {
+        "id": "feature-2",
+        "title": "Recurso 3",
+        "description": "Uma descrição breve do recurso e de como ele ajuda no trabalho.",
+        "href": "#",
+        "value": "Crescimento",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Recursos",
+  "order": 4
+}

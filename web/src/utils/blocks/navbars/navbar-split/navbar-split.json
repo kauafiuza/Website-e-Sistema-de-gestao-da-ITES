@@ -1,0 +1,67 @@
+{
+  "id": "navbar-split",
+  "name": "Navegação — Dividido",
+  "category": "navbar",
+  "variant": "split",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "imageUrl",
+    "imageAlt",
+    "logoHref",
+    "showThemeToggle",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "NavbarSplitBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "navbars/navbar-split/navbar-split.tsx"
+  },
+  "defaults": {
+    "title": "Estúdio",
+    "imageUrl": "",
+    "imageAlt": "Logo do site",
+    "logoHref": "#",
+    "showThemeToggle": false,
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "features",
+        "title": "Link 1",
+        "description": "",
+        "href": "#features",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "pricing",
+        "title": "Link 2",
+        "description": "",
+        "href": "#pricing",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "contact",
+        "title": "Link 3",
+        "description": "",
+        "href": "#contact",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Navegação",
+  "order": 20
+}

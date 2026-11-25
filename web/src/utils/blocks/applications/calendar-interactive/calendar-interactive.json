@@ -1,0 +1,198 @@
+{
+  "id": "calendar-interactive",
+  "name": "Calendário — Interativo",
+  "category": "calendar",
+  "variant": "interactive",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Calendário",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "1",
+        "title": "Evento 1",
+        "description": "",
+        "href": "2026-09-28",
+        "value": "work",
+        "features": ["10:00", "11:00"]
+      },
+      {
+        "id": "2",
+        "title": "Evento 2",
+        "description": "",
+        "href": "2026-10-01",
+        "value": "social",
+        "features": []
+      },
+      {
+        "id": "3",
+        "title": "Evento 3",
+        "description": "",
+        "href": "2026-10-02",
+        "value": "meetings",
+        "features": ["14:00", "15:00"]
+      },
+      {
+        "id": "4",
+        "title": "Evento 4",
+        "description": "",
+        "href": "2026-10-05",
+        "value": "meetings",
+        "features": ["09:00", "09:15"]
+      },
+      {
+        "id": "5",
+        "title": "Evento 5",
+        "description": "",
+        "href": "2026-10-07",
+        "value": "personal",
+        "features": ["15:30", "16:15"]
+      },
+      {
+        "id": "6",
+        "title": "Evento 6",
+        "description": "",
+        "href": "2026-10-08",
+        "value": "important",
+        "features": ["11:00", "12:00"]
+      },
+      {
+        "id": "7",
+        "title": "Evento 7",
+        "description": "",
+        "href": "2026-10-12",
+        "value": "meetings",
+        "features": ["11:00", "12:00"]
+      },
+      {
+        "id": "8",
+        "title": "Evento 8",
+        "description": "",
+        "href": "2026-10-12",
+        "value": "work",
+        "features": ["15:00", "16:00"]
+      },
+      {
+        "id": "9",
+        "title": "Evento 9",
+        "description": "",
+        "href": "2026-10-13",
+        "value": "important",
+        "features": ["16:30", "17:30"]
+      },
+      {
+        "id": "10",
+        "title": "Evento 10",
+        "description": "",
+        "href": "2026-10-16",
+        "value": "meetings",
+        "features": ["10:00", "12:30"]
+      },
+      {
+        "id": "11",
+        "title": "Evento 11",
+        "description": "",
+        "href": "2026-10-17",
+        "value": "personal",
+        "features": ["09:00", "11:00"]
+      },
+      {
+        "id": "12",
+        "title": "Evento 12",
+        "description": "",
+        "href": "2026-10-19",
+        "value": "meetings",
+        "features": ["09:00", "09:15"]
+      },
+      {
+        "id": "13",
+        "title": "Evento 13",
+        "description": "",
+        "href": "2026-10-21",
+        "value": "work",
+        "features": ["10:30", "11:00"]
+      },
+      {
+        "id": "14",
+        "title": "Evento 14",
+        "description": "",
+        "href": "2026-10-21",
+        "value": "social",
+        "features": ["12:30", "13:30"]
+      },
+      {
+        "id": "15",
+        "title": "Evento 15",
+        "description": "",
+        "href": "2026-10-21",
+        "value": "personal",
+        "features": ["18:00", "19:00"]
+      },
+      {
+        "id": "16",
+        "title": "Evento 16",
+        "description": "",
+        "href": "2026-10-23",
+        "value": "work",
+        "features": ["16:00", "17:00"]
+      },
+      {
+        "id": "17",
+        "title": "Evento 17",
+        "description": "",
+        "href": "2026-10-25",
+        "value": "personal",
+        "features": ["08:00", "12:00"]
+      },
+      {
+        "id": "18",
+        "title": "Evento 18",
+        "description": "",
+        "href": "2026-10-29",
+        "value": "important",
+        "features": ["09:30", "11:00"]
+      },
+      {
+        "id": "19",
+        "title": "Evento 19",
+        "description": "",
+        "href": "2026-10-30",
+        "value": "important",
+        "features": []
+      },
+      {
+        "id": "20",
+        "title": "Evento 20",
+        "description": "",
+        "href": "2026-10-31",
+        "value": "social",
+        "features": ["19:00", "23:00"]
+      },
+      {
+        "id": "21",
+        "title": "Evento 21",
+        "description": "",
+        "href": "2026-11-02",
+        "value": "meetings",
+        "features": ["14:00", "15:00"]
+      }
+    ]
+  },
+  "editableProperties": ["title", "items"],
+  "export": {
+    "componentName": "CalendarInteractiveBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/calendar-interactive/calendar-interactive.tsx"
+  },
+  "categoryName": "Calendário",
+  "order": 68
+}

@@ -1,0 +1,65 @@
+{
+  "id": "footer-directory",
+  "name": "Rodapé — Diretório de links",
+  "category": "footer",
+  "variant": "directory",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Minha empresa",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "features",
+        "title": "Link 1",
+        "description": "",
+        "href": "#features",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "pricing",
+        "title": "Link 2",
+        "description": "",
+        "href": "#pricing",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "contact",
+        "title": "Link 3",
+        "description": "",
+        "href": "#contact",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "FooterDirectoryBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "footers/footer-directory/footer-directory.tsx"
+  },
+  "categoryName": "Rodapé",
+  "order": 57
+}

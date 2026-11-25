@@ -1,0 +1,33 @@
+{
+  "id": "motion-cylinder-carousel",
+  "name": "Cylinder Carousel",
+  "category": "motion",
+  "categoryName": "Motion",
+  "variant": "concave-carousel",
+  "description": "Drag, scroll, or use arrow keys to roll a spring-driven cylinder carousel.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [
+      { "id": "carousel-design", "title": "Design", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "carousel-motion", "title": "Motion", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "carousel-react", "title": "React", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "carousel-beui", "title": "BeUI", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "carousel-builder", "title": "Builder", "description": "", "href": "", "value": "", "features": [] }
+    ],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": ["items"],
+  "export": {
+    "componentName": "MotionCylinderCarouselBlock",
+    "sourceFile": "motion/motion-cylinder-carousel/motion-cylinder-carousel.tsx",
+    "dependencies": ["react", "motion"],
+    "tailwindVersion": 4
+  },
+  "order": 211
+}

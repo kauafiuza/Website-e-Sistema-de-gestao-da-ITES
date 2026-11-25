@@ -1,0 +1,40 @@
+{
+  "id": "about-classic",
+  "name": "Sobre — Clássico",
+  "category": "about",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "alignment",
+    "appearance",
+    "imageUrl",
+    "imageAlt"
+  ],
+  "export": {
+    "componentName": "AboutClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/about-classic/about-classic.tsx"
+  },
+  "defaults": {
+    "title": "Feito com propósito.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/workplace-photos/photo-2.jpg",
+    "imageAlt": "Imagem ilustrativa do conteúdo."
+  },
+  "categoryName": "Sobre",
+  "order": 17
+}

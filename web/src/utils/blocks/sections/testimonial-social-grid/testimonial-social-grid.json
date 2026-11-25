@@ -1,0 +1,26 @@
+{
+  "id": "testimonial-social-grid",
+  "name": "Depoimentos — Grade social",
+  "category": "testimonial-social-grid",
+  "categoryName": "Depoimentos",
+  "variant": "social-grid",
+  "description": "Grade em colunas com depoimentos, avatares e ícones de origem.",
+  "defaults": {
+    "title": "A confiança de equipes que usam",
+    "description": "Relatos de pessoas que adotaram a plataforma em seus projetos.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      { "id": "social-review-1", "title": "Pessoa cliente 1", "description": "A biblioteca de componentes ajudou nossa equipe a entregar uma nova versão com mais rapidez.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp", "value": "Liderança de produto", "features": ["Retrato da pessoa cliente", ""] },
+      { "id": "social-review-2", "title": "Pessoa cliente 2", "description": "Os blocos são fáceis de adaptar e já vêm com uma boa base de acessibilidade.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar7.webp", "value": "Engenharia de software", "features": ["Retrato da pessoa cliente", ""] },
+      { "id": "social-review-3", "title": "Pessoa cliente 3", "description": "Conseguimos lançar páginas de campanha em dias, mantendo consistência visual.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar12.webp", "value": "Design de produto", "features": ["Retrato da pessoa cliente", ""] },
+      { "id": "social-review-4", "title": "Pessoa cliente 4", "description": "A integração com TypeScript e Tailwind se encaixou bem no nosso fluxo.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar4.webp", "value": "Desenvolvimento", "features": ["Retrato da pessoa cliente", ""] },
+      { "id": "social-review-5", "title": "Pessoa cliente 5", "description": "Os layouts responsivos reduziram o tempo gasto corrigindo detalhes entre telas.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar9.webp", "value": "Experiência do usuário", "features": ["Retrato da pessoa cliente", ""] },
+      { "id": "social-review-6", "title": "Pessoa cliente 6", "description": "A equipe ganhou uma base compartilhada para criar interfaces consistentes.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar11.webp", "value": "Liderança técnica", "features": ["Retrato da pessoa cliente", ""] }
+    ]
+  },
+  "editableProperties": ["title", "description", "items"],
+  "export": { "componentName": "TestimonialSocialGridBlock", "sourceFile": "sections/testimonial-social-grid/testimonial-social-grid.tsx", "dependencies": ["react", "shadcn/ui (see generated imports)"], "tailwindVersion": 4 },
+  "order": 100
+}

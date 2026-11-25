@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "name": "Portal institucional ITES",
+  "activePageId": "ites-inicio",
+  "pages": [
+    {
+      "id": "ites-inicio",
+      "name": "Início",
+      "slug": "inicio",
+      "blocks": [
+        { "id": "ites-destaque", "definitionId": "hero-classic", "props": { "eyebrow": "IFRJ Campus Niterói", "title": "Economia solidária se constrói em conjunto", "description": "A Incubadora Tecnológica de Economia Solidária apoia iniciativas coletivas com formação, articulação e acompanhamento." , "button": "Enviar uma demanda", "href": "/demandas", "imageUrl": "", "imageAlt": "" } },
+        { "id": "ites-sobre", "definitionId": "about-classic", "props": { "eyebrow": "Quem somos", "title": "Conhecimento, território e cooperação", "description": "A ITES atua junto a empreendimentos, grupos, coletivos, redes e parceiros, fortalecendo práticas de trabalho associado e desenvolvimento solidário.", "button": "Conheça a incubadora", "href": "/institucional/quem-somos", "imageUrl": "", "imageAlt": "" } },
+        { "id": "ites-atuacao", "definitionId": "features-classic", "props": { "eyebrow": "Como trabalhamos", "title": "Apoio construído com cada iniciativa", "description": "As atividades partem das necessidades dos grupos e valorizam a troca de saberes.", "items": [{ "id": "formacao", "title": "Formação", "description": "Oficinas, encontros e atividades educativas.", "href": "/institucional/noticias", "value": "Aprender", "features": [] }, { "id": "assessoria", "title": "Assessoria", "description": "Acompanhamento e apoio às iniciativas de economia solidária.", "href": "/demandas", "value": "Apoiar", "features": [] }, { "id": "articulacao", "title": "Articulação", "description": "Parcerias, redes e cooperação no território.", "href": "/institucional/projetos", "value": "Cooperar", "features": [] }] } },
+        { "id": "ites-projetos", "definitionId": "portfolio-classic", "props": { "eyebrow": "Projetos e empreendimentos", "title": "Iniciativas apoiadas", "description": "Conheça os grupos, coletivos e redes acompanhados pela incubadora.", "items": [] } },
+        { "id": "ites-noticias", "definitionId": "blog-classic", "props": { "eyebrow": "Notícias e eventos", "title": "Agenda da ITES", "description": "Oficinas, encontros e atividades institucionais.", "items": [] } },
+        { "id": "ites-publicacoes", "definitionId": "download-classic", "props": { "eyebrow": "Publicações e biblioteca", "title": "Materiais para compartilhar conhecimento", "description": "Publicações, materiais de formação e produções relacionadas à economia solidária.", "button": "Consultar publicações", "href": "/institucional/publicacoes" } },
+        { "id": "ites-contato", "definitionId": "contact-classic", "props": { "eyebrow": "Fale com a ITES", "title": "Vamos construir em parceria?", "description": "Apresente sua necessidade à equipe da incubadora e acompanhe sua solicitação pela plataforma.", "button": "Enviar demanda", "href": "/demandas" } }
+      ]
+    }
+  ]
+}

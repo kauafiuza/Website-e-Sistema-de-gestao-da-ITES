@@ -1,0 +1,14 @@
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import type { BlockProps } from "@/utils/blocks/types"
+import { InlineText, type InlineEditor } from "@/utils/blocks/shared/inline-editing"
+
+export function CheckoutDemoBlock({props:p,editor}:{props:BlockProps;editor?:InlineEditor}) {
+ const [sent,setSent]=useState(false)
+ const [payment,setPayment]=useState("card")
+ return <section className="builder-block builder-block--spacious bg-background"><div className="container mx-auto"><h1 className="mb-2 text-3xl font-bold"><InlineText editor={editor} target={{kind:"property",key:"title"}} value={p.title} label="título" /></h1><InlineText editor={editor} target={{kind:"property",key:"description"}} value={p.description} label="descrição" as="p" className="mb-8 text-muted-foreground"/><div className="grid gap-8 @lg:grid-cols-2"><form className="space-y-6" onSubmit={e=>{e.preventDefault();setSent(true)}}><fieldset className="space-y-4"><legend className="mb-3 text-xl font-semibold">Contato e entrega</legend><div className="grid gap-4 @md:grid-cols-2">{["E-mail","Nome","Sobrenome","País","Endereço","CEP","Cidade","Telefone"].map((label,i)=><div key={label} className={i===4?"@md:col-span-2":""}><Label htmlFor={`checkout-${i}`}>{label}</Label><Input id={`checkout-${i}`} required type={i===0?"email":"text"} autoComplete="off" /></div>)}</div></fieldset><fieldset className="space-y-3"><legend className="text-xl font-semibold">Pagamento de demonstração</legend><p className="text-sm text-muted-foreground">Esta prévia não coleta nem envia dados de cartão.</p><RadioGroup aria-label="Forma de pagamento" value={payment} onValueChange={setPayment} className="gap-2"><label className="flex items-center gap-2"><RadioGroupItem value="card" /> Cartão de crédito (simulação)</label><label className="flex items-center gap-2"><RadioGroupItem value="paypal" /> PayPal</label><label className="flex items-center gap-2"><RadioGroupItem value="transfer" /> Transferência bancária</label></RadioGroup></fieldset><Button type="submit" className="w-full">{sent?"Pedido de demonstração recebido":p.button}</Button></form><Card><CardContent className="space-y-4 p-6"><h2 className="text-xl font-semibold">Seu carrinho</h2>{(p.items??[]).map(item=><div key={item.id} className="flex justify-between gap-4 border-b pb-3"><span>{item.title} <span className="text-muted-foreground">× {item.features[0]||"1"}</span></span><span>{item.description}</span></div>)}<div className="flex justify-between font-semibold"><span>Total</span><span>{p.eyebrow}</span></div></CardContent></Card></div></div></section>
+}

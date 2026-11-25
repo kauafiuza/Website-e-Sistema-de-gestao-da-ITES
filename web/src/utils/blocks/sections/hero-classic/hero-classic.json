@@ -1,0 +1,40 @@
+{
+  "id": "hero-classic",
+  "name": "Cabeçalho — Clássico",
+  "category": "hero",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "alignment",
+    "appearance",
+    "imageUrl",
+    "imageAlt"
+  ],
+  "export": {
+    "componentName": "HeroClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/hero-classic/hero-classic.tsx"
+  },
+  "defaults": {
+    "title": "Apresente sua próxima ideia.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-2-16x9.jpg",
+    "imageAlt": "Imagem ilustrativa do conteúdo."
+  },
+  "categoryName": "Cabeçalho",
+  "order": 1
+}

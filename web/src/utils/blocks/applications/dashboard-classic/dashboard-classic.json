@@ -1,0 +1,34 @@
+{
+  "id": "dashboard-classic",
+  "name": "Painel — Clássico",
+  "category": "dashboard",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "DashboardClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/dashboard-classic/dashboard-classic.tsx"
+  },
+  "defaults": {
+    "title": "Visão geral do espaço",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Painel",
+  "order": 24
+}

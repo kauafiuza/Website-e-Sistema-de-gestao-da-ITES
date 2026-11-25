@@ -1,0 +1,77 @@
+{
+  "id": "pricing-comparison",
+  "name": "Preços — Comparação de cobrança",
+  "category": "pricing",
+  "variant": "comparison",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Planos claros para cada necessidade.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "plan-0",
+        "title": "Plano 1",
+        "description": "Recursos para atender às necessidades da sua equipe.",
+        "href": "#contact",
+        "value": "0",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "plan-1",
+        "title": "Plano 2",
+        "description": "Recursos para atender às necessidades da sua equipe.",
+        "href": "#contact",
+        "value": "29",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "plan-2",
+        "title": "Plano 3",
+        "description": "Recursos para atender às necessidades da sua equipe.",
+        "href": "#contact",
+        "value": "99",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "PricingComparisonBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/pricing-comparison/pricing-comparison.tsx"
+  },
+  "categoryName": "Preços",
+  "order": 48
+}

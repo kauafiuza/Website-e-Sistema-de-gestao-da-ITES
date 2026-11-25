@@ -1,0 +1,5 @@
+# ITES · IFRJ Campus Niterói
+
+Portal da Incubadora Tecnológica de Economia Solidária, com informações institucionais, iniciativas apoiadas, notícias, publicações e canais de contato.
+
+O sistema também permite o envio e o acompanhamento de demandas. As áreas administrativas e os dados privados exigem autenticação e autorização.

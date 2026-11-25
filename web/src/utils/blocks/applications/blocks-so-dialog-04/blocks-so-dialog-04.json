@@ -1,0 +1,23 @@
+{
+  "id": "blocks-so-dialog-04",
+  "name": "Dialog — edição de perfil (Blocks.so 04)",
+  "category": "blocks-so-dialog",
+  "categoryName": "Dialogs Blocks.so",
+  "variant": "dialog-04",
+  "description": "Diálogo compacto para editar um campo de perfil com confirmação local.",
+  "defaults": {
+    "title": "Editar perfil",
+    "description": "Atualize as informações do perfil nesta demonstração local.",
+    "button": "Editar perfil",
+    "href": "#",
+    "eyebrow": "Seu nome"
+  },
+  "editableProperties": ["title", "description", "button", "eyebrow"],
+  "export": {
+    "componentName": "BlocksSoDialog04Block",
+    "sourceFile": "applications/blocks-so-dialog-04/blocks-so-dialog-04.tsx",
+    "dependencies": ["react", "@base-ui/react", "shadcn/ui (local Dialog, Button, Input, Label)"],
+    "tailwindVersion": 4
+  },
+  "order": 231
+}

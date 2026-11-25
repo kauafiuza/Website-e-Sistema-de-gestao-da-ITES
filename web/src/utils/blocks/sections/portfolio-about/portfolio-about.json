@@ -1,0 +1,37 @@
+{
+  "id": "portfolio-about",
+  "name": "Portfólio — Sobre",
+  "category": "portfolio-about",
+  "categoryName": "Portfólio",
+  "variant": "profile-and-skills",
+  "description": "Apresentação pessoal e tecnologias em destaque.",
+  "defaults": {
+    "eyebrow": "SOBRE",
+    "title": "Tecnologia com intenção",
+    "description": "Sou desenvolvedor full-stack e gosto de transformar problemas complexos em experiências digitais simples. Trabalho entre arquitetura, produto e interface para criar soluções úteis de ponta a ponta.",
+    "button": "",
+    "href": "#",
+    "imageUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=720&q=85",
+    "imageAlt": "Retrato ilustrativo de uma profissional de tecnologia",
+    "logoHref": "https://example.com/perfil",
+    "layoutWidth": "standard",
+    "layoutGutter": 24,
+    "blockAnimation": "fade-up",
+    "items": [
+      { "id": "skill-java", "title": "Java", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "skill-spring", "title": "Spring Boot", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "skill-react", "title": "React", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "skill-typescript", "title": "TypeScript", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "skill-node", "title": "Node.js", "description": "", "href": "", "value": "", "features": [] },
+      { "id": "skill-docker", "title": "Docker", "description": "", "href": "", "value": "", "features": [] }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "description", "imageUrl", "imageAlt", "logoHref", "items"],
+  "export": {
+    "componentName": "PortfolioAboutBlock",
+    "sourceFile": "sections/portfolio-about/portfolio-about.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 116
+}

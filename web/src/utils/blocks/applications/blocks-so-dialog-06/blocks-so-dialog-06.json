@@ -1,0 +1,23 @@
+{
+  "id": "blocks-so-dialog-06",
+  "name": "Dialog — criar workspace (Blocks.so 06)",
+  "category": "blocks-so-dialog",
+  "categoryName": "Dialogs Blocks.so",
+  "variant": "dialog-06",
+  "description": "Diálogo com formulário de criação e opção de privacidade local.",
+  "defaults": {
+    "title": "Criar workspace",
+    "description": "Configure um espaço compartilhado para organizar o trabalho da sua equipe.",
+    "button": "Criar workspace",
+    "href": "#",
+    "eyebrow": "Workspace"
+  },
+  "editableProperties": ["title", "description", "button"],
+  "export": {
+    "componentName": "BlocksSoDialog06Block",
+    "sourceFile": "applications/blocks-so-dialog-06/blocks-so-dialog-06.tsx",
+    "dependencies": ["react", "@base-ui/react", "shadcn/ui (local Dialog, Button, Input, Label, Switch)"],
+    "tailwindVersion": 4
+  },
+  "order": 232
+}

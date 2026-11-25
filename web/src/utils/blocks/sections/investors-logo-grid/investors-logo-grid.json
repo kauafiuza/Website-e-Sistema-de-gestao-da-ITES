@@ -1,0 +1,33 @@
+{
+  "id": "investors-logo-grid",
+  "name": "Investidores — Grade de marcas",
+  "category": "logos",
+  "categoryName": "Marcas",
+  "variant": "investors-grid",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Marcas que confiam no trabalho.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      { "id": "investor-1", "title": "Item 1", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/sequoia.svg", "value": "", "features": [] },
+      { "id": "investor-2", "title": "Item 2", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/a16z.svg", "value": "", "features": [] },
+      { "id": "investor-3", "title": "Item 3", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/accel.svg", "value": "", "features": [] },
+      { "id": "investor-4", "title": "Item 4", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/kleiner-perkins.svg", "value": "", "features": [] },
+      { "id": "investor-5", "title": "Item 5", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/greylock.svg", "value": "", "features": [] },
+      { "id": "investor-6", "title": "Item 6", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/lightspeed.svg", "value": "", "features": [] },
+      { "id": "investor-7", "title": "Item 7", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/founders-fund.svg", "value": "", "features": [] },
+      { "id": "investor-8", "title": "Item 8", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/investors/khosla.svg", "value": "", "features": [] }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "description", "items"],
+  "export": {
+    "componentName": "InvestorsLogoGridBlock",
+    "sourceFile": "sections/investors-logo-grid/investors-logo-grid.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 73
+}

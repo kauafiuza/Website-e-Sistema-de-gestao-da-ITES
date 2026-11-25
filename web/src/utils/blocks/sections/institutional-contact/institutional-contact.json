@@ -1,0 +1,46 @@
+{
+  "id": "institutional-contact",
+  "name": "Portfólio — Contato e rodapé",
+  "category": "institutional-contact",
+  "categoryName": "Contato",
+  "variant": "editorial-footer",
+  "description": "Encerramento enxuto com chamada de contato, redes e retorno ao topo.",
+  "defaults": {
+    "eyebrow": "Contato",
+    "title": "Entre em contato com a ITES",
+    "button": "Enviar uma demanda",
+    "href": "/demandas/nova",
+    "description": "Incubadora Tecnológica de Economia Solidária · IFRJ Campus Niterói",
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-up",
+    "items": [
+      {
+        "id": "social-instagram",
+        "title": "Instagram da ITES",
+        "description": "Acompanhe as atividades da incubadora.",
+        "href": "https://www.instagram.com/ites.ifrjniteroi/",
+        "value": "instagram",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "button",
+    "href",
+    "description",
+    "items"
+  ],
+  "export": {
+    "componentName": "InstitutionalContactBlock",
+    "sourceFile": "sections/institutional-contact/institutional-contact.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 205
+}

@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="980" viewBox="0 0 1520 980" role="img" aria-labelledby="title description">
+  <title id="title">Modelo lógico relacional acadêmico da plataforma ITES</title>
+  <desc id="description">Diagrama com doze tabelas, chaves primárias, chaves estrangeiras e relações de usuários, permissões, demandas e páginas.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#47617c" />
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #182b3e; }
+      .title { font-size: 26px; font-weight: 700; }
+      .subtitle { font-size: 15px; fill: #456079; }
+      .table { fill: #f1f6fb; stroke: #42617c; stroke-width: 2; rx: 10; }
+      .table-title { font-size: 17px; font-weight: 700; }
+      .field { font-size: 13px; }
+      .edge { fill: none; stroke: #47617c; stroke-width: 2; marker-end: url(#arrow); }
+      .edge-label { font-size: 12px; font-weight: 700; fill: #294d70; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
+      .legend { font-size: 13px; }
+    </style>
+  </defs>
+  <rect width="1520" height="980" fill="#ffffff" />
+  <text class="title" x="40" y="38">Modelo lógico relacional acadêmico da ITES</text>
+  <text class="subtitle" x="40" y="64">12 tabelas • relacionamentos identificados por FK • tabelas de associação representam relações N:N</text>
+
+  <!-- Relacionamentos: desenhados antes das entidades para permanecerem ao fundo. -->
+  <path class="edge" d="M290 118 H360" /><text class="edge-label" x="306" y="108">1:N</text>
+  <path class="edge" d="M660 112 H590" /><text class="edge-label" x="610" y="102">1:N</text>
+  <path class="edge" d="M870 112 H940" /><text class="edge-label" x="888" y="102">1:N</text>
+  <path class="edge" d="M1260 112 H1190" /><text class="edge-label" x="1206" y="102">1:N</text>
+  <path class="edge" d="M165 190 V282 H500 V330" /><text class="edge-label" x="300" y="273">1:N solicitante</text>
+  <path class="edge" d="M290 408 H360" /><text class="edge-label" x="302" y="397">1:N</text>
+  <path class="edge" d="M690 423 H770" /><text class="edge-label" x="710" y="413">1:N</text>
+  <path class="edge" d="M290 160 H730 V383 H770" /><text class="edge-label" x="710" y="376">1:N responsável</text>
+  <path class="edge" d="M290 174 H1110 V408 H1130" /><text class="edge-label" x="1085" y="400">1:N ator/sujeito</text>
+  <path class="edge" d="M765 155 V320 H1280 V360" /><text class="edge-label" x="1070" y="312">1:N papel</text>
+  <path class="edge" d="M290 790 H360" /><text class="edge-label" x="307" y="780">1:N</text>
+  <path class="edge" d="M290 818 H735 V770 H770" /><text class="edge-label" x="690" y="760">1:N</text>
+  <path class="edge" d="M660 785 H770" /><text class="edge-label" x="686" y="775">1:N</text>
+  <path class="edge" d="M250 190 V640 H485 V690" /><text class="edge-label" x="340" y="632">1:N autor</text>
+  <path class="edge" d="M250 182 H1090 V640 H900 V700" /><text class="edge-label" x="1030" y="632">1:N ator</text>
+
+  <!-- Entidades de identidade e autorização. -->
+  <g transform="translate(40 80)">
+    <rect class="table" width="250" height="110" />
+    <text class="table-title" x="14" y="25">users</text>
+    <text class="field" x="14" y="49">PK id • email UNIQUE</text>
+    <text class="field" x="14" y="70">name • password_hash • active</text>
+    <text class="field" x="14" y="91">whatsapp • created_at</text>
+  </g>
+  <g transform="translate(360 80)">
+    <rect class="table" width="230" height="96" />
+    <text class="table-title" x="14" y="25">user_roles</text>
+    <text class="field" x="14" y="50">PK composta • FK user_id</text>
+    <text class="field" x="14" y="72">FK role_id</text>
+  </g>
+  <g transform="translate(660 80)">
+    <rect class="table" width="210" height="76" />
+    <text class="table-title" x="14" y="25">roles</text>
+    <text class="field" x="14" y="50">PK id • code UNIQUE • name</text>
+  </g>
+  <g transform="translate(940 80)">
+    <rect class="table" width="250" height="96" />
+    <text class="table-title" x="14" y="25">role_permissions</text>
+    <text class="field" x="14" y="50">PK composta • FK role_id</text>
+    <text class="field" x="14" y="72">FK permission_id</text>
+  </g>
+  <g transform="translate(1260 80)">
+    <rect class="table" width="220" height="96" />
+    <text class="table-title" x="14" y="25">permissions</text>
+    <text class="field" x="14" y="50">PK id • code UNIQUE</text>
+    <text class="field" x="14" y="72">description</text>
+  </g>
+
+  <!-- Entidades de organização e gestão de demandas. -->
+  <g transform="translate(40 360)">
+    <rect class="table" width="250" height="96" />
+    <text class="table-title" x="14" y="25">organizations</text>
+    <text class="field" x="14" y="50">PK id • name • economic_sector</text>
+    <text class="field" x="14" y="73">contact_email • created_at</text>
+  </g>
+  <g transform="translate(360 330)">
+    <rect class="table" width="330" height="210" />
+    <text class="table-title" x="14" y="25">demands</text>
+    <text class="field" x="14" y="50">PK id • code UNIQUE (gerado)</text>
+    <text class="field" x="14" y="72">FK requester_id • FK organization_id?</text>
+    <text class="field" x="14" y="94">capacity • capacity_other • service</text>
+    <text class="field" x="14" y="116">description • urgency • status</text>
+    <text class="field" x="14" y="138">completion_note • review_notes</text>
+    <text class="field" x="14" y="160">created_at • updated_at</text>
+    <text class="field" x="14" y="188">CHECKs de situação e integridade</text>
+  </g>
+  <g transform="translate(770 360)">
+    <rect class="table" width="310" height="128" />
+    <text class="table-title" x="14" y="25">demand_events</text>
+    <text class="field" x="14" y="50">PK id • FK demand_id • FK actor_id</text>
+    <text class="field" x="14" y="72">old_status • new_status • justification</text>
+    <text class="field" x="14" y="96">occurred_at • histórico imutável</text>
+  </g>
+  <g transform="translate(1130 360)">
+    <rect class="table" width="300" height="140" />
+    <text class="table-title" x="14" y="25">grant_audit</text>
+    <text class="field" x="14" y="50">PK id • FK actor_id • FK subject_user_id</text>
+    <text class="field" x="14" y="72">FK role_id • action (GRANT/REVOKE)</text>
+    <text class="field" x="14" y="96">occurred_at</text>
+  </g>
+
+  <!-- Entidades de páginas e publicação institucional. -->
+  <g transform="translate(40 740)">
+    <rect class="table" width="250" height="100" />
+    <text class="table-title" x="14" y="25">pages</text>
+    <text class="field" x="14" y="50">PK id • slug UNIQUE • title</text>
+    <text class="field" x="14" y="74">FK composta para versão publicada?</text>
+  </g>
+  <g transform="translate(360 690)">
+    <rect class="table" width="300" height="150" />
+    <text class="table-title" x="14" y="25">page_versions</text>
+    <text class="field" x="14" y="50">PK id • FK page_id • FK author_id</text>
+    <text class="field" x="14" y="72">revision • document JSONB</text>
+    <text class="field" x="14" y="96">UNIQUE(page_id, revision)</text>
+    <text class="field" x="14" y="120">UNIQUE(page_id, id)</text>
+  </g>
+  <g transform="translate(770 700)">
+    <rect class="table" width="310" height="130" />
+    <text class="table-title" x="14" y="25">page_events</text>
+    <text class="field" x="14" y="50">PK id • FK page_id • FK version_id?</text>
+    <text class="field" x="14" y="72">FK actor_id • action</text>
+    <text class="field" x="14" y="96">occurred_at</text>
+  </g>
+
+  <rect x="40" y="900" width="20" height="16" fill="#f1f6fb" stroke="#42617c" stroke-width="2" />
+  <text class="legend" x="70" y="913">PK: chave primária • FK: chave estrangeira • ?: associação opcional • 1:N: cardinalidade</text>
+  <text class="subtitle" x="40" y="950">user_roles e role_permissions materializam as relações N:N entre usuários, papéis e permissões.</text>
+</svg>

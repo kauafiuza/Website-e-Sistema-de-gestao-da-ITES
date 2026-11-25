@@ -1,0 +1,35 @@
+{
+  "id": "form-classic",
+  "name": "Formulários — Clássico",
+  "category": "form",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "FormClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/form-classic/form-classic.tsx"
+  },
+  "defaults": {
+    "title": "Conte-nos sobre você",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Formulários",
+  "order": 26
+}

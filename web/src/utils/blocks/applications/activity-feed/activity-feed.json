@@ -1,0 +1,63 @@
+{
+  "id": "activity-feed",
+  "name": "Atividades — Atividades da equipe",
+  "category": "activity",
+  "variant": "feed",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Atividades recentes",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "event-0",
+        "title": "Atividade 1",
+        "description": "Uma atividade de exemplo da equipe.",
+        "href": "#",
+        "value": "há 1 hora",
+        "features": []
+      },
+      {
+        "id": "event-1",
+        "title": "Atividade 2",
+        "description": "Uma atividade de exemplo da equipe.",
+        "href": "#",
+        "value": "há 2 horas",
+        "features": []
+      },
+      {
+        "id": "event-2",
+        "title": "Atividade 3",
+        "description": "Uma atividade de exemplo da equipe.",
+        "href": "#",
+        "value": "há 3 horas",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "ActivityFeedBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/activity-feed/activity-feed.tsx"
+  },
+  "categoryName": "Atividades",
+  "order": 62
+}

@@ -1,0 +1,38 @@
+{
+  "id": "empty-start",
+  "name": "Estado vazio — Primeiros passos",
+  "category": "empty",
+  "variant": "start",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Sua próxima ideia começa aqui.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default"
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href"
+  ],
+  "export": {
+    "componentName": "EmptyStartBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/empty-start/empty-start.tsx"
+  },
+  "categoryName": "Estados vazios",
+  "order": 64
+}

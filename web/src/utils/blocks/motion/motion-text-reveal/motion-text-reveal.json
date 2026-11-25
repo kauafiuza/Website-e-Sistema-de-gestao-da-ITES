@@ -1,0 +1,27 @@
+{
+  "id": "motion-text-reveal",
+  "name": "Text Reveal",
+  "category": "motion",
+  "categoryName": "Motion",
+  "variant": "word-reveal",
+  "description": "Reveal words with the spring animation from BeUI Text Animation.",
+  "defaults": {
+    "title": "Motion, made tangible.",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": ["title"],
+  "export": {
+    "componentName": "MotionTextRevealBlock",
+    "sourceFile": "motion/motion-text-reveal/motion-text-reveal.tsx",
+    "dependencies": ["react", "motion"],
+    "tailwindVersion": 4
+  },
+  "order": 208
+}

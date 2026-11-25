@@ -1,0 +1,69 @@
+{
+  "id": "download-platforms",
+  "name": "Downloads — Plataformas",
+  "category": "download-app",
+  "categoryName": "Downloads",
+  "variant": "platforms",
+  "description": "Opções de download para diferentes dispositivos.",
+  "defaults": {
+    "title": "Baixe o aplicativo",
+    "description": "Escolha sua plataforma e comece a usar o aplicativo. Disponível para computador, celular e tablet.",
+    "button": "Baixar",
+    "href": "#",
+    "eyebrow": "Disponível agora",
+    "items": [
+      {
+        "id": "desktop",
+        "title": "Computador",
+        "description": "Solução completa para computador.",
+        "href": "https://www.shadcnblocks.com",
+        "value": "desktop",
+        "features": [
+          "Baixar",
+          "",
+          ""
+        ]
+      },
+      {
+        "id": "ios",
+        "title": "iPhone",
+        "description": "Aplicativo preparado para dispositivos iOS.",
+        "href": "#",
+        "value": "ios",
+        "features": [
+          "",
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/badges/appstore.png",
+          "Baixar na loja de aplicativos"
+        ]
+      },
+      {
+        "id": "android",
+        "title": "Celular e tablet",
+        "description": "Aplicativo otimizado para dispositivos Android.",
+        "href": "#",
+        "value": "android",
+        "features": [
+          "",
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/badges/googleplay.png",
+          "Disponível na loja de aplicativos"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "items"
+  ],
+  "export": {
+    "componentName": "DownloadPlatformsBlock",
+    "sourceFile": "sections/download-platforms/download-platforms.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 87
+}

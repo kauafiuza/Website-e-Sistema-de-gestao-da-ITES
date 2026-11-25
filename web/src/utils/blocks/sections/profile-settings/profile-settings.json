@@ -1,0 +1,78 @@
+{
+  "id": "profile-settings",
+  "name": "Configurações — Perfil",
+  "category": "profile-settings",
+  "categoryName": "Configurações",
+  "variant": "profile",
+  "description": "Formulário de perfil editável para uma área de configurações.",
+  "defaults": {
+    "title": "Perfil",
+    "description": "Atualize suas informações e a imagem do perfil.",
+    "button": "Salvar alterações",
+    "href": "#",
+    "eyebrow": "",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar8.webp",
+    "imageAlt": "Imagem do perfil",
+    "items": [
+      {
+        "id": "profile-name",
+        "title": "Nome completo",
+        "description": "Pessoa Exemplo",
+        "href": "text",
+        "value": "identity",
+        "features": [
+          "Digite seu nome"
+        ]
+      },
+      {
+        "id": "profile-username",
+        "title": "Nome de usuário",
+        "description": "usuarioexemplo",
+        "href": "text",
+        "value": "identity",
+        "features": [
+          "Digite um nome de usuário"
+        ]
+      },
+      {
+        "id": "profile-email",
+        "title": "Email",
+        "description": "pessoa@exemplo.com",
+        "href": "email",
+        "value": "identity",
+        "features": [
+          "Digite seu email"
+        ]
+      },
+      {
+        "id": "profile-bio",
+        "title": "Biografia",
+        "description": "Profissional com experiência em produtos digitais e acessibilidade.",
+        "href": "textarea",
+        "value": "bio",
+        "features": [
+          "Conte um pouco sobre você"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "ProfileSettingsBlock",
+    "sourceFile": "sections/profile-settings/profile-settings.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 93
+}

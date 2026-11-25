@@ -1,0 +1,90 @@
+{
+  "id": "careers-openings",
+  "name": "Carreiras — Vagas",
+  "category": "career-openings",
+  "categoryName": "Carreiras",
+  "group": "careers",
+  "variant": "openings",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Oportunidades",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "engineering",
+        "title": "Engenharia",
+        "description": "",
+        "href": "",
+        "value": "category",
+        "features": []
+      },
+      {
+        "id": "job-senior-frontend",
+        "title": "Cargo de exemplo 1",
+        "description": "Remoto",
+        "href": "#",
+        "value": "job",
+        "features": ["engineering"]
+      },
+      {
+        "id": "job-ui-ux",
+        "title": "Cargo de exemplo 2",
+        "description": "Remoto",
+        "href": "#",
+        "value": "job",
+        "features": ["engineering"]
+      },
+      {
+        "id": "job-react",
+        "title": "Cargo de exemplo 3",
+        "description": "Remoto",
+        "href": "#",
+        "value": "job",
+        "features": ["engineering"]
+      },
+      {
+        "id": "job-tech-lead",
+        "title": "Cargo de exemplo 4",
+        "description": "Remoto",
+        "href": "#",
+        "value": "job",
+        "features": ["engineering"]
+      },
+      {
+        "id": "design",
+        "title": "Design",
+        "description": "",
+        "href": "",
+        "value": "category",
+        "features": []
+      },
+      {
+        "id": "job-product-designer",
+        "title": "Cargo de exemplo 5",
+        "description": "Remoto",
+        "href": "#",
+        "value": "job",
+        "features": ["design"]
+      },
+      {
+        "id": "job-visual-designer",
+        "title": "Cargo de exemplo 6",
+        "description": "Remoto",
+        "href": "#",
+        "value": "job",
+        "features": ["design"]
+      }
+    ]
+  },
+  "editableProperties": ["title", "description", "items"],
+  "export": {
+    "componentName": "CareersOpeningsBlock",
+    "sourceFile": "sections/careers-openings/careers-openings.tsx",
+    "dependencies": ["react", "lucide-react"],
+    "tailwindVersion": 4
+  },
+  "order": 83
+}

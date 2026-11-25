@@ -1,0 +1,42 @@
+{
+  "id": "hero-editorial",
+  "name": "Cabeçalho — Editorial",
+  "category": "hero",
+  "variant": "editorial",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Apresente sua próxima ideia.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "imageUrl": "",
+    "imageAlt": ""
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href",
+    "imageUrl",
+    "imageAlt"
+  ],
+  "export": {
+    "componentName": "HeroEditorialBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/hero-editorial/hero-editorial.tsx"
+  },
+  "categoryName": "Cabeçalho",
+  "order": 45
+}

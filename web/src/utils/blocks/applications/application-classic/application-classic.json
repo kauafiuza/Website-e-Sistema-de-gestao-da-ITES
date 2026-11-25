@@ -1,0 +1,34 @@
+{
+  "id": "application-classic",
+  "name": "Estrutura do aplicativo — Clássico",
+  "category": "application",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "ApplicationClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/application-classic/application-classic.tsx"
+  },
+  "defaults": {
+    "title": "Seu espaço de trabalho",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Estrutura do aplicativo",
+  "order": 25
+}

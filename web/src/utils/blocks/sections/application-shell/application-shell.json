@@ -1,0 +1,277 @@
+{
+  "id": "application-shell",
+  "name": "Aplicativo — Barra lateral",
+  "category": "sidebar-application",
+  "categoryName": "Aplicativos",
+  "variant": "sidebar",
+  "description": "Estrutura de aplicativo com navegação lateral e conteúdo principal.",
+  "defaults": {
+    "title": "Painel da equipe",
+    "description": "Acompanhe o trabalho e as atividades da equipe.",
+    "button": "Sair",
+    "href": "#",
+    "eyebrow": "",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
+    "imageAlt": "Marca do aplicativo",
+    "items": [
+      {
+        "id": "group-main",
+        "title": "Visão geral",
+        "description": "",
+        "href": "",
+        "value": "group",
+        "features": [
+          "open",
+          "layout"
+        ]
+      },
+      {
+        "id": "nav-dashboard",
+        "title": "Painel",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-main",
+          "dashboard"
+        ]
+      },
+      {
+        "id": "nav-tasks",
+        "title": "Tarefas",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-main",
+          "tasks"
+        ]
+      },
+      {
+        "id": "nav-roadmap",
+        "title": "Planejamento",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-main",
+          "chart"
+        ]
+      },
+      {
+        "id": "group-projects",
+        "title": "Projetos",
+        "description": "",
+        "href": "",
+        "value": "group",
+        "features": [
+          "open",
+          "folder"
+        ]
+      },
+      {
+        "id": "nav-active-projects",
+        "title": "Projetos ativos",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-projects",
+          "briefcase"
+        ]
+      },
+      {
+        "id": "child-project-one",
+        "title": "Projeto exemplo A",
+        "description": "",
+        "href": "#",
+        "value": "child",
+        "features": [
+          "nav-active-projects",
+          "file"
+        ]
+      },
+      {
+        "id": "child-project-two",
+        "title": "Projeto exemplo B",
+        "description": "",
+        "href": "#",
+        "value": "child",
+        "features": [
+          "nav-active-projects",
+          "file"
+        ]
+      },
+      {
+        "id": "nav-archive",
+        "title": "Arquivo",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-projects",
+          "folder"
+        ]
+      },
+      {
+        "id": "group-team",
+        "title": "Equipe",
+        "description": "",
+        "href": "",
+        "value": "group",
+        "features": [
+          "closed",
+          "users"
+        ]
+      },
+      {
+        "id": "nav-members",
+        "title": "Pessoas",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-team",
+          "users"
+        ]
+      },
+      {
+        "id": "nav-approvals",
+        "title": "Aprovações",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-team",
+          "check"
+        ]
+      },
+      {
+        "id": "group-workspace",
+        "title": "Espaço de trabalho",
+        "description": "",
+        "href": "",
+        "value": "group",
+        "features": [
+          "closed",
+          "globe"
+        ]
+      },
+      {
+        "id": "nav-integrations",
+        "title": "Integrações",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-workspace",
+          "globe"
+        ]
+      },
+      {
+        "id": "nav-automation",
+        "title": "Automações",
+        "description": "",
+        "href": "#",
+        "value": "item",
+        "features": [
+          "group-workspace",
+          "sparkles"
+        ]
+      },
+      {
+        "id": "group-footer",
+        "title": "Suporte",
+        "description": "",
+        "href": "",
+        "value": "group",
+        "features": [
+          "open",
+          "help"
+        ]
+      },
+      {
+        "id": "nav-help",
+        "title": "Central de ajuda",
+        "description": "",
+        "href": "#",
+        "value": "footer",
+        "features": [
+          "group-footer",
+          "help"
+        ]
+      },
+      {
+        "id": "nav-settings",
+        "title": "Configurações",
+        "description": "",
+        "href": "#",
+        "value": "footer",
+        "features": [
+          "group-footer",
+          "settings"
+        ]
+      },
+      {
+        "id": "user-profile",
+        "title": "Pessoa Exemplo",
+        "description": "pessoa@exemplo.com",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+        "value": "user",
+        "features": [
+          "",
+          "avatar"
+        ]
+      },
+      {
+        "id": "workspace-sample-1",
+        "title": "Espaço de trabalho",
+        "description": "Plano Equipe",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/shadcnblocks-logo.svg",
+        "value": "workspace",
+        "features": [
+          ""
+        ]
+      },
+      {
+        "id": "workspace-sample-2",
+        "title": "Espaço de projetos",
+        "description": "Plano Inicial",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/shadcnblocks-logo.svg",
+        "value": "workspace",
+        "features": [
+          ""
+        ]
+      },
+      {
+        "id": "workspace-sample-3",
+        "title": "Espaço pessoal",
+        "description": "Plano gratuito",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/shadcnblocks-logo.svg",
+        "value": "workspace",
+        "features": [
+          ""
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "ApplicationShellBlock",
+    "sourceFile": "sections/application-shell/application-shell.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 94
+}

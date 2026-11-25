@@ -1,0 +1,3 @@
+User-agent: *
+# The current application has only editor and preview routes; no public landing page.
+Disallow: /

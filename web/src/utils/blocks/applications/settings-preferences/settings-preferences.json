@@ -1,0 +1,37 @@
+{
+  "id": "settings-preferences",
+  "name": "Configurações — Preferências",
+  "category": "settings",
+  "variant": "preferences",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Seu espaço, do seu jeito.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default"
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button"
+  ],
+  "export": {
+    "componentName": "SettingsPreferencesBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/settings-preferences/settings-preferences.tsx"
+  },
+  "categoryName": "Configurações",
+  "order": 60
+}

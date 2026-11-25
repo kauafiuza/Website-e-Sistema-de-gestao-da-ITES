@@ -1,0 +1,90 @@
+{
+  "id": "hero-feature-slider",
+  "name": "Cabeçalho — Carrossel de recursos",
+  "category": "hero-feature-slider",
+  "categoryName": "Cabeçalho",
+  "group": "hero",
+  "variant": "feature-slider",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Recursos para criar com confiança.",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "feature-1",
+        "title": "Recurso 1",
+        "description": "Uma descrição breve deste recurso.",
+        "href": "#",
+        "value": "braces",
+        "features": ["feature", ""]
+      },
+      {
+        "id": "feature-2",
+        "title": "Recurso 2",
+        "description": "Uma descrição breve deste recurso.",
+        "href": "#",
+        "value": "cpu",
+        "features": ["feature", ""]
+      },
+      {
+        "id": "feature-3",
+        "title": "Recurso 3",
+        "description": "Uma descrição breve deste recurso.",
+        "href": "#",
+        "value": "keyboard",
+        "features": ["feature", ""]
+      },
+      {
+        "id": "preview-1",
+        "title": "Recurso 4",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-hero/saas-hero-2-16x9.png",
+        "value": "Visão geral",
+        "features": [
+          "image",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-hero/saas-hero-2-16x9-dark.png",
+          "Recurso de exemplo"
+        ]
+      },
+      {
+        "id": "preview-2",
+        "title": "Recurso 5",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-hero/saas-hero-3-16x9.png",
+        "value": "Fluxo de trabalho",
+        "features": [
+          "image",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-hero/saas-hero-3-16x9-dark.png",
+          "Recurso de exemplo"
+        ]
+      },
+      {
+        "id": "preview-3",
+        "title": "Recurso 6",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-hero/saas-hero-4-16x9.png",
+        "value": "Informações",
+        "features": [
+          "image",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/saas-hero/saas-hero-4-16x9-dark.png",
+          "Recurso de exemplo"
+        ]
+      }
+    ]
+  },
+  "editableProperties": ["title", "eyebrow", "items"],
+  "export": {
+    "componentName": "HeroFeatureSliderBlock",
+    "sourceFile": "sections/hero-feature-slider/hero-feature-slider.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 79
+}

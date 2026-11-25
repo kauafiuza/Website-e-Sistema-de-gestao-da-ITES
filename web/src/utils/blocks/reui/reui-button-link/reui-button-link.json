@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-link",
+  "name": "Button — Link",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-6: Link button variant.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonLinkBlock",
+    "sourceFile": "reui/reui-button-link/reui-button-link.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 217
+}

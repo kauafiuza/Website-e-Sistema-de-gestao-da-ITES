@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-extra-small",
+  "name": "Button — Extra small",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-7: Extra small button.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonExtraSmallBlock",
+    "sourceFile": "reui/reui-button-extra-small/reui-button-extra-small.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 218
+}

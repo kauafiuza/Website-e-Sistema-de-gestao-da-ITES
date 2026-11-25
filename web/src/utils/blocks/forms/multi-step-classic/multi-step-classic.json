@@ -1,0 +1,33 @@
+{
+  "id": "multi-step-classic",
+  "name": "Formulário em etapas — Clássico",
+  "category": "multi-step",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "button"
+  ],
+  "export": {
+    "componentName": "MultiStepClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/multi-step-classic/multi-step-classic.tsx"
+  },
+  "defaults": {
+    "title": "Vamos começar",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Formulário em etapas",
+  "order": 41
+}

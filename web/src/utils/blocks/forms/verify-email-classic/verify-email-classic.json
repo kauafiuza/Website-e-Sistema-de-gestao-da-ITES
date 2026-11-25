@@ -1,0 +1,33 @@
+{
+  "id": "verify-email-classic",
+  "name": "Verificar e-mail — Clássico",
+  "category": "verify-email",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "button"
+  ],
+  "export": {
+    "componentName": "VerifyEmailClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/verify-email-classic/verify-email-classic.tsx"
+  },
+  "defaults": {
+    "title": "Confirme seu e-mail",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Verificar e-mail",
+  "order": 34
+}

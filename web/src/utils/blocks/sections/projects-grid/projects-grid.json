@@ -1,0 +1,99 @@
+{
+  "id": "projects-grid",
+  "name": "Projetos — Grade",
+  "category": "portfolio",
+  "categoryName": "Projetos",
+  "variant": "grid",
+  "description": "Galeria de projetos com categoria, ano e imagem.",
+  "defaults": {
+    "title": "Projetos",
+    "description": "Uma seleção de trabalhos recentes.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "project-1",
+        "title": "Pavilhão contemporâneo",
+        "description": "Arquitetura · 2025",
+        "href": "https://example.com/projeto-1",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/lummi/Modern Architectural Elegance at Twilight.png",
+          "Pavilhão de arquitetura contemporânea."
+        ]
+      },
+      {
+        "id": "project-2",
+        "title": "Vida urbana colorida",
+        "description": "Design urbano · 2025",
+        "href": "https://example.com/projeto-2",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/lummi/Modernist Architecture in Lush Forest.png",
+          "Edifício integrado a uma área verde."
+        ]
+      },
+      {
+        "id": "project-3",
+        "title": "Refúgio minimalista",
+        "description": "Interiores · 2025",
+        "href": "https://example.com/projeto-3",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/lummi/bw12.jpeg",
+          "Interior residencial minimalista."
+        ]
+      },
+      {
+        "id": "project-4",
+        "title": "Casa urbana",
+        "description": "Design de produto · 2025",
+        "href": "https://example.com/projeto-4",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/photos/tiny-home/erik-mclean-g3U7sqtdJ1w-unsplash.jpg",
+          "Casa compacta em contexto urbano."
+        ]
+      },
+      {
+        "id": "project-5",
+        "title": "Volume residencial",
+        "description": "Residencial · 2025",
+        "href": "https://example.com/projeto-5",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/lummi/bw14.jpeg",
+          "Residência de linhas geométricas."
+        ]
+      },
+      {
+        "id": "project-6",
+        "title": "Casa envidraçada",
+        "description": "Design sustentável · 2025",
+        "href": "https://example.com/projeto-6",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/lummi/bw16.jpeg",
+          "Casa envidraçada em meio à natureza."
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "items"
+  ],
+  "export": {
+    "componentName": "ProjectsGridBlock",
+    "sourceFile": "sections/projects-grid/projects-grid.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 90
+}

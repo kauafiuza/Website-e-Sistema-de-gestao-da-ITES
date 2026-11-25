@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-small",
+  "name": "Button — Small",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-8: Small button.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonSmallBlock",
+    "sourceFile": "reui/reui-button-small/reui-button-small.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 219
+}

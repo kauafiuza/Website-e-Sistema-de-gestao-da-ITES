@@ -1,0 +1,32 @@
+{
+  "id": "changelog-classic",
+  "name": "Registro de alterações — Clássico",
+  "category": "changelog",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow"
+  ],
+  "export": {
+    "componentName": "ChangelogClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/changelog-classic/changelog-classic.tsx"
+  },
+  "defaults": {
+    "title": "Novidades",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Registro de alterações",
+  "order": 39
+}

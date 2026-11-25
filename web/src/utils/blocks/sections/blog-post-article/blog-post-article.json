@@ -1,0 +1,357 @@
+{
+  "id": "blog-post-article",
+  "name": "Blog — Artigo editorial",
+  "category": "blog-article",
+  "categoryName": "Blog",
+  "group": "blog",
+  "variant": "editorial",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Um guia prático para começar",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "March 18, 2026",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog/photo-1-16x9.jpg",
+    "imageAlt": "Imagem ilustrativa do conteúdo.",
+    "items": [
+      {
+        "id": "author-jack",
+        "title": "Trecho de exemplo do artigo",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+        "value": "author",
+        "features": [
+          "author",
+          "Informação de exemplo em português",
+          "",
+          "",
+          "https://www.shadcnblocks.com",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "body-h2-1",
+        "title": "Trecho de exemplo do artigo",
+        "description": "",
+        "href": "",
+        "value": "h2",
+        "features": []
+      },
+      {
+        "id": "body-p-1",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-p-2",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-p-3",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-p-4",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-h3-1",
+        "title": "Trecho de exemplo do artigo",
+        "description": "",
+        "href": "",
+        "value": "h3",
+        "features": []
+      },
+      {
+        "id": "body-p-5",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-ul-1",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "list-item",
+        "features": [
+          "top"
+        ]
+      },
+      {
+        "id": "body-ul-2",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "list-item",
+        "features": [
+          "top"
+        ]
+      },
+      {
+        "id": "body-ul-3",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "list-item",
+        "features": [
+          "top"
+        ]
+      },
+      {
+        "id": "body-ul-4",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "list-item",
+        "features": [
+          "nested"
+        ]
+      },
+      {
+        "id": "body-ul-5",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "list-item",
+        "features": [
+          "nested"
+        ]
+      },
+      {
+        "id": "body-p-6",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-quote-1",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "blockquote",
+        "features": []
+      },
+      {
+        "id": "body-h2-2",
+        "title": "Trecho de exemplo do artigo",
+        "description": "",
+        "href": "",
+        "value": "h2",
+        "features": []
+      },
+      {
+        "id": "body-p-7",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-h3-2",
+        "title": "Trecho de exemplo do artigo",
+        "description": "",
+        "href": "",
+        "value": "h3",
+        "features": []
+      },
+      {
+        "id": "body-ol-1",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "ordered-item",
+        "features": []
+      },
+      {
+        "id": "body-ol-2",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "ordered-item",
+        "features": []
+      },
+      {
+        "id": "body-ol-3",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "ordered-item",
+        "features": []
+      },
+      {
+        "id": "body-code-1",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "code",
+        "features": []
+      },
+      {
+        "id": "body-p-8",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-p-9",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-table-head",
+        "title": "",
+        "description": "",
+        "href": "",
+        "value": "table-header",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "body-table-row-1",
+        "title": "",
+        "description": "",
+        "href": "",
+        "value": "table-row",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "body-table-row-2",
+        "title": "",
+        "description": "",
+        "href": "",
+        "value": "table-row",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "body-table-row-3",
+        "title": "",
+        "description": "",
+        "href": "",
+        "value": "table-row",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "body-table-row-4",
+        "title": "",
+        "description": "",
+        "href": "",
+        "value": "table-row",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "body-h2-3",
+        "title": "Trecho de exemplo do artigo",
+        "description": "",
+        "href": "",
+        "value": "h2",
+        "features": []
+      },
+      {
+        "id": "body-p-10",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-figure-1",
+        "title": "Trecho de exemplo do artigo",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog/photo-4-16x9.jpg",
+        "value": "figure",
+        "features": []
+      },
+      {
+        "id": "body-p-11",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-p-12",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "paragraph",
+        "features": []
+      },
+      {
+        "id": "body-footnote-1",
+        "title": "",
+        "description": "Texto de exemplo em português para personalizar este artigo.",
+        "href": "",
+        "value": "footnote",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "eyebrow",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "BlogPostArticleBlock",
+    "sourceFile": "sections/blog-post-article/blog-post-article.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 84
+}

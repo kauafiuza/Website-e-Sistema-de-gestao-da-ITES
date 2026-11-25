@@ -1,0 +1,95 @@
+{
+  "id": "editorial-blog-index",
+  "name": "Portfólio — Artigos editoriais",
+  "category": "editorial-blog-index",
+  "categoryName": "Portfólio",
+  "variant": "editorial-article-list",
+  "description": "Índice editorial de artigos com capa, data, categoria e resumo no estilo escuro do portfólio.",
+  "defaults": {
+    "eyebrow": "Blog",
+    "title": "Notícias e atividades",
+    "description": "Acompanhe notícias, eventos e ações da Incubadora Tecnológica de Economia Solidária.",
+    "button": "Voltar",
+    "href": "/",
+    "brandLogoUrl": "",
+    "brandLogoAlt": "Identidade visual da ITES",
+    "brandLogoText": "ITES",
+    "brandLogoHref": "/",
+    "articleLayout": "grid",
+    "showArticleImages": false,
+    "showArticleDates": false,
+    "showArticleCategories": false,
+    "showArticleSummaries": true,
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-up",
+    "items": [
+      {
+        "id": "editorial-blog-architecture",
+        "title": "Arquitetura que acompanha o crescimento do produto",
+        "description": "Como separar responsabilidades e manter espaço para evoluir sem tornar cada mudança mais difícil do que precisa ser.",
+        "href": "#editorial-blog-architecture",
+        "value": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=85",
+        "features": [
+          "Exemplo de artigo",
+          "Engenharia",
+          "Notebook com editor de código em uma mesa",
+          "Uma arquitetura clara define limites para que cada parte do produto evolua com autonomia. Separe responsabilidades, mantenha os contratos explícitos e prefira mudanças pequenas que possam ser verificadas sem afetar o restante do sistema.\n\nO desenho deve acompanhar as necessidades reais do produto. Revise os limites quando o domínio mudar e evite criar camadas que ainda não resolvem um problema concreto."
+        ]
+      },
+      {
+        "id": "editorial-blog-interfaces",
+        "title": "Interfaces rápidas começam com decisões simples",
+        "description": "Uma leitura prática sobre carregamento, estado e pequenos detalhes que deixam a experiência mais responsiva.",
+        "href": "#editorial-blog-interfaces",
+        "value": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=85",
+        "features": [
+          "Exemplo de artigo",
+          "Frontend",
+          "Tela com código-fonte colorido",
+          "Uma interface responsiva começa com estados previsíveis, conteúdo que aparece no momento certo e feedback direto para cada ação. Carregue dados em paralelo quando não houver dependência entre eles e mantenha as transições curtas.\n\nPequenos detalhes como foco visível, carregamento progressivo e mensagens de erro úteis tornam a experiência mais fluida sem esconder o que está acontecendo."
+        ]
+      },
+      {
+        "id": "editorial-blog-api",
+        "title": "O que aprendi integrando uma API externa",
+        "description": "Mapeamento de dados, estados de carregamento e alternativas quando uma fonte remota não responde.",
+        "href": "#editorial-blog-api",
+        "value": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85",
+        "features": [
+          "Exemplo de artigo",
+          "APIs",
+          "Pessoas trabalhando juntas diante de um computador",
+          "Uma integração começa pela definição dos campos que a interface precisa e por uma validação explícita da resposta. Trate o carregamento, o sucesso e a falha como estados diferentes, mantendo os dados salvos disponíveis enquanto a fonte remota está fora do ar.\n\nSepare a configuração do endpoint do mapeamento de dados e mostre uma mensagem clara quando a API não responder. Assim, a conexão externa complementa a página sem comprometer o conteúdo existente."
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "brandLogoUrl",
+    "brandLogoAlt",
+    "brandLogoText",
+    "brandLogoHref",
+    "articleLayout",
+    "showArticleImages",
+    "showArticleDates",
+    "showArticleCategories",
+    "showArticleSummaries",
+    "items"
+  ],
+  "export": {
+    "componentName": "EditorialBlogIndexBlock",
+    "sourceFile": "sections/editorial-blog-index/editorial-blog-index.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 207
+}

@@ -1,0 +1,106 @@
+{
+  "id": "wishlist-grid",
+  "name": "Lista de desejos — Produtos",
+  "category": "wishlist",
+  "categoryName": "Lista de desejos",
+  "variant": "grid",
+  "description": "Lista de produtos salvos com preços e disponibilidade.",
+  "defaults": {
+    "title": "Minha lista de desejos",
+    "description": "itens salvos",
+    "button": "Adicionar todos ao carrinho",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "wish-1",
+        "title": "Fones sem fio",
+        "description": "249.99",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/ecommerce/electronics/Modern-White-Headphones-1.png",
+        "value": "299.99",
+        "features": [
+          "Fones sem fio com cancelamento de ruído.",
+          "sim",
+          "sim"
+        ]
+      },
+      {
+        "id": "wish-2",
+        "title": "Bolsa transversal",
+        "description": "189.00",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/ecommerce/clothes/maroon-leather-handbag.png",
+        "value": "",
+        "features": [
+          "Bolsa transversal em material resistente.",
+          "sim",
+          "não"
+        ]
+      },
+      {
+        "id": "wish-3",
+        "title": "Casaco de lã",
+        "description": "329.00",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/ecommerce/clothes/Young-Man-in-White-Hoodie-1.png",
+        "value": "",
+        "features": [
+          "Casaco confortável para dias frios.",
+          "não",
+          "não"
+        ]
+      },
+      {
+        "id": "wish-4",
+        "title": "Brincos dourados",
+        "description": "79.00",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/ecommerce/accessories/Elegant-Gold-Earrings-1.png",
+        "value": "99.00",
+        "features": [
+          "Brincos de acabamento dourado.",
+          "sim",
+          "sim"
+        ]
+      },
+      {
+        "id": "wish-5",
+        "title": "Moletom de algodão",
+        "description": "65.00",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/ecommerce/clothes/black-hoodie-against-light-background.png",
+        "value": "",
+        "features": [
+          "Moletom de algodão.",
+          "sim",
+          "não"
+        ]
+      },
+      {
+        "id": "wish-6",
+        "title": "Relógio minimalista",
+        "description": "195.00",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/ecommerce/accessories/Elegant-Watch-on-Womans-Wrist-1.png",
+        "value": "",
+        "features": [
+          "Relógio de design minimalista.",
+          "sim",
+          "não"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "items"
+  ],
+  "export": {
+    "componentName": "WishlistGridBlock",
+    "sourceFile": "sections/wishlist-grid/wishlist-grid.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 92
+}

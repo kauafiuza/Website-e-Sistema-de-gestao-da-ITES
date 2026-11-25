@@ -1,0 +1,61 @@
+{
+  "id": "testimonials-classic",
+  "name": "Depoimentos — Clássico",
+  "category": "testimonials",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "TestimonialsClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/testimonials-classic/testimonials-classic.tsx"
+  },
+  "defaults": {
+    "title": "Experiências de quem usa.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "testimonial-1",
+        "title": "Pessoa usuária 1",
+        "description": "Uma experiência simples, clara e útil para o dia a dia.",
+        "href": "#",
+        "value": "Pessoa usuária · Empresa exemplo",
+        "features": []
+      },
+      {
+        "id": "testimonial-2",
+        "title": "Pessoa usuária 2",
+        "description": "Uma experiência simples, clara e útil para o dia a dia.",
+        "href": "#",
+        "value": "Pessoa usuária · Empresa exemplo",
+        "features": []
+      },
+      {
+        "id": "testimonial-3",
+        "title": "Pessoa usuária 3",
+        "description": "Uma experiência simples, clara e útil para o dia a dia.",
+        "href": "#",
+        "value": "Pessoa usuária · Empresa exemplo",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Depoimentos",
+  "order": 7
+}

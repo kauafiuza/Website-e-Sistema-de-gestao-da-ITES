@@ -1,0 +1,27 @@
+{
+  "id": "motion-animated-badge",
+  "name": "Animated Badge",
+  "category": "motion",
+  "categoryName": "Motion",
+  "variant": "success-pulse",
+  "description": "Status badge with BeUI's animated icon and pulse feedback.",
+  "defaults": {
+    "title": "All systems operational",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": ["title"],
+  "export": {
+    "componentName": "MotionAnimatedBadgeBlock",
+    "sourceFile": "motion/motion-animated-badge/motion-animated-badge.tsx",
+    "dependencies": ["react", "motion", "lucide-react"],
+    "tailwindVersion": 4
+  },
+  "order": 209
+}

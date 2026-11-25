@@ -1,0 +1,509 @@
+@import "./pages/editor/block-styles.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/roboto";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/montserrat";
+@import "@fontsource-variable/lora";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/source-sans-3";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/oswald";
+@import "@fontsource-variable/merriweather";
+@import "@fontsource-variable/cormorant-garamond";
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/fira-code";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Paleta institucional da ITES. */
+  --color-ites-green: var(--ites-green);
+  --color-ites-forest: var(--ites-forest);
+  --color-ites-sage: var(--ites-sage);
+  --color-ites-cream: var(--ites-cream);
+  --color-ites-red: var(--ites-red);
+  --color-ites-orange: var(--ites-orange);
+  /* Cores semânticas usadas pelos blocos de conteúdo. */
+  --color-brand-amber: #ffb110;
+  --color-brand-coral: #f64932;
+  --color-brand-sky: #62aef0;
+
+  --font-heading: var(--font-sans);
+  --font-sans: "Nunito Sans Variable", system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-border-strong: var(--ites-border-strong);
+  --color-field: var(--field);
+  --color-input-border: var(--input-border);
+  --color-input: var(--input);
+  --color-overlay-border: var(--overlay-border);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
+}
+
+:root {
+  /* Cores da identidade visual institucional. */
+  --ites-green: #24724f;
+  --ites-forest: #174d38;
+  --ites-sage: #84ac8b;
+  --ites-cream: #f5f7ef;
+  --ites-red: #b9403b;
+  --ites-orange: #c78d26;
+
+  /* Contrato semântico: superfícies e texto neutros. */
+  --background: #fafafa;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: #ffffff;
+  --popover-foreground: var(--foreground);
+  --primary: #24724f; /* Cor principal dos controles e ações. */
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #262626;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #f0f0f0;
+  --accent-foreground: var(--foreground);
+  --destructive: #c62828;
+  --border: #e5e5e5;
+  --ites-border-strong: #d4d4d4;
+  --field: #f5f5f5;
+  --input-border: #d4d4d4;
+  --input: var(--input-border); /* Compatibilidade com o mapeamento existente. */
+  --overlay-border: var(--border);
+  --ring: #24724f;
+
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  /* Gradientes institucionais com contraste adequado para ações. */
+  --ites-brand-gradient: linear-gradient(110deg, #9bc9a8 0%, #4c956b 45%, #174d38 100%);
+  --ites-cta-gradient: linear-gradient(110deg, #2f8054 0%, #24724f 65%, #174d38 100%);
+  --ites-badge-gradient: var(--ites-brand-gradient);
+
+  /* Área de edição com superfícies neutras. */
+  --builder-toolbar: var(--card);
+  --builder-compact-control: var(--secondary);
+  --builder-toolbar-group: var(--secondary);
+  --builder-outline-item: var(--card);
+  --builder-outline-selected: var(--accent);
+  --builder-workspace-ground: var(--background);
+  --builder-empty-canvas: #ffffff;
+  --builder-canvas-gradient: none;
+
+  /* Contratos de vidro existentes: tintas e sombras acromáticas. */
+  --glass-subtle-solid: var(--sidebar);
+  --glass-toolbar-solid: var(--builder-toolbar);
+  --glass-clear-solid: var(--builder-compact-control);
+  --glass-frosted-solid: var(--popover);
+  --glass-elevated-solid: var(--popover);
+  --glass-subtle-tint: var(--sidebar);
+  --glass-toolbar-tint: color-mix(in srgb, var(--builder-toolbar) 96%, transparent);
+  --glass-clear-tint: color-mix(in srgb, var(--builder-compact-control) 97%, transparent);
+  --glass-frosted-tint: color-mix(in srgb, var(--popover) 98%, transparent);
+  --glass-elevated-tint: color-mix(in srgb, var(--popover) 99%, transparent);
+  --glass-toolbar-blur: 6px;
+  --glass-frosted-blur: 10px;
+  --glass-elevated-blur: 4px;
+  --glass-inner-highlight: color-mix(in srgb, #ffffff 54%, transparent);
+  --glass-edge-reflection: color-mix(in srgb, #a3a3a3 22%, transparent);
+  --glass-contact-shadow: color-mix(in srgb, #000000 6%, transparent);
+  --glass-floating-shadow: color-mix(in srgb, #000000 12%, transparent);
+  --glass-control-tint: color-mix(in srgb, var(--builder-toolbar-group) 96%, transparent);
+  --glass-context-tint: color-mix(in srgb, var(--card) 97%, transparent);
+
+  --radius: 12px;
+  --builder-header-height: 104px;
+}
+
+.dark {
+  --background: #101010;
+  --foreground: #f5f5f5;
+  --card: #191919;
+  --card-foreground: var(--foreground);
+  --popover: #222222;
+  --popover-foreground: var(--foreground);
+  --primary: #9bc9a8;
+  --primary-foreground: #101010;
+  --secondary: #222222;
+  --secondary-foreground: #e5e5e5;
+  --muted: #222222;
+  --muted-foreground: #a3a3a3;
+  --accent: #2a2a2a;
+  --accent-foreground: var(--foreground);
+  --destructive: #ff655a;
+  --border: #303030;
+  --ites-border-strong: #454545;
+  --field: #222222;
+  --input-border: #454545;
+  --input: var(--input-border);
+  --overlay-border: var(--border);
+  --ring: #9bc9a8;
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --builder-toolbar: var(--card);
+  --builder-compact-control: var(--secondary);
+  --builder-toolbar-group: var(--secondary);
+  --builder-outline-item: var(--card);
+  --builder-outline-selected: var(--accent);
+  --builder-workspace-ground: var(--background);
+  --builder-empty-canvas: transparent;
+  --builder-canvas-gradient: none;
+  --glass-inner-highlight: color-mix(in srgb, #ffffff 8%, transparent);
+  --glass-edge-reflection: color-mix(in srgb, #ffffff 5%, transparent);
+  --glass-contact-shadow: color-mix(in srgb, #000000 22%, transparent);
+  --glass-floating-shadow: color-mix(in srgb, #000000 32%, transparent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Aplicar somente a uma ação explicitamente definida como CTA principal. */
+.ites-cta-gradient:not(:disabled):not([aria-disabled="true"]) {
+  background-color: #174d38;
+  background-image: var(--ites-cta-gradient);
+  color: #ffffff;
+  border-color: transparent;
+}
+.ites-cta-gradient:hover:not(:disabled):not([aria-disabled="true"]) {
+  filter: brightness(0.96);
+}
+.ites-cta-gradient:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.builder-editor-stage {
+  background-color: var(--builder-workspace-ground);
+  background-image: var(--builder-canvas-gradient);
+}
+.builder-grid {
+  background: transparent;
+}
+.builder-brand-badge {
+  background-image: var(--builder-badge-gradient);
+}
+.builder-empty-canvas {
+  background-color: var(--builder-empty-canvas);
+}
+.builder-toolbar-actions {
+  background-color: var(--glass-control-tint);
+  box-shadow: inset 0 1px 0 var(--glass-inner-highlight), 0 1px 3px var(--glass-contact-shadow);
+}
+.builder-canvas-actions {
+  background-color: var(--glass-context-tint);
+  box-shadow: inset 0 1px 0 var(--glass-edge-reflection);
+}
+.builder-toolbar-actions .builder-toolbar-action:hover,
+.builder-toolbar-actions .builder-toolbar-action[aria-pressed="true"] {
+  background-color: var(--accent);
+}
+.builder-ui .builder-outline-item {
+  background-color: var(--builder-outline-item);
+}
+.builder-ui .builder-outline-item:hover {
+  background-color: var(--secondary);
+}
+.builder-ui .builder-outline-item[aria-pressed="true"] {
+  background-color: var(--builder-outline-selected);
+  box-shadow: inset 3px 0 var(--ites-border-strong);
+}
+@media (min-width: 640px) {
+  .builder-toolbar-actions .builder-toolbar-action {
+    background-color: var(--builder-toolbar-group);
+  }
+}
+@media (max-width: 639px) {
+  .builder-toolbar-actions {
+    background-color: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
+/* Uma camada de vidro por painel; miniaturas e conteúdo autoral permanecem sólidos. */
+.builder-ui.glass-subtle {
+  background-color: var(--glass-subtle-solid);
+  border-color: var(--border);
+}
+.builder-ui.glass-subtle.glass-toolbar {
+  background-color: var(--glass-toolbar-solid);
+  box-shadow: inset 0 1px 0 var(--glass-inner-highlight), inset 0 -1px 0 var(--glass-edge-reflection), 0 2px 7px var(--glass-contact-shadow);
+}
+.builder-ui.glass-clear {
+  background-color: var(--glass-clear-solid);
+}
+.builder-ui.glass-frosted[data-slot] {
+  background-color: var(--glass-frosted-solid);
+  border-color: var(--overlay-border);
+  box-shadow: inset 0 1px 0 var(--glass-inner-highlight), 0 12px 32px var(--glass-floating-shadow);
+}
+.builder-ui.glass-elevated[data-slot] {
+  background-color: var(--glass-elevated-solid);
+  border-color: var(--overlay-border);
+  box-shadow: inset 0 1px 0 var(--glass-inner-highlight), 0 18px 48px var(--glass-floating-shadow);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .builder-ui.glass-subtle {
+    background-color: var(--glass-subtle-tint);
+  }
+  .builder-ui.glass-subtle.glass-toolbar {
+    background-color: var(--glass-toolbar-tint);
+    -webkit-backdrop-filter: blur(var(--glass-toolbar-blur));
+    backdrop-filter: blur(var(--glass-toolbar-blur));
+  }
+  .builder-ui.glass-clear {
+    background-color: var(--glass-clear-tint);
+  }
+  .builder-ui.glass-frosted[data-slot] {
+    background-color: var(--glass-frosted-tint);
+    -webkit-backdrop-filter: blur(var(--glass-frosted-blur));
+    backdrop-filter: blur(var(--glass-frosted-blur));
+  }
+  .builder-ui.glass-elevated[data-slot] {
+    background-color: var(--glass-elevated-tint);
+    -webkit-backdrop-filter: blur(var(--glass-elevated-blur));
+    backdrop-filter: blur(var(--glass-elevated-blur));
+  }
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .builder-ui.glass-subtle,
+  .builder-ui.glass-subtle.glass-toolbar,
+  .builder-ui.glass-clear,
+  .builder-ui.glass-frosted[data-slot],
+  .builder-ui.glass-elevated[data-slot] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .builder-ui.glass-subtle { background-color: var(--glass-subtle-solid); }
+  .builder-ui.glass-subtle.glass-toolbar { background-color: var(--glass-toolbar-solid); }
+  .builder-ui.glass-clear { background-color: var(--glass-clear-solid); }
+  .builder-ui.glass-frosted[data-slot] { background-color: var(--glass-frosted-solid); }
+  .builder-ui.glass-elevated[data-slot] { background-color: var(--glass-elevated-solid); }
+}
+@media (min-width: 1280px) {
+  :root {
+    --builder-header-height: 64px;
+  }
+}
+select option {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Blocos usam os tokens fornecidos pelo tema do projeto, sem redefinir a paleta. */
+:is(.builder-authored-content, [data-builder-content-preview]) {
+  color: var(--foreground);
+  background-color: var(--background);
+  font-family: var(--builder-body-font, "Inter Variable", system-ui, sans-serif);
+}
+
+html.dark { color-scheme: dark; }
+html.light { color-scheme: light; }
+.builder-workspace main,
+.builder-workspace aside {
+  overscroll-behavior: contain;
+}
+.builder-workspace :is(button, a):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.builder-workspace :is(h1, h2, h3, p) {
+  overflow-wrap: anywhere;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+.builder-workspace { font-size: 14px; }
+.builder-workspace [data-slot="sheet-content"] {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.builder-workspace main {
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground) 48%, transparent) transparent;
+  scrollbar-width: thin;
+}
+.builder-workspace main::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.builder-workspace main::-webkit-scrollbar-track { background: transparent; }
+.builder-workspace main::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--muted-foreground) 48%, transparent);
+  background-clip: padding-box;
+}
+.builder-workspace main::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--muted-foreground) 68%, transparent);
+  background-clip: padding-box;
+}
+.builder-workspace [data-slot="scroll-area-scrollbar"] { background: transparent; }
+.builder-workspace [data-slot="scroll-area-thumb"] {
+  background-color: color-mix(in srgb, var(--muted-foreground) 42%, transparent);
+}
+.builder-workspace [data-slot="scroll-area-thumb"]:hover {
+  background-color: color-mix(in srgb, var(--muted-foreground) 64%, transparent);
+}
+
+/* Escopo Builder também alcança conteúdos portalled. */
+.builder-ui [data-slot="button"] {
+  border-radius: var(--radius-md);
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+.builder-ui [data-slot="button"].border-border {
+  background-color: var(--card);
+}
+.builder-ui [data-slot="button"].border-border:hover:not(:disabled) {
+  background-color: var(--muted);
+}
+.builder-ui [data-slot="accordion-trigger"] {
+  transition-property: color, background-color;
+}
+.builder-ui [data-slot="accordion-trigger"]:hover {
+  background-color: var(--muted);
+  text-decoration: none;
+}
+.builder-ui [data-slot="accordion-trigger-icon"] { margin-left: 0; }
+.builder-ui [data-slot="tabs-trigger"][data-active] {
+  background-color: var(--card);
+}
+.builder-ui :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], select):not([data-builder-content-preview] *) {
+  border-color: var(--input-border);
+  background-color: var(--field);
+  color: var(--foreground);
+}
+.builder-ui :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], select):not([data-builder-content-preview] *)[aria-invalid="true"] {
+  border-color: var(--destructive);
+}
+.builder-ui [data-slot="button"].border-border:not([data-builder-content-preview] *) {
+  border-color: var(--input-border);
+}
+.builder-ui :is(button, a):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.builder-ui :is([data-slot="button"], [data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]):disabled {
+  opacity: 0.68;
+}
+.builder-ui[data-slot="dialog-content"] {
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+  border: 1px solid var(--overlay-border);
+  border-radius: var(--radius);
+  background-color: var(--popover);
+  box-shadow: none;
+}
+.builder-ui[data-slot="dropdown-menu-content"] {
+  border: 1px solid var(--overlay-border);
+  border-radius: var(--radius);
+  background-color: var(--popover);
+  box-shadow: none;
+}
+.builder-ui[data-slot="sheet-content"] {
+  border-color: var(--overlay-border);
+  background-color: var(--popover);
+}
+.builder-ui[data-slot="popover-content"],
+.builder-ui[data-slot="select-content"],
+.builder-ui[data-slot="alert-dialog-content"] {
+  border: 1px solid var(--overlay-border);
+  border-radius: var(--radius);
+  background-color: var(--popover);
+  box-shadow: none;
+}
+.builder-ui :is([data-slot="select-trigger"], [data-slot="textarea"]) {
+  border-radius: var(--radius-md);
+}
+.builder-ui[data-slot="alert-dialog-content"] {
+  max-width: min(28rem, calc(100vw - 2rem));
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+}
+.builder-ui [data-slot="card"]:not([data-builder-content-preview] *) {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.builder-ui [data-slot="card"][data-active-page="true"]:not([data-builder-content-preview] *) {
+  border-color: var(--ites-border-strong);
+  background-color: var(--secondary);
+}
+.builder-ui [data-slot="alert"] {
+  border-radius: var(--radius);
+}

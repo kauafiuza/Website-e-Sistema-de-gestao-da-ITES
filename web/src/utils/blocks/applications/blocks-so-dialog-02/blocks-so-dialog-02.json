@@ -1,0 +1,23 @@
+{
+  "id": "blocks-so-dialog-02",
+  "name": "Dialog — confirmação com duas ações (Blocks.so 02)",
+  "category": "blocks-so-dialog",
+  "categoryName": "Dialogs Blocks.so",
+  "variant": "dialog-02",
+  "description": "Diálogo de confirmação com ícone de sucesso e duas ações para fechar.",
+  "defaults": {
+    "title": "Tudo pronto",
+    "description": "Sua configuração foi atualizada nesta demonstração local.",
+    "button": "Abrir confirmação",
+    "href": "#",
+    "eyebrow": "Demonstração"
+  },
+  "editableProperties": ["title", "description", "button"],
+  "export": {
+    "componentName": "BlocksSoDialog02Block",
+    "sourceFile": "applications/blocks-so-dialog-02/blocks-so-dialog-02.tsx",
+    "dependencies": ["react", "lucide-react", "@base-ui/react", "shadcn/ui (local Dialog and Button)"],
+    "tailwindVersion": 4
+  },
+  "order": 229
+}

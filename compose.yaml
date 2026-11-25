@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-ites}
+      POSTGRES_USER: ${DB_USERNAME:-ites}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${DB_USERNAME:-ites} -d ${DB_DATABASE:-ites}
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ites
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-ites}
+      DB_USERNAME: ${DB_USERNAME:-ites}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?Defina AUTH_JWT_SECRET no arquivo .env}
+      AUTH_TOTP_ENCRYPTION_KEY: ${AUTH_TOTP_ENCRYPTION_KEY:?Defina AUTH_TOTP_ENCRYPTION_KEY no arquivo .env}
+      AUTH_BROWSER_ORIGINS: ${AUTH_BROWSER_ORIGINS:-http://localhost:3000}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+      OPENAPI_ENABLED: ${OPENAPI_ENABLED:-false}
+      SWAGGER_UI_ENABLED: ${SWAGGER_UI_ENABLED:-false}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:3000}
+      MAILER_ENABLED: ${MAILER_ENABLED:-false}
+      MAILER_API_URL: ${MAILER_API_URL:-https://api.resend.com}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-ITES}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL:-}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - http://localhost:8080/actuator/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      ites:
+        aliases:
+          - ites-api
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${WEB_HOST_PORT:-3000}:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -q
+        - --tries=1
+        - --spider
+        - http://127.0.0.1/health
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - ites
+
+networks:
+  ites:
+    driver: bridge
+
+volumes:
+  postgres_data:

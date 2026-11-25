@@ -1,0 +1,108 @@
+{
+  "id": "project-showcase",
+  "name": "Projeto — Estudo de caso",
+  "category": "project-showcase",
+  "categoryName": "Projetos",
+  "variant": "case-study",
+  "description": "Apresentação editorial de um projeto com imagens e informações editáveis.",
+  "defaults": {
+    "title": "Projeto",
+    "highlight": "Refúgio contemporâneo",
+    "description": "Uma proposta de arquitetura que valoriza materiais naturais e integração com a paisagem.",
+    "button": "Visitar projeto",
+    "href": "#",
+    "eyebrow": "",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/block/photos/tiny-home/erik-mclean-g3U7sqtdJ1w-unsplash.jpg",
+    "imageAlt": "Casa compacta em meio à vegetação.",
+    "items": [
+      {
+        "id": "story-1",
+        "title": "História",
+        "description": "Em meio à paisagem natural, este projeto combina linhas simples, madeira clara e grandes aberturas para aproveitar a luz do dia.",
+        "href": "",
+        "value": "story",
+        "features": []
+      },
+      {
+        "id": "story-2",
+        "title": "Detalhes",
+        "description": "Cada ambiente foi pensado para aproveitar melhor o espaço. Soluções integradas e materiais duráveis ajudam a criar conforto com menor impacto ambiental.",
+        "href": "",
+        "value": "story",
+        "features": []
+      },
+      {
+        "id": "detail-client",
+        "title": "Cliente",
+        "description": "Residência particular",
+        "href": "",
+        "value": "detail",
+        "features": []
+      },
+      {
+        "id": "detail-location",
+        "title": "Localização",
+        "description": "Região costeira",
+        "href": "",
+        "value": "detail",
+        "features": []
+      },
+      {
+        "id": "detail-year",
+        "title": "Ano",
+        "description": "2025",
+        "href": "",
+        "value": "detail",
+        "features": []
+      },
+      {
+        "id": "detail-scope",
+        "title": "Escopo",
+        "description": "Arquitetura, materiais sustentáveis e eficiência energética",
+        "href": "",
+        "value": "detail",
+        "features": []
+      },
+      {
+        "id": "project-image-1",
+        "title": "Ambiente integrado",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/photos/tiny-home/erik-mclean-u9-yqtr6YrM-unsplash.jpg",
+        "value": "image",
+        "features": [
+          "Interior com acabamentos em madeira clara."
+        ]
+      },
+      {
+        "id": "project-image-2",
+        "title": "Área de descanso",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/photos/tiny-home/erik-mclean-VEaI2ftIV2M-unsplash.jpg",
+        "value": "image",
+        "features": [
+          "Espaço de descanso com vista para a natureza."
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "highlight",
+    "description",
+    "href",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "ProjectShowcaseBlock",
+    "sourceFile": "sections/project-showcase/project-showcase.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 89
+}

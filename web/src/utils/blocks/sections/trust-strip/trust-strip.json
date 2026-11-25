@@ -1,0 +1,63 @@
+{
+  "id": "trust-strip",
+  "name": "Confiança — Faixa",
+  "category": "trust-strip",
+  "categoryName": "Confiança",
+  "variant": "strip",
+  "description": "Faixa responsiva com benefícios e informações de confiança.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "trust-shipping",
+        "title": "Envio disponível",
+        "description": "Consulte as opções ao finalizar a compra.",
+        "href": "",
+        "value": "truck",
+        "features": []
+      },
+      {
+        "id": "trust-returns",
+        "title": "Trocas simples",
+        "description": "Veja as condições de troca e devolução.",
+        "href": "",
+        "value": "return",
+        "features": []
+      },
+      {
+        "id": "trust-payment",
+        "title": "Pagamento protegido",
+        "description": "Seus dados são tratados com segurança.",
+        "href": "",
+        "value": "shield",
+        "features": []
+      },
+      {
+        "id": "trust-rating",
+        "title": "Avaliações positivas",
+        "description": "Confira a opinião de outros clientes.",
+        "href": "",
+        "value": "star",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "items"
+  ],
+  "export": {
+    "componentName": "TrustStripBlock",
+    "sourceFile": "sections/trust-strip/trust-strip.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 97
+}

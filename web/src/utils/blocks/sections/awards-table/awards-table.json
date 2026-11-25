@@ -1,0 +1,57 @@
+{
+  "id": "awards-table",
+  "name": "Prêmios — Tabela",
+  "category": "awards",
+  "categoryName": "Prêmios",
+  "variant": "table",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Reconhecimentos",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "award-1",
+        "title": "Reconhecimento 1",
+        "description": "Reconhecimento por qualidade e experiência.",
+        "href": "#",
+        "value": "2024",
+        "features": []
+      },
+      {
+        "id": "award-2",
+        "title": "Reconhecimento 2",
+        "description": "Reconhecimento por qualidade e experiência.",
+        "href": "#",
+        "value": "2023",
+        "features": []
+      },
+      {
+        "id": "award-3",
+        "title": "Reconhecimento 3",
+        "description": "Reconhecimento por qualidade e experiência.",
+        "href": "https://www.shadcnblocks.com",
+        "value": "2023",
+        "features": []
+      },
+      {
+        "id": "award-4",
+        "title": "Reconhecimento 4",
+        "description": "Reconhecimento por qualidade e experiência.",
+        "href": "#",
+        "value": "2022",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": ["title", "items"],
+  "export": {
+    "componentName": "AwardsTableBlock",
+    "sourceFile": "sections/awards-table/awards-table.tsx",
+    "dependencies": ["react", "lucide-react"],
+    "tailwindVersion": 4
+  },
+  "order": 82
+}

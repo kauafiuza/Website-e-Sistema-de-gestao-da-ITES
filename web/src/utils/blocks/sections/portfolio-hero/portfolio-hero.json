@@ -1,0 +1,30 @@
+{
+  "id": "portfolio-hero",
+  "name": "Portfólio — Abertura",
+  "category": "portfolio-hero",
+  "categoryName": "Portfólio",
+  "variant": "image-overlay",
+  "description": "Abertura em tela cheia para um portfólio pessoal.",
+  "defaults": {
+    "eyebrow": "DESENVOLVEDOR FULL-STACK",
+    "title": "Seu nome",
+    "highlight": "",
+    "description": "Construo produtos digitais robustos, acessíveis e bem pensados — do primeiro protótipo à produção.",
+    "button": "Conheça meus projetos",
+    "href": "#projetos",
+    "imageUrl": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=2400&q=85",
+    "imageAlt": "Mesa de trabalho com computador e ferramentas de desenvolvimento",
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-in",
+    "items": []
+  },
+  "editableProperties": ["eyebrow", "title", "description", "button", "href", "imageUrl", "imageAlt"],
+  "export": {
+    "componentName": "PortfolioHeroBlock",
+    "sourceFile": "sections/portfolio-hero/portfolio-hero.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 115
+}

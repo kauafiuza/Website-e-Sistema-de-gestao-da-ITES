@@ -1,0 +1,36 @@
+{
+  "id": "profile-experience",
+  "name": "Portfólio — Experiência em acordeão",
+  "category": "profile-experience",
+  "categoryName": "Portfólio",
+  "variant": "accordion-list",
+  "description": "Trajetória, formação e certificações organizadas no acordeão compacto da referência.",
+  "defaults": {
+    "eyebrow": "Atuação",
+    "title": "Como trabalhamos",
+    "description": "A incubação é construída em colaboração com cada iniciativa e respeita seus contextos e objetivos.",
+    "button": "",
+    "href": "#experiencia",
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-up",
+    "items": []
+  },
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "items"
+  ],
+  "export": {
+    "componentName": "ProfileExperienceBlock",
+    "sourceFile": "sections/profile-experience/profile-experience.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "beUI BouncyAccordion"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 203
+}

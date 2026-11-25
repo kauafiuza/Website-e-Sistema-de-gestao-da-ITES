@@ -1,0 +1,142 @@
+{
+  "id": "issue-list",
+  "name": "Tarefas — Lista de pendências",
+  "category": "issues",
+  "variant": "list",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Painel de tarefas",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "issue-001",
+        "title": "Tarefa 1",
+        "description": "",
+        "href": "RFC-101",
+        "value": "In Progress",
+        "features": [
+          "high",
+          "Rajesh Bhatt",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar5.webp",
+          "2026-04-02",
+          "2026-04-10"
+        ]
+      },
+      {
+        "id": "issue-002",
+        "title": "Tarefa 2",
+        "description": "",
+        "href": "RFC-102",
+        "value": "Planned",
+        "features": [
+          "medium",
+          "Ilze Pērkone",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar2.webp",
+          "2026-04-04",
+          "2026-04-06"
+        ]
+      },
+      {
+        "id": "issue-003",
+        "title": "Tarefa 3",
+        "description": "",
+        "href": "RFC-103",
+        "value": "Review",
+        "features": [
+          "high",
+          "Kim Jihoon",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar8.webp",
+          "2026-04-08",
+          "2026-04-16"
+        ]
+      },
+      {
+        "id": "issue-004",
+        "title": "Tarefa 4",
+        "description": "",
+        "href": "RFC-104",
+        "value": "Backlog",
+        "features": [
+          "",
+          "Lín Wàngshū",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar4.webp",
+          "",
+          ""
+        ]
+      },
+      {
+        "id": "issue-005",
+        "title": "Tarefa 5",
+        "description": "",
+        "href": "RFC-105",
+        "value": "Planned",
+        "features": [
+          "medium",
+          "Jessica Cannon",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar6.webp",
+          "2026-04-14",
+          "2026-04-21"
+        ]
+      },
+      {
+        "id": "issue-006",
+        "title": "Tarefa 6",
+        "description": "",
+        "href": "RFC-106",
+        "value": "Done",
+        "features": [
+          "low",
+          "Vernon Desilets",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp",
+          "2026-04-03",
+          "2026-04-07"
+        ]
+      },
+      {
+        "id": "issue-007",
+        "title": "Tarefa 7",
+        "description": "",
+        "href": "RFC-107",
+        "value": "Review",
+        "features": [
+          "medium",
+          "Jack Walsh",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+          "2026-04-06",
+          "2026-04-08"
+        ]
+      },
+      {
+        "id": "issue-008",
+        "title": "Tarefa 8",
+        "description": "",
+        "href": "RFC-108",
+        "value": "Backlog",
+        "features": [
+          "",
+          "Allison Goldstein",
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar7.webp",
+          "",
+          ""
+        ]
+      }
+    ]
+  },
+  "editableProperties": ["title", "items"],
+  "export": {
+    "componentName": "IssueListBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/issue-list/issue-list.tsx"
+  },
+  "categoryName": "Tarefas",
+  "order": 70
+}

@@ -1,0 +1,35 @@
+{
+  "id": "contact-classic",
+  "name": "Contato — Clássico",
+  "category": "contact",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "ContactClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/contact-classic/contact-classic.tsx"
+  },
+  "defaults": {
+    "title": "Vamos conversar?",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Contato",
+  "order": 18
+}

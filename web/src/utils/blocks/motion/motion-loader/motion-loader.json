@@ -1,0 +1,27 @@
+{
+  "id": "motion-loader",
+  "name": "Loader",
+  "category": "motion",
+  "categoryName": "Motion",
+  "variant": "morph",
+  "description": "Reduced-motion-aware animated loader with editable accessible label.",
+  "defaults": {
+    "title": "Loading",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": ["title"],
+  "export": {
+    "componentName": "MotionLoaderBlock",
+    "sourceFile": "motion/motion-loader/motion-loader.tsx",
+    "dependencies": ["react", "motion"],
+    "tailwindVersion": 4
+  },
+  "order": 210
+}

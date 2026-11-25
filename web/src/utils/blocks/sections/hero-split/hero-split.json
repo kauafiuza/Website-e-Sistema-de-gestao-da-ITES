@@ -1,0 +1,40 @@
+{
+  "id": "hero-split",
+  "name": "Cabeçalho — Dividido",
+  "category": "hero",
+  "variant": "split",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "alignment",
+    "appearance",
+    "imageUrl",
+    "imageAlt"
+  ],
+  "export": {
+    "componentName": "HeroSplitBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/hero-split/hero-split.tsx"
+  },
+  "defaults": {
+    "title": "Apresente sua próxima ideia.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/company-benefits/photo-1-3x4.jpg",
+    "imageAlt": "Imagem ilustrativa do conteúdo."
+  },
+  "categoryName": "Cabeçalho",
+  "order": 2
+}

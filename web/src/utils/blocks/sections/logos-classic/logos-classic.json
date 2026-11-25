@@ -1,0 +1,34 @@
+{
+  "id": "logos-classic",
+  "name": "Marcas — Clássico",
+  "category": "logos",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "LogosClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/logos-classic/logos-classic.tsx"
+  },
+  "defaults": {
+    "title": "Marcas que confiam no trabalho.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Marcas",
+  "order": 13
+}

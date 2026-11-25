@@ -1,0 +1,23 @@
+{
+  "id": "blocks-so-dialog-03",
+  "name": "Dialog — confirmação com senha (Blocks.so 03)",
+  "category": "blocks-so-dialog",
+  "categoryName": "Dialogs Blocks.so",
+  "variant": "dialog-03",
+  "description": "Diálogo de aviso com confirmação por senha e ação apenas local.",
+  "defaults": {
+    "title": "Desativar acesso?",
+    "description": "Confirme sua intenção. Esta demonstração não altera contas nem remove dados.",
+    "button": "Revisar desativação",
+    "href": "#",
+    "eyebrow": "Demonstração"
+  },
+  "editableProperties": ["title", "description", "button"],
+  "export": {
+    "componentName": "BlocksSoDialog03Block",
+    "sourceFile": "applications/blocks-so-dialog-03/blocks-so-dialog-03.tsx",
+    "dependencies": ["react", "lucide-react", "@base-ui/react", "shadcn/ui (local Dialog, Button, Input, Label)"],
+    "tailwindVersion": 4
+  },
+  "order": 230
+}

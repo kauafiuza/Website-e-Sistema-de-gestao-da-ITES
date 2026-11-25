@@ -1,0 +1,34 @@
+{
+  "id": "error-classic",
+  "name": "Erro — Clássico",
+  "category": "error",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "button",
+    "href"
+  ],
+  "export": {
+    "componentName": "ErrorClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/error-classic/error-classic.tsx"
+  },
+  "defaults": {
+    "title": "Página não encontrada",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Erro",
+  "order": 38
+}

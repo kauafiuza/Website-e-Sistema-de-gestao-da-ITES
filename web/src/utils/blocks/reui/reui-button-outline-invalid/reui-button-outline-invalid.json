@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-outline-invalid",
+  "name": "Button — Outline invalid",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-32: Outline button with an invalid state.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonOutlineInvalidBlock",
+    "sourceFile": "reui/reui-button-outline-invalid/reui-button-outline-invalid.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 224
+}

@@ -1,0 +1,33 @@
+{
+  "id": "register-classic",
+  "name": "Cadastro — Clássico",
+  "category": "register",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "button"
+  ],
+  "export": {
+    "componentName": "RegisterClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/register-classic/register-classic.tsx"
+  },
+  "defaults": {
+    "title": "Crie sua conta",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Cadastro",
+  "order": 31
+}

@@ -1,0 +1,32 @@
+{
+  "id": "company-benefits",
+  "name": "Benefícios da empresa — Visão geral",
+  "category": "company-benefits",
+  "categoryName": "Benefícios da empresa",
+  "variant": "overview",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Benefícios para a equipe.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      { "id": "photo-1", "title": "Informação 1", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/company-benefits/photo-1-3x4.jpg", "value": "", "features": ["photo", ""] },
+      { "id": "photo-2", "title": "Informação 2", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/workplace-photos/photo-2.jpg", "value": "", "features": ["photo", ""] },
+      { "id": "testimonial-1", "title": "Informação 3", "description": "Informação geral sobre a experiência da equipe.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp", "value": "Pessoa da equipe", "features": ["Texto alternativo da imagem", ""] },
+      { "id": "rating-1", "title": "Informação 4", "description": "Informação geral sobre a experiência da equipe.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/company-benefits/linkedin.svg", "value": "4.8", "features": ["rating", ""] },
+      { "id": "rating-2", "title": "Informação 5", "description": "Informação geral sobre a experiência da equipe.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/company-benefits/glassdoor.svg", "value": "4.6", "features": ["rating", ""] },
+      { "id": "rating-3", "title": "Informação 6", "description": "Informação geral sobre a experiência da equipe.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/company-benefits/indeed.svg", "value": "4.3", "features": ["rating", ""] },
+      { "id": "rating-4", "title": "Informação 7", "description": "Informação geral sobre a experiência da equipe.", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/company-benefits/levels.svg", "value": "Top 5%", "features": ["rating", ""] }
+    ]
+  },
+  "editableProperties": ["title", "description", "items"],
+  "export": {
+    "componentName": "CompanyBenefitsBlock",
+    "sourceFile": "sections/company-benefits/company-benefits.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 75
+}

@@ -1,0 +1,42 @@
+{
+  "id": "profile-hero",
+  "name": "Portfólio — Capa imersiva",
+  "category": "profile-hero",
+  "categoryName": "Portfólio",
+  "variant": "fullscreen-portrait",
+  "description": "Capa de portfólio em tela inteira, com figura central, assinatura visual e gradiente azul-violeta.",
+  "defaults": {
+    "eyebrow": "",
+    "title": "ITES",
+    "description": "Conheça as iniciativas, projetos e ações da ITES.",
+    "button": "",
+    "href": "#hero",
+    "imageUrl": "",
+    "imageAlt": "Imagem institucional da ITES",
+    "backgroundLogoUrl": "",
+    "backgroundLogoAlt": "Identidade visual da ITES",
+    "animateBackground": true,
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-in",
+    "items": []
+  },
+  "editableProperties": [
+    "title",
+    "imageUrl",
+    "imageAlt",
+    "backgroundLogoUrl",
+    "backgroundLogoAlt",
+    "animateBackground"
+  ],
+  "export": {
+    "componentName": "ProfileHeroBlock",
+    "sourceFile": "sections/profile-hero/profile-hero.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 201
+}

@@ -1,0 +1,74 @@
+{
+  "id": "code-example-1",
+  "name": "Exemplo de código — Abas",
+  "category": "code-example",
+  "categoryName": "Exemplos de código",
+  "variant": "tabs",
+  "description": "Apresentação editável de exemplos de código em várias linguagens.",
+  "defaults": {
+    "title": "ESCREVA CÓDIGO.",
+    "highlight": "ENTREGUE MAIS RÁPIDO.",
+    "description": "Crie aplicações modernas com código claro e reutilizável. Estes exemplos mostram pequenas funções úteis em diferentes linguagens.",
+    "button": "Começar",
+    "href": "#",
+    "eyebrow": "./instalar.sh",
+    "items": [
+      {
+        "id": "snippet-javascript",
+        "title": "JavaScript",
+        "description": "exemplos.js",
+        "href": "",
+        "value": "javascript",
+        "features": [
+          "function fibonacci(n) {\n  if (n <= 1) return n;\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nfunction debounce(func, delay) {\n  let timeoutId;\n  return (...args) => {\n    clearTimeout(timeoutId);\n    timeoutId = setTimeout(() => func(...args), delay);\n  };\n}\n\nconst memoize = (fn) => {\n  const cache = new Map();\n  return (...args) => {\n    const key = JSON.stringify(args);\n    if (cache.has(key)) return cache.get(key);\n    const result = fn(...args);\n    cache.set(key, result);\n    return result;\n  };\n};"
+        ]
+      },
+      {
+        "id": "snippet-python",
+        "title": "Python",
+        "description": "exemplos.py",
+        "href": "",
+        "value": "python",
+        "features": [
+          "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)\n\ndef debounce(func, delay):\n    import threading\n    timer = None\n    def wrapper(*args, **kwargs):\n        nonlocal timer\n        if timer:\n            timer.cancel()\n        timer = threading.Timer(delay, func, args, kwargs)\n        timer.start()\n    return wrapper\n\ndef memoize(func):\n    cache = {}\n    def wrapper(*args):\n        if args not in cache:\n            cache[args] = func(*args)\n        return cache[args]\n    return wrapper"
+        ]
+      },
+      {
+        "id": "snippet-go",
+        "title": "Go",
+        "description": "exemplos.go",
+        "href": "",
+        "value": "go",
+        "features": [
+          "package utils\n\nfunc Fibonacci(n int) int {\n    if n <= 1 {\n        return n\n    }\n    return Fibonacci(n-1) + Fibonacci(n-2)\n}\n\nfunc Filter[T any](slice []T, predicate func(T) bool) []T {\n    result := make([]T, 0)\n    for _, item := range slice {\n        if predicate(item) {\n            result = append(result, item)\n        }\n    }\n    return result\n}\n\nfunc Map[T, U any](slice []T, transform func(T) U) []U {\n    result := make([]U, len(slice))\n    for i, item := range slice {\n        result[i] = transform(item)\n    }\n    return result\n}"
+        ]
+      },
+      {
+        "id": "snippet-ruby",
+        "title": "Ruby",
+        "description": "exemplos.rb",
+        "href": "",
+        "value": "ruby",
+        "features": [
+          "def fibonacci(n)\n  return n if n <= 1\n  fibonacci(n - 1) + fibonacci(n - 2)\nend\n\ndef debounce(delay, &block)\n  @timer&.cancel\n  @timer = Thread.new do\n    sleep(delay)\n    block.call\n  end\nend\n\ndef memoize(method_name)\n  cache = {}\n  define_method(method_name) do |*args|\n    cache[args] ||= super(*args)\n  end\nend"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "highlight",
+    "description",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "CodeExample1Block",
+    "sourceFile": "sections/code-example-1/code-example-1.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 86
+}

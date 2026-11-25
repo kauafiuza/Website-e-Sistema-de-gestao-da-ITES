@@ -1,0 +1,63 @@
+{
+  "id": "stats-editorial",
+  "name": "Estatísticas — Linhas editoriais",
+  "category": "stats",
+  "variant": "editorial",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Progresso em números.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "metric-0",
+        "title": "Indicador 1",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "10k+",
+        "features": []
+      },
+      {
+        "id": "metric-1",
+        "title": "Indicador 2",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "4.9/5",
+        "features": []
+      },
+      {
+        "id": "metric-2",
+        "title": "Indicador 3",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "120+",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "StatsEditorialBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/stats-editorial/stats-editorial.tsx"
+  },
+  "categoryName": "Estatísticas",
+  "order": 53
+}

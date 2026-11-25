@@ -1,0 +1,902 @@
+==================================================================
+1. ESTRUTURA DAS TABELAS (colunas, tipos, chaves e restrições)
+==================================================================
+              List of relations
+ Schema |       Name       | Type  |  Owner
+--------+------------------+-------+----------
+ public | demand_events    | table | postgres
+ public | demands          | table | postgres
+ public | grant_audit      | table | postgres
+ public | organizations    | table | postgres
+ public | page_events      | table | postgres
+ public | page_versions    | table | postgres
+ public | pages            | table | postgres
+ public | permissions      | table | postgres
+ public | role_permissions | table | postgres
+ public | roles            | table | postgres
+ public | user_roles       | table | postgres
+ public | users            | table | postgres
+(12 rows)
+
+                                      Table "public.users"
+    Column     |           Type           | Collation | Nullable |           Default
+---------------+--------------------------+-----------+----------+------------------------------
+ id            | bigint                   |           | not null | generated always as identity
+ name          | text                     |           | not null |
+ email         | text                     |           | not null |
+ password_hash | text                     |           | not null |
+ whatsapp      | text                     |           |          |
+ active        | boolean                  |           | not null | true
+ created_at    | timestamp with time zone |           | not null | now()
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_email_key" UNIQUE CONSTRAINT, btree (email)
+Referenced by:
+    TABLE "demand_events" CONSTRAINT "demand_events_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id)
+    TABLE "demands" CONSTRAINT "demands_requester_id_fkey" FOREIGN KEY (requester_id) REFERENCES users(id)
+    TABLE "grant_audit" CONSTRAINT "grant_audit_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id)
+    TABLE "grant_audit" CONSTRAINT "grant_audit_subject_user_id_fkey" FOREIGN KEY (subject_user_id) REFERENCES users(id)
+    TABLE "page_events" CONSTRAINT "page_events_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id)
+    TABLE "page_versions" CONSTRAINT "page_versions_author_id_fkey" FOREIGN KEY (author_id) REFERENCES users(id)
+    TABLE "user_roles" CONSTRAINT "user_roles_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+
+                         Table "public.roles"
+ Column |  Type  | Collation | Nullable |           Default
+--------+--------+-----------+----------+------------------------------
+ id     | bigint |           | not null | generated always as identity
+ code   | text   |           | not null |
+ name   | text   |           | not null |
+Indexes:
+    "roles_pkey" PRIMARY KEY, btree (id)
+    "roles_code_key" UNIQUE CONSTRAINT, btree (code)
+Referenced by:
+    TABLE "grant_audit" CONSTRAINT "grant_audit_role_id_fkey" FOREIGN KEY (role_id) REFERENCES roles(id)
+    TABLE "role_permissions" CONSTRAINT "role_permissions_role_id_fkey" FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+    TABLE "user_roles" CONSTRAINT "user_roles_role_id_fkey" FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+
+                         Table "public.permissions"
+   Column    |  Type  | Collation | Nullable |           Default
+-------------+--------+-----------+----------+------------------------------
+ id          | bigint |           | not null | generated always as identity
+ code        | text   |           | not null |
+ description | text   |           | not null |
+Indexes:
+    "permissions_pkey" PRIMARY KEY, btree (id)
+    "permissions_code_key" UNIQUE CONSTRAINT, btree (code)
+Referenced by:
+    TABLE "role_permissions" CONSTRAINT "role_permissions_permission_id_fkey" FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+
+             Table "public.user_roles"
+ Column  |  Type  | Collation | Nullable | Default
+---------+--------+-----------+----------+---------
+ user_id | bigint |           | not null |
+ role_id | bigint |           | not null |
+Indexes:
+    "user_roles_pkey" PRIMARY KEY, btree (user_id, role_id)
+Foreign-key constraints:
+    "user_roles_role_id_fkey" FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+    "user_roles_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+
+             Table "public.role_permissions"
+    Column     |  Type  | Collation | Nullable | Default
+---------------+--------+-----------+----------+---------
+ role_id       | bigint |           | not null |
+ permission_id | bigint |           | not null |
+Indexes:
+    "role_permissions_pkey" PRIMARY KEY, btree (role_id, permission_id)
+Foreign-key constraints:
+    "role_permissions_permission_id_fkey" FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+    "role_permissions_role_id_fkey" FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+
+                                   Table "public.organizations"
+     Column      |           Type           | Collation | Nullable |           Default
+-----------------+--------------------------+-----------+----------+------------------------------
+ id              | bigint                   |           | not null | generated always as identity
+ name            | text                     |           | not null |
+ economic_sector | text                     |           | not null |
+ contact_email   | text                     |           |          |
+ created_at      | timestamp with time zone |           | not null | now()
+Indexes:
+    "organizations_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "demands" CONSTRAINT "demands_organization_id_fkey" FOREIGN KEY (organization_id) REFERENCES organizations(id)
+
+                                                             Table "public.demands"
+     Column      |           Type           | Collation | Nullable |                                  Default
+-----------------+--------------------------+-----------+----------+----------------------------------------------------------------------------
+ id              | bigint                   |           | not null | generated always as identity
+ code            | text                     |           |          | generated always as ('ITES-'::text || lpad(id::text, 8, '0'::text)) stored
+ requester_id    | bigint                   |           | not null |
+ organization_id | bigint                   |           |          |
+ capacity        | text                     |           | not null |
+ capacity_other  | text                     |           |          |
+ service         | text                     |           | not null |
+ description     | text                     |           | not null |
+ urgency         | text                     |           | not null |
+ status          | text                     |           | not null | 'Pendente'::text
+ completion_note | text                     |           |          |
+ review_notes    | text                     |           |          |
+ created_at      | timestamp with time zone |           | not null | now()
+ updated_at      | timestamp with time zone |           | not null | now()
+Indexes:
+    "demands_pkey" PRIMARY KEY, btree (id)
+    "demands_code_key" UNIQUE CONSTRAINT, btree (code)
+    "demands_organization_status_idx" btree (organization_id, status)
+    "demands_requester_idx" btree (requester_id, created_at DESC)
+    "demands_status_idx" btree (status, created_at DESC)
+Check constraints:
+    "demands_capacity_check" CHECK (capacity = ANY (ARRAY['GROUP'::text, 'FORUM'::text, 'PARTNER'::text, 'OTHER'::text]))
+    "demands_capacity_other_check" CHECK (capacity <> 'OTHER'::text OR NULLIF(btrim(capacity_other), ''::text) IS NOT NULL)
+    "demands_completion_check" CHECK (status <> 'Concluída'::text OR NULLIF(btrim(completion_note), ''::text) IS NOT NULL)
+    "demands_description_check" CHECK (length(btrim(description)) >= 10)
+    "demands_status_check" CHECK (status = ANY (ARRAY['Pendente'::text, 'Aceita para atendimento'::text, 'Em atendimento'::text, 'Concluída'::text, 'Recusada'::text, 'Cancelada'::text]))
+    "demands_urgency_check" CHECK (urgency = ANY (ARRAY['LOW'::text, 'MEDIUM'::text, 'HIGH'::text]))
+Foreign-key constraints:
+    "demands_organization_id_fkey" FOREIGN KEY (organization_id) REFERENCES organizations(id)
+    "demands_requester_id_fkey" FOREIGN KEY (requester_id) REFERENCES users(id)
+Referenced by:
+    TABLE "demand_events" CONSTRAINT "demand_events_demand_id_fkey" FOREIGN KEY (demand_id) REFERENCES demands(id)
+Triggers:
+    transition_guard BEFORE UPDATE OF status ON demands FOR EACH ROW EXECUTE FUNCTION transition_guard()
+
+                                  Table "public.demand_events"
+    Column     |           Type           | Collation | Nullable |           Default
+---------------+--------------------------+-----------+----------+------------------------------
+ id            | bigint                   |           | not null | generated always as identity
+ demand_id     | bigint                   |           | not null |
+ actor_id      | bigint                   |           | not null |
+ old_status    | text                     |           | not null |
+ new_status    | text                     |           | not null |
+ justification | text                     |           | not null |
+ occurred_at   | timestamp with time zone |           | not null | now()
+Indexes:
+    "demand_events_pkey" PRIMARY KEY, btree (id)
+    "demand_events_actor_time_idx" btree (actor_id, occurred_at DESC)
+    "demand_events_demand_time_idx" btree (demand_id, occurred_at DESC)
+Check constraints:
+    "demand_events_justification_check" CHECK (length(btrim(justification)) > 0)
+    "demand_events_new_status_check" CHECK (new_status = ANY (ARRAY['Aceita para atendimento'::text, 'Em atendimento'::text, 'Concluída'::text, 'Recusada'::text, 'Cancelada'::text]))
+    "demand_events_old_status_check" CHECK (old_status = ANY (ARRAY['Pendente'::text, 'Aceita para atendimento'::text, 'Em atendimento'::text]))
+Foreign-key constraints:
+    "demand_events_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id)
+    "demand_events_demand_id_fkey" FOREIGN KEY (demand_id) REFERENCES demands(id)
+Triggers:
+    event_immutable BEFORE DELETE OR UPDATE ON demand_events FOR EACH ROW EXECUTE FUNCTION event_immutable()
+
+                                         Table "public.pages"
+        Column        |           Type           | Collation | Nullable |           Default
+----------------------+--------------------------+-----------+----------+------------------------------
+ id                   | bigint                   |           | not null | generated always as identity
+ slug                 | text                     |           | not null |
+ title                | text                     |           | not null |
+ published_version_id | bigint                   |           |          |
+ created_at           | timestamp with time zone |           | not null | now()
+Indexes:
+    "pages_pkey" PRIMARY KEY, btree (id)
+    "pages_slug_key" UNIQUE CONSTRAINT, btree (slug)
+Foreign-key constraints:
+    "pages_published_fk" FOREIGN KEY (id, published_version_id) REFERENCES page_versions(page_id, id)
+Referenced by:
+    TABLE "page_events" CONSTRAINT "page_events_page_id_fkey" FOREIGN KEY (page_id) REFERENCES pages(id)
+    TABLE "page_versions" CONSTRAINT "page_versions_page_id_fkey" FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE
+Triggers:
+    page_publish_audit AFTER UPDATE OF published_version_id ON pages FOR EACH ROW EXECUTE FUNCTION page_publish_audit()
+
+                                Table "public.page_versions"
+   Column   |           Type           | Collation | Nullable |           Default
+------------+--------------------------+-----------+----------+------------------------------
+ id         | bigint                   |           | not null | generated always as identity
+ page_id    | bigint                   |           | not null |
+ revision   | integer                  |           | not null |
+ document   | jsonb                    |           | not null |
+ author_id  | bigint                   |           | not null |
+ created_at | timestamp with time zone |           | not null | now()
+Indexes:
+    "page_versions_pkey" PRIMARY KEY, btree (id)
+    "page_versions_page_id_id_key" UNIQUE CONSTRAINT, btree (page_id, id)
+    "page_versions_page_id_revision_key" UNIQUE CONSTRAINT, btree (page_id, revision)
+Check constraints:
+    "page_versions_document_check" CHECK (jsonb_typeof(document) = 'object'::text)
+    "page_versions_revision_check" CHECK (revision > 0)
+Foreign-key constraints:
+    "page_versions_author_id_fkey" FOREIGN KEY (author_id) REFERENCES users(id)
+    "page_versions_page_id_fkey" FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE
+Referenced by:
+    TABLE "page_events" CONSTRAINT "page_events_page_id_version_id_fkey" FOREIGN KEY (page_id, version_id) REFERENCES page_versions(page_id, id)
+    TABLE "pages" CONSTRAINT "pages_published_fk" FOREIGN KEY (id, published_version_id) REFERENCES page_versions(page_id, id)
+
+                                  Table "public.page_events"
+   Column    |           Type           | Collation | Nullable |           Default
+-------------+--------------------------+-----------+----------+------------------------------
+ id          | bigint                   |           | not null | generated always as identity
+ page_id     | bigint                   |           | not null |
+ version_id  | bigint                   |           |          |
+ actor_id    | bigint                   |           | not null |
+ action      | text                     |           | not null |
+ occurred_at | timestamp with time zone |           | not null | now()
+Indexes:
+    "page_events_pkey" PRIMARY KEY, btree (id)
+    "page_events_page_time_idx" btree (page_id, occurred_at DESC)
+Check constraints:
+    "page_events_action_check" CHECK (action = ANY (ARRAY['PUBLISH'::text, 'UNPUBLISH'::text]))
+Foreign-key constraints:
+    "page_events_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id)
+    "page_events_page_id_fkey" FOREIGN KEY (page_id) REFERENCES pages(id)
+    "page_events_page_id_version_id_fkey" FOREIGN KEY (page_id, version_id) REFERENCES page_versions(page_id, id)
+
+                                    Table "public.grant_audit"
+     Column      |           Type           | Collation | Nullable |           Default
+-----------------+--------------------------+-----------+----------+------------------------------
+ id              | bigint                   |           | not null | generated always as identity
+ actor_id        | bigint                   |           | not null |
+ subject_user_id | bigint                   |           | not null |
+ role_id         | bigint                   |           | not null |
+ action          | text                     |           | not null |
+ occurred_at     | timestamp with time zone |           | not null | now()
+Indexes:
+    "grant_audit_pkey" PRIMARY KEY, btree (id)
+    "grant_audit_subject_time_idx" btree (subject_user_id, occurred_at DESC)
+Check constraints:
+    "grant_audit_action_check" CHECK (action = ANY (ARRAY['GRANT'::text, 'REVOKE'::text]))
+Foreign-key constraints:
+    "grant_audit_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id)
+    "grant_audit_role_id_fkey" FOREIGN KEY (role_id) REFERENCES roles(id)
+    "grant_audit_subject_user_id_fkey" FOREIGN KEY (subject_user_id) REFERENCES users(id)
+
+==================================================================
+2. QUANTIDADE DE REGISTROS POR TABELA (mínimo de 20)
+==================================================================
+SELECT 'users' AS tabela, count(*) AS registros FROM users
+UNION ALL SELECT 'roles', count(*) FROM roles
+UNION ALL SELECT 'permissions', count(*) FROM permissions
+UNION ALL SELECT 'user_roles', count(*) FROM user_roles
+UNION ALL SELECT 'role_permissions', count(*) FROM role_permissions
+UNION ALL SELECT 'organizations', count(*) FROM organizations
+UNION ALL SELECT 'demands', count(*) FROM demands
+UNION ALL SELECT 'demand_events', count(*) FROM demand_events
+UNION ALL SELECT 'pages', count(*) FROM pages
+UNION ALL SELECT 'page_versions', count(*) FROM page_versions
+UNION ALL SELECT 'page_events', count(*) FROM page_events
+UNION ALL SELECT 'grant_audit', count(*) FROM grant_audit
+ORDER BY tabela;
+      tabela      | registros
+------------------+-----------
+ demand_events    |        25
+ demands          |        30
+ grant_audit      |        45
+ organizations    |        20
+ page_events      |        20
+ page_versions    |        20
+ pages            |        20
+ permissions      |        20
+ role_permissions |        61
+ roles            |        20
+ user_roles       |        45
+ users            |        30
+(12 rows)
+
+==================================================================
+3. DADOS INSERIDOS
+==================================================================
+SELECT id, name, email, whatsapp, active FROM users ORDER BY id;
+ id |           name           |          email           |    whatsapp     | active
+----+--------------------------+--------------------------+-----------------+--------
+  1 | Ana Paula Ferreira       | pessoa01@example.invalid | (21) 98137-1263 | t
+  2 | Marcos Vinícius Souza    | pessoa02@example.invalid | (21) 98174-1526 | t
+  3 | Juliana Rocha Lima       | pessoa03@example.invalid | (21) 98211-1789 | t
+  4 | Carlos Eduardo Martins   | pessoa04@example.invalid | (21) 98248-2052 | t
+  5 | Fernanda Alves Costa     | pessoa05@example.invalid | (21) 98285-2315 | t
+  6 | Rafael Nogueira Dias     | pessoa06@example.invalid | (21) 98322-2578 | t
+  7 | Patrícia Mendes Ribeiro  | pessoa07@example.invalid | (21) 98359-2841 | t
+  8 | Lucas Henrique Barbosa   | pessoa08@example.invalid | (21) 98396-3104 | t
+  9 | Camila Duarte Pinto      | pessoa09@example.invalid | (21) 98433-3367 | t
+ 10 | Thiago Cardoso Freitas   | pessoa10@example.invalid | (21) 98470-3630 | t
+ 11 | Mariana Gomes Teixeira   | pessoa11@example.invalid | (21) 98507-3893 | t
+ 12 | Eduardo Lopes Moreira    | pessoa12@example.invalid | (21) 98544-4156 | t
+ 13 | Beatriz Carvalho Santos  | pessoa13@example.invalid | (21) 98581-4419 | t
+ 14 | Gustavo Araújo Pereira   | pessoa14@example.invalid | (21) 98618-4682 | t
+ 15 | Larissa Monteiro Vieira  | pessoa15@example.invalid | (21) 98655-4945 | t
+ 16 | Diego Fernandes Castro   | pessoa16@example.invalid | (21) 98692-5208 | t
+ 17 | Aline Batista Correia    | pessoa17@example.invalid | (21) 98729-5471 | t
+ 18 | Rodrigo Pires Cavalcanti | pessoa18@example.invalid | (21) 98766-5734 | t
+ 19 | Vanessa Lacerda Moura    | pessoa19@example.invalid | (21) 98803-5997 | t
+ 20 | Felipe Rezende Azevedo   | pessoa20@example.invalid | (21) 98840-6260 | t
+ 21 | Renata Fonseca Brandão   | pessoa21@example.invalid | (21) 98877-6523 | t
+ 22 | André Luiz Sampaio       | pessoa22@example.invalid | (21) 98914-6786 | t
+ 23 | Débora Antunes Farias    | pessoa23@example.invalid | (21) 98951-7049 | t
+ 24 | Leonardo Machado Reis    | pessoa24@example.invalid | (21) 98988-7312 | t
+ 25 | Simone Tavares Braga     | pessoa25@example.invalid | (21) 99025-7575 | t
+ 26 | Helena Coutinho Prado    | pessoa26@example.invalid | (21) 99062-7838 | t
+ 27 | Ricardo Viana Lemos      | pessoa27@example.invalid | (21) 99099-8101 | t
+ 28 | Cláudia Barros Siqueira  | pessoa28@example.invalid | (21) 99136-8364 | t
+ 29 | Paulo Roberto Amaral     | pessoa29@example.invalid | (21) 99173-8627 | t
+ 30 | Luana Medeiros Quintela  | pessoa30@example.invalid | (21) 99210-8890 | t
+(30 rows)
+
+SELECT * FROM roles ORDER BY id;
+ id |            code             |                      name
+----+-----------------------------+------------------------------------------------
+  1 | REQUESTER                   | Solicitante
+  2 | ADMINISTRATOR               | Administrador
+  3 | DEMAND_MANAGER              | Gestor de demandas
+  4 | COLLABORATOR                | Colaborador
+  5 | TRIAGE_ANALYST              | Analista de triagem
+  6 | ORGANIZATION_REPRESENTATIVE | Representante de organização
+  7 | COORDINATOR                 | Coordenação da ITES
+  8 | PLAN_MANAGER                | Gestor de planos de atendimento
+  9 | ACTIVITY_RESPONSIBLE        | Responsável por atividades
+ 10 | REPORT_VIEWER               | Leitor de relatórios
+ 11 | REPORT_EXPORTER             | Exportador de relatórios
+ 12 | AUDITOR                     | Auditor
+ 13 | USER_MANAGER                | Gestor de contas de usuários
+ 14 | CONTENT_EDITOR              | Editor de conteúdo institucional
+ 15 | CONTENT_PUBLISHER           | Publicador de conteúdo institucional
+ 16 | NEWS_EDITOR                 | Editor de notícias e agenda
+ 17 | PUBLICATIONS_EDITOR         | Editor de publicações
+ 18 | PROJECTS_EDITOR             | Editor de projetos e empreendimentos incubados
+ 19 | PARTNERSHIP_MANAGER         | Gestor de parcerias
+ 20 | SUPPORT                     | Suporte técnico
+(20 rows)
+
+SELECT * FROM permissions ORDER BY id;
+ id |         code          |               description
+----+-----------------------+------------------------------------------
+  1 | profile.read_own      | Consultar o próprio perfil
+  2 | profile.manage_own    | Atualizar o próprio perfil
+  3 | users.read            | Consultar contas de usuários
+  4 | users.manage          | Administrar contas de usuários
+  5 | roles.manage          | Conceder e revogar papéis
+  6 | demands.read_own      | Consultar as próprias demandas
+  7 | demands.read          | Consultar demandas para análise
+  8 | demands.review        | Classificar demandas
+  9 | demands.decide        | Decidir demandas
+ 10 | organizations.read    | Consultar organizações
+ 11 | portal.content.manage | Administrar conteúdo institucional
+ 12 | builder.pages.edit    | Editar páginas institucionais
+ 13 | builder.pages.publish | Publicar páginas institucionais
+ 14 | demands.create        | Registrar novas demandas
+ 15 | demands.cancel        | Cancelar demandas
+ 16 | organizations.manage  | Cadastrar e atualizar organizações
+ 17 | plans.manage          | Criar e acompanhar planos de atendimento
+ 18 | reports.read          | Consultar relatórios e indicadores
+ 19 | reports.export        | Exportar relatórios
+ 20 | audit.read            | Consultar trilhas de auditoria
+(20 rows)
+
+SELECT ur.user_id, u.name, r.code AS papel
+  FROM user_roles ur JOIN users u ON u.id = ur.user_id JOIN roles r ON r.id = ur.role_id
+ ORDER BY ur.user_id, r.code;
+ user_id |           name           |     papel
+---------+--------------------------+----------------
+       1 | Ana Paula Ferreira       | DEMAND_MANAGER
+       1 | Ana Paula Ferreira       | REQUESTER
+       2 | Marcos Vinícius Souza    | DEMAND_MANAGER
+       2 | Marcos Vinícius Souza    | REQUESTER
+       3 | Juliana Rocha Lima       | DEMAND_MANAGER
+       3 | Juliana Rocha Lima       | REQUESTER
+       4 | Carlos Eduardo Martins   | DEMAND_MANAGER
+       4 | Carlos Eduardo Martins   | REQUESTER
+       5 | Fernanda Alves Costa     | DEMAND_MANAGER
+       5 | Fernanda Alves Costa     | REQUESTER
+       6 | Rafael Nogueira Dias     | COLLABORATOR
+       6 | Rafael Nogueira Dias     | REQUESTER
+       7 | Patrícia Mendes Ribeiro  | COLLABORATOR
+       7 | Patrícia Mendes Ribeiro  | REQUESTER
+       8 | Lucas Henrique Barbosa   | COLLABORATOR
+       8 | Lucas Henrique Barbosa   | REQUESTER
+       9 | Camila Duarte Pinto      | COLLABORATOR
+       9 | Camila Duarte Pinto      | REQUESTER
+      10 | Thiago Cardoso Freitas   | COLLABORATOR
+      10 | Thiago Cardoso Freitas   | REQUESTER
+      11 | Mariana Gomes Teixeira   | REQUESTER
+      12 | Eduardo Lopes Moreira    | REQUESTER
+      13 | Beatriz Carvalho Santos  | REQUESTER
+      14 | Gustavo Araújo Pereira   | REQUESTER
+      15 | Larissa Monteiro Vieira  | REQUESTER
+      16 | Diego Fernandes Castro   | REQUESTER
+      17 | Aline Batista Correia    | REQUESTER
+      18 | Rodrigo Pires Cavalcanti | REQUESTER
+      19 | Vanessa Lacerda Moura    | REQUESTER
+      20 | Felipe Rezende Azevedo   | REQUESTER
+      21 | Renata Fonseca Brandão   | REQUESTER
+      22 | André Luiz Sampaio       | REQUESTER
+      23 | Débora Antunes Farias    | REQUESTER
+      24 | Leonardo Machado Reis    | REQUESTER
+      25 | Simone Tavares Braga     | REQUESTER
+      26 | Helena Coutinho Prado    | ADMINISTRATOR
+      26 | Helena Coutinho Prado    | REQUESTER
+      27 | Ricardo Viana Lemos      | ADMINISTRATOR
+      27 | Ricardo Viana Lemos      | REQUESTER
+      28 | Cláudia Barros Siqueira  | ADMINISTRATOR
+      28 | Cláudia Barros Siqueira  | REQUESTER
+      29 | Paulo Roberto Amaral     | ADMINISTRATOR
+      29 | Paulo Roberto Amaral     | REQUESTER
+      30 | Luana Medeiros Quintela  | ADMINISTRATOR
+      30 | Luana Medeiros Quintela  | REQUESTER
+(45 rows)
+
+SELECT r.code AS papel, p.code AS permissao
+  FROM role_permissions rp JOIN roles r ON r.id = rp.role_id JOIN permissions p ON p.id = rp.permission_id
+ ORDER BY r.id, p.id;
+            papel            |       permissao
+-----------------------------+-----------------------
+ REQUESTER                   | profile.read_own
+ REQUESTER                   | profile.manage_own
+ REQUESTER                   | demands.read_own
+ REQUESTER                   | demands.create
+ ADMINISTRATOR               | profile.read_own
+ ADMINISTRATOR               | profile.manage_own
+ ADMINISTRATOR               | users.read
+ ADMINISTRATOR               | users.manage
+ ADMINISTRATOR               | roles.manage
+ ADMINISTRATOR               | demands.read_own
+ ADMINISTRATOR               | demands.read
+ ADMINISTRATOR               | demands.review
+ ADMINISTRATOR               | demands.decide
+ ADMINISTRATOR               | organizations.read
+ ADMINISTRATOR               | portal.content.manage
+ ADMINISTRATOR               | builder.pages.edit
+ ADMINISTRATOR               | builder.pages.publish
+ ADMINISTRATOR               | demands.create
+ ADMINISTRATOR               | demands.cancel
+ ADMINISTRATOR               | organizations.manage
+ ADMINISTRATOR               | plans.manage
+ ADMINISTRATOR               | reports.read
+ ADMINISTRATOR               | reports.export
+ ADMINISTRATOR               | audit.read
+ DEMAND_MANAGER              | demands.read
+ DEMAND_MANAGER              | demands.review
+ DEMAND_MANAGER              | demands.decide
+ DEMAND_MANAGER              | organizations.read
+ DEMAND_MANAGER              | demands.cancel
+ DEMAND_MANAGER              | plans.manage
+ COLLABORATOR                | demands.read
+ COLLABORATOR                | organizations.read
+ TRIAGE_ANALYST              | demands.read
+ TRIAGE_ANALYST              | demands.review
+ TRIAGE_ANALYST              | organizations.read
+ ORGANIZATION_REPRESENTATIVE | demands.read_own
+ ORGANIZATION_REPRESENTATIVE | demands.create
+ ORGANIZATION_REPRESENTATIVE | organizations.manage
+ COORDINATOR                 | roles.manage
+ COORDINATOR                 | demands.read
+ COORDINATOR                 | demands.decide
+ COORDINATOR                 | reports.read
+ PLAN_MANAGER                | demands.read
+ PLAN_MANAGER                | plans.manage
+ ACTIVITY_RESPONSIBLE        | plans.manage
+ REPORT_VIEWER               | reports.read
+ REPORT_EXPORTER             | reports.read
+ REPORT_EXPORTER             | reports.export
+ AUDITOR                     | reports.read
+ AUDITOR                     | audit.read
+ USER_MANAGER                | users.read
+ USER_MANAGER                | users.manage
+ CONTENT_EDITOR              | portal.content.manage
+ CONTENT_EDITOR              | builder.pages.edit
+ CONTENT_PUBLISHER           | builder.pages.publish
+ NEWS_EDITOR                 | builder.pages.edit
+ PUBLICATIONS_EDITOR         | builder.pages.edit
+ PROJECTS_EDITOR             | builder.pages.edit
+ PARTNERSHIP_MANAGER         | organizations.read
+ PARTNERSHIP_MANAGER         | organizations.manage
+ SUPPORT                     | users.read
+(61 rows)
+
+SELECT id, name, economic_sector, contact_email FROM organizations ORDER BY id;
+ id |                name                 | economic_sector |       contact_email
+----+-------------------------------------+-----------------+---------------------------
+  1 | Coletivo Raízes do Morro            | agricultura     | contato01@example.invalid
+  2 | Grupo Mãos da Baía                  | cultura         | contato02@example.invalid
+  3 | Associação Maré Viva                | alimentação     | contato03@example.invalid
+  4 | Rede de Costura Solidária           | serviços        | contato04@example.invalid
+  5 | Cooperativa Sementes de Itaipu      | artesanato      | contato05@example.invalid
+  6 | Coletivo Cultura em Rede            | agricultura     | contato06@example.invalid
+  7 | Grupo Sabores de Niterói            | cultura         | contato07@example.invalid
+  8 | Associação Artes da Região          | alimentação     | contato08@example.invalid
+  9 | Rede de Agricultura Urbana          | serviços        | contato09@example.invalid
+ 10 | Cooperativa de Reciclagem Horizonte | artesanato      | contato10@example.invalid
+ 11 | Coletivo Mulheres da Pesca          | agricultura     | contato11@example.invalid
+ 12 | Grupo Tecendo Histórias             | cultura         | contato12@example.invalid
+ 13 | Associação Feira Popular            | alimentação     | contato13@example.invalid
+ 14 | Coletivo Juventude Criativa         | serviços        | contato14@example.invalid
+ 15 | Rede de Alimentação Comunitária     | artesanato      | contato15@example.invalid
+ 16 | Grupo Cerâmica da Costa             | agricultura     | contato16@example.invalid
+ 17 | Cooperativa de Serviços do Leste    | cultura         | contato17@example.invalid
+ 18 | Coletivo Memória e Território       | alimentação     | contato18@example.invalid
+ 19 | Associação Ecos da Serra            | serviços        | contato19@example.invalid
+ 20 | Rede de Produção Local              | artesanato      | contato20@example.invalid
+(20 rows)
+
+SELECT id, code, requester_id, organization_id, capacity, capacity_other, service,
+       description, urgency, status, completion_note
+  FROM demands ORDER BY id;
+ id |     code      | requester_id | organization_id | capacity |      capacity_other       |       service        |                                     description                                     | urgency |         status          |                                completion_note
+----+---------------+--------------+-----------------+----------+---------------------------+----------------------+-------------------------------------------------------------------------------------+---------+-------------------------+-------------------------------------------------------------------------------
+  1 | ITES-00000001 |           21 |                 | GROUP    |                           | comunicação          | Produção de vídeo curto apresentando a história e o trabalho do grupo.              | LOW     | Em atendimento          |
+  2 | ITES-00000002 |            1 |               1 | GROUP    |                           | comunicação          | Criação de identidade visual e perfil nas redes sociais do coletivo.                | MEDIUM  | Pendente                |
+  3 | ITES-00000003 |           22 |               2 | FORUM    |                           | comercialização      | Definição de estratégia de venda para a nova linha de produtos de cerâmica.         | MEDIUM  | Concluída               | Atendimento concluído: ações realizadas e resultados registrados com o grupo.
+  4 | ITES-00000004 |            2 |               2 | FORUM    |                           | comercialização      | Apoio para participar de feiras e eventos de comercialização em Niterói.            | HIGH    | Aceita para atendimento |
+  5 | ITES-00000005 |           23 |               3 | PARTNER  |                           | apoio administrativo | Orientação sobre controle de estoque e registro de vendas do grupo.                 | HIGH    | Recusada                |
+  6 | ITES-00000006 |            3 |               3 | PARTNER  |                           | apoio administrativo | Orientação para formalização do grupo como associação ou cooperativa.               | LOW     | Em atendimento          |
+  7 | ITES-00000007 |           24 |               4 | OTHER    | Representante comunitário | parceria             | Apoio técnico para submissão de projeto a edital de fomento.                        | LOW     | Cancelada               |
+  8 | ITES-00000008 |            4 |               4 | OTHER    | Representante comunitário | parceria             | Proposta de parceria para atividades de extensão com estudantes do IFRJ.            | MEDIUM  | Concluída               | Atendimento concluído: ações realizadas e resultados registrados com o grupo.
+  9 | ITES-00000009 |           25 |               5 | GROUP    |                           | formação             | Oficina sobre boas práticas de manipulação de alimentos para a cozinha comunitária. | MEDIUM  | Pendente                |
+ 10 | ITES-00000010 |            5 |               5 | GROUP    |                           | formação             | Oficina de gestão de empreendimentos solidários para os integrantes do grupo.       | HIGH    | Recusada                |
+ 11 | ITES-00000011 |            1 |               6 | FORUM    |                           | comunicação          | Orientação para manter um calendário de publicações nas redes sociais.              | HIGH    | Aceita para atendimento |
+ 12 | ITES-00000012 |            6 |               6 | FORUM    |                           | comunicação          | Apoio para produzir fotos e textos de divulgação dos produtos artesanais.           | LOW     | Cancelada               |
+ 13 | ITES-00000013 |            2 |               7 | PARTNER  |                           | comercialização      | Inserção dos produtos do grupo em compras institucionais e mercados públicos.       | LOW     | Em atendimento          |
+ 14 | ITES-00000014 |            7 |                 | PARTNER  |                           | comercialização      | Organização de pontos de venda coletiva para os produtos agroecológicos.            | MEDIUM  | Pendente                |
+ 15 | ITES-00000015 |            3 |                 | OTHER    | Representante comunitário | apoio administrativo | Apoio para inscrição do empreendimento no cadastro de economia solidária.           | MEDIUM  | Concluída               | Atendimento concluído: ações realizadas e resultados registrados com o grupo.
+ 16 | ITES-00000016 |            8 |               8 | OTHER    | Representante comunitário | apoio administrativo | Apoio na elaboração do estatuto e do regimento interno do empreendimento.           | HIGH    | Aceita para atendimento |
+ 17 | ITES-00000017 |            4 |               9 | GROUP    |                           | parceria             | Parceria com universidade para pesquisa sobre o impacto do grupo no território.     | HIGH    | Recusada                |
+ 18 | ITES-00000018 |            9 |               9 | GROUP    |                           | parceria             | Busca de parceria com a prefeitura para uso de espaço da feira municipal.           | LOW     | Em atendimento          |
+ 19 | ITES-00000019 |            5 |              10 | FORUM    |                           | formação             | Formação de jovens do grupo em uso de ferramentas digitais de trabalho.             | LOW     | Cancelada               |
+ 20 | ITES-00000020 |           10 |              10 | FORUM    |                           | formação             | Formação em precificação justa dos produtos vendidos na feira do bairro.            | MEDIUM  | Concluída               | Atendimento concluído: ações realizadas e resultados registrados com o grupo.
+ 21 | ITES-00000021 |           11 |              11 | PARTNER  |                           | comunicação          | Planejamento de comunicação para divulgar a feira de economia solidária.            | HIGH    | Recusada                |
+ 22 | ITES-00000022 |           12 |              12 | OTHER    | Representante comunitário | comercialização      | Estruturação de venda on-line com entrega por cestas semanais.                      | LOW     | Cancelada               |
+ 23 | ITES-00000023 |           13 |              13 | GROUP    |                           | apoio administrativo | Organização da documentação para emissão de nota fiscal como MEI.                   | MEDIUM  | Pendente                |
+ 24 | ITES-00000024 |           14 |                 | FORUM    |                           | parceria             | Articulação com o fórum regional de economia solidária para ações conjuntas.        | HIGH    | Aceita para atendimento |
+ 25 | ITES-00000025 |           15 |              15 | PARTNER  |                           | formação             | Curso introdutório de cooperativismo e autogestão para novos associados.            | LOW     | Em atendimento          |
+ 26 | ITES-00000026 |           16 |              16 | OTHER    | Representante comunitário | comunicação          | Elaboração de catálogo digital dos produtos para envio por WhatsApp.                | MEDIUM  | Concluída               | Atendimento concluído: ações realizadas e resultados registrados com o grupo.
+ 27 | ITES-00000027 |           17 |              17 | GROUP    |                           | comercialização      | Apoio na negociação com restaurantes locais para fornecimento de hortaliças.        | HIGH    | Recusada                |
+ 28 | ITES-00000028 |           18 |              18 | FORUM    |                           | apoio administrativo | Apoio na prestação de contas de um pequeno projeto financiado por edital.           | LOW     | Cancelada               |
+ 29 | ITES-00000029 |           19 |              19 | PARTNER  |                           | parceria             | Parceria para projeto de reciclagem com escolas da rede pública.                    | MEDIUM  | Pendente                |
+ 30 | ITES-00000030 |           20 |              20 | OTHER    | Representante comunitário | formação             | Capacitação em controle financeiro básico e fluxo de caixa do coletivo.             | HIGH    | Aceita para atendimento |
+(30 rows)
+
+SELECT id, demand_id, actor_id, old_status, new_status, justification FROM demand_events ORDER BY id;
+ id | demand_id | actor_id |       old_status        |       new_status        |                                        justification
+----+-----------+----------+-------------------------+-------------------------+----------------------------------------------------------------------------------------------
+  1 |         1 |       26 | Aceita para atendimento | Em atendimento          | Equipe definida e plano de atendimento iniciado com o grupo.
+  2 |         3 |       26 | Em atendimento          | Concluída               | Ações previstas realizadas e resultados registrados.
+  3 |         4 |       26 | Pendente                | Aceita para atendimento | Demanda alinhada às linhas de atuação da ITES; aceita para atendimento.
+  4 |         5 |       26 | Pendente                | Recusada                | Pedido fora do escopo atual da incubadora; solicitante orientado a procurar a rede parceira.
+  5 |         6 |       26 | Aceita para atendimento | Em atendimento          | Equipe definida e plano de atendimento iniciado com o grupo.
+  6 |         7 |       26 | Pendente                | Cancelada               | Cancelada a pedido do solicitante antes do início do atendimento.
+  7 |         8 |       26 | Em atendimento          | Concluída               | Ações previstas realizadas e resultados registrados.
+  8 |        10 |       26 | Pendente                | Recusada                | Pedido fora do escopo atual da incubadora; solicitante orientado a procurar a rede parceira.
+  9 |        11 |       26 | Pendente                | Aceita para atendimento | Demanda alinhada às linhas de atuação da ITES; aceita para atendimento.
+ 10 |        12 |       26 | Pendente                | Cancelada               | Cancelada a pedido do solicitante antes do início do atendimento.
+ 11 |        13 |       26 | Aceita para atendimento | Em atendimento          | Equipe definida e plano de atendimento iniciado com o grupo.
+ 12 |        15 |       26 | Em atendimento          | Concluída               | Ações previstas realizadas e resultados registrados.
+ 13 |        16 |       26 | Pendente                | Aceita para atendimento | Demanda alinhada às linhas de atuação da ITES; aceita para atendimento.
+ 14 |        17 |       26 | Pendente                | Recusada                | Pedido fora do escopo atual da incubadora; solicitante orientado a procurar a rede parceira.
+ 15 |        18 |       26 | Aceita para atendimento | Em atendimento          | Equipe definida e plano de atendimento iniciado com o grupo.
+ 16 |        19 |       26 | Pendente                | Cancelada               | Cancelada a pedido do solicitante antes do início do atendimento.
+ 17 |        20 |       26 | Em atendimento          | Concluída               | Ações previstas realizadas e resultados registrados.
+ 18 |        21 |       26 | Pendente                | Recusada                | Pedido fora do escopo atual da incubadora; solicitante orientado a procurar a rede parceira.
+ 19 |        22 |       26 | Pendente                | Cancelada               | Cancelada a pedido do solicitante antes do início do atendimento.
+ 20 |        24 |       26 | Pendente                | Aceita para atendimento | Demanda alinhada às linhas de atuação da ITES; aceita para atendimento.
+ 21 |        25 |       26 | Aceita para atendimento | Em atendimento          | Equipe definida e plano de atendimento iniciado com o grupo.
+ 22 |        26 |       26 | Em atendimento          | Concluída               | Ações previstas realizadas e resultados registrados.
+ 23 |        27 |       26 | Pendente                | Recusada                | Pedido fora do escopo atual da incubadora; solicitante orientado a procurar a rede parceira.
+ 24 |        28 |       26 | Pendente                | Cancelada               | Cancelada a pedido do solicitante antes do início do atendimento.
+ 25 |        30 |       26 | Pendente                | Aceita para atendimento | Demanda alinhada às linhas de atuação da ITES; aceita para atendimento.
+(25 rows)
+
+SELECT id, slug, title, published_version_id FROM pages ORDER BY id;
+ id |         slug         |             title              | published_version_id
+----+----------------------+--------------------------------+----------------------
+  1 | inicio               | Início                         |                    1
+  2 | quem-somos           | Quem somos                     |                    2
+  3 | como-atuamos         | Como atuamos                   |                    3
+  4 | projetos             | Projetos apoiados              |                    4
+  5 | empreendimentos      | Empreendimentos solidários     |                    5
+  6 | noticias             | Notícias                       |                    6
+  7 | agenda               | Agenda de eventos              |                    7
+  8 | publicacoes          | Publicações                    |                    8
+  9 | biblioteca           | Biblioteca                     |                    9
+ 10 | ferramentas          | Aplicativos e ferramentas      |                   10
+ 11 | contato              | Contato                        |                   11
+ 12 | submeter-demanda     | Solicitar apoio                |                   12
+ 13 | formacao             | Formação em economia solidária |                   13
+ 14 | comercializacao      | Comercialização em rede        |                   14
+ 15 | comunicacao          | Comunicação comunitária        |                   15
+ 16 | parcerias            | Parcerias institucionais       |                   16
+ 17 | feira-solidaria      | Feira de economia solidária    |                   17
+ 18 | memoria-territorial  | Memória e território           |                   18
+ 19 | tecnologia-social    | Tecnologia social              |                   19
+ 20 | perguntas-frequentes | Perguntas frequentes           |                   20
+(20 rows)
+
+SELECT id, page_id, revision, author_id,
+       document -> 'pages' -> 0 -> 'blocks' -> 0 -> 'props' ->> 'description' AS conteudo
+  FROM page_versions ORDER BY id;
+ id | page_id | revision | author_id |                                     conteudo
+----+---------+----------+-----------+----------------------------------------------------------------------------------
+  1 |       1 |        1 |        26 | Página inicial do portal da ITES, com destaques e acesso à solicitação de apoio.
+  2 |       2 |        1 |        26 | História, missão e equipe da incubadora no IFRJ Campus Niterói.
+  3 |       3 |        1 |        26 | Metodologia de incubação baseada em autogestão e educação popular.
+  4 |       4 |        1 |        26 | Projetos de extensão e pesquisa apoiados pela incubadora.
+  5 |       5 |        1 |        26 | Empreendimentos solidários incubados e acompanhados pela ITES.
+  6 |       6 |        1 |        26 | Notícias sobre as ações da incubadora e dos grupos apoiados.
+  7 |       7 |        1 |        26 | Calendário de oficinas, feiras e eventos de economia solidária.
+  8 |       8 |        1 |        26 | Artigos, relatórios e cartilhas produzidos pela equipe.
+  9 |       9 |        1 |        26 | Materiais de apoio sobre cooperativismo e economia solidária.
+ 10 |      10 |        1 |        26 | Aplicativos e ferramentas digitais disponibilizados aos grupos.
+ 11 |      11 |        1 |        26 | Canais de contato e redes sociais da ITES.
+ 12 |      12 |        1 |        26 | Como cadastrar-se e enviar uma solicitação de apoio à ITES.
+ 13 |      13 |        1 |        26 | Cursos e oficinas de formação em economia solidária.
+ 14 |      14 |        1 |        26 | Apoio à comercialização coletiva e às feiras solidárias.
+ 15 |      15 |        1 |        26 | Ações de comunicação comunitária com os empreendimentos.
+ 16 |      16 |        1 |        26 | Instituições parceiras e como estabelecer uma parceria.
+ 17 |      17 |        1 |        26 | Informações sobre a feira de economia solidária de Niterói.
+ 18 |      18 |        1 |        26 | Registros de memória e identidade dos territórios atendidos.
+ 19 |      19 |        1 |        26 | Tecnologias sociais desenvolvidas com as comunidades.
+ 20 |      20 |        1 |        26 | Respostas às dúvidas mais comuns sobre a incubadora.
+(20 rows)
+
+SELECT id, page_id, version_id, actor_id, action FROM page_events ORDER BY id;
+ id | page_id | version_id | actor_id | action
+----+---------+------------+----------+---------
+  1 |       1 |          1 |       26 | PUBLISH
+  2 |       2 |          2 |       26 | PUBLISH
+  3 |       3 |          3 |       26 | PUBLISH
+  4 |       4 |          4 |       26 | PUBLISH
+  5 |       5 |          5 |       26 | PUBLISH
+  6 |       6 |          6 |       26 | PUBLISH
+  7 |       7 |          7 |       26 | PUBLISH
+  8 |       8 |          8 |       26 | PUBLISH
+  9 |       9 |          9 |       26 | PUBLISH
+ 10 |      10 |         10 |       26 | PUBLISH
+ 11 |      11 |         11 |       26 | PUBLISH
+ 12 |      12 |         12 |       26 | PUBLISH
+ 13 |      13 |         13 |       26 | PUBLISH
+ 14 |      14 |         14 |       26 | PUBLISH
+ 15 |      15 |         15 |       26 | PUBLISH
+ 16 |      16 |         16 |       26 | PUBLISH
+ 17 |      17 |         17 |       26 | PUBLISH
+ 18 |      18 |         18 |       26 | PUBLISH
+ 19 |      19 |         19 |       26 | PUBLISH
+ 20 |      20 |         20 |       26 | PUBLISH
+(20 rows)
+
+SELECT id, actor_id, subject_user_id, role_id, action FROM grant_audit ORDER BY id;
+ id | actor_id | subject_user_id | role_id | action
+----+----------+-----------------+---------+--------
+  1 |       26 |               1 |       1 | GRANT
+  2 |       26 |               2 |       1 | GRANT
+  3 |       26 |               3 |       1 | GRANT
+  4 |       26 |               4 |       1 | GRANT
+  5 |       26 |               5 |       1 | GRANT
+  6 |       26 |               6 |       1 | GRANT
+  7 |       26 |               7 |       1 | GRANT
+  8 |       26 |               8 |       1 | GRANT
+  9 |       26 |               9 |       1 | GRANT
+ 10 |       26 |              10 |       1 | GRANT
+ 11 |       26 |              11 |       1 | GRANT
+ 12 |       26 |              12 |       1 | GRANT
+ 13 |       26 |              13 |       1 | GRANT
+ 14 |       26 |              14 |       1 | GRANT
+ 15 |       26 |              15 |       1 | GRANT
+ 16 |       26 |              16 |       1 | GRANT
+ 17 |       26 |              17 |       1 | GRANT
+ 18 |       26 |              18 |       1 | GRANT
+ 19 |       26 |              19 |       1 | GRANT
+ 20 |       26 |              20 |       1 | GRANT
+ 21 |       26 |              21 |       1 | GRANT
+ 22 |       26 |              22 |       1 | GRANT
+ 23 |       26 |              23 |       1 | GRANT
+ 24 |       26 |              24 |       1 | GRANT
+ 25 |       26 |              25 |       1 | GRANT
+ 26 |       26 |              26 |       1 | GRANT
+ 27 |       26 |              27 |       1 | GRANT
+ 28 |       26 |              28 |       1 | GRANT
+ 29 |       26 |              29 |       1 | GRANT
+ 30 |       26 |              30 |       1 | GRANT
+ 31 |       26 |              26 |       2 | GRANT
+ 32 |       26 |              27 |       2 | GRANT
+ 33 |       26 |              28 |       2 | GRANT
+ 34 |       26 |              29 |       2 | GRANT
+ 35 |       26 |              30 |       2 | GRANT
+ 36 |       26 |               1 |       3 | GRANT
+ 37 |       26 |               2 |       3 | GRANT
+ 38 |       26 |               3 |       3 | GRANT
+ 39 |       26 |               4 |       3 | GRANT
+ 40 |       26 |               5 |       3 | GRANT
+ 41 |       26 |               6 |       4 | GRANT
+ 42 |       26 |               7 |       4 | GRANT
+ 43 |       26 |               8 |       4 | GRANT
+ 44 |       26 |               9 |       4 | GRANT
+ 45 |       26 |              10 |       4 | GRANT
+(45 rows)
+
+==================================================================
+4. CONSULTAS E SUBCONSULTAS (03_queries.sql)
+==================================================================
+SELECT code, service, urgency, created_at
+FROM demands
+WHERE status = 'Pendente'
+ORDER BY created_at DESC, code;
+     code      |       service        | urgency |          created_at
+---------------+----------------------+---------+-------------------------------
+ ITES-00000002 | comunicação          | MEDIUM  | 2026-11-19 10:04:43.789282-03
+ ITES-00000009 | formação             | MEDIUM  | 2026-11-19 10:04:43.789282-03
+ ITES-00000014 | comercialização      | MEDIUM  | 2026-11-19 10:04:43.789282-03
+ ITES-00000023 | apoio administrativo | MEDIUM  | 2026-11-19 10:04:43.789282-03
+ ITES-00000029 | parceria             | MEDIUM  | 2026-11-19 10:04:43.789282-03
+(5 rows)
+
+SELECT code, service, status
+FROM demands
+WHERE urgency = 'HIGH'
+  AND status NOT IN ('Concluída', 'Recusada', 'Cancelada')
+ORDER BY code;
+     code      |       service        |         status
+---------------+----------------------+-------------------------
+ ITES-00000004 | comercialização      | Aceita para atendimento
+ ITES-00000011 | comunicação          | Aceita para atendimento
+ ITES-00000016 | apoio administrativo | Aceita para atendimento
+ ITES-00000024 | parceria             | Aceita para atendimento
+ ITES-00000030 | formação             | Aceita para atendimento
+(5 rows)
+
+SELECT name, economic_sector, contact_email
+FROM organizations
+WHERE economic_sector = 'artesanato'
+ORDER BY name;
+                name                 | economic_sector |       contact_email
+-------------------------------------+-----------------+---------------------------
+ Cooperativa Sementes de Itaipu      | artesanato      | contato05@example.invalid
+ Cooperativa de Reciclagem Horizonte | artesanato      | contato10@example.invalid
+ Rede de Alimentação Comunitária     | artesanato      | contato15@example.invalid
+ Rede de Produção Local              | artesanato      | contato20@example.invalid
+(4 rows)
+
+SELECT code, capacity, capacity_other, service
+FROM demands
+WHERE organization_id IS NULL
+   OR capacity = 'OTHER'
+ORDER BY code;
+     code      | capacity |      capacity_other       |       service
+---------------+----------+---------------------------+----------------------
+ ITES-00000001 | GROUP    |                           | comunicação
+ ITES-00000007 | OTHER    | Representante comunitário | parceria
+ ITES-00000008 | OTHER    | Representante comunitário | parceria
+ ITES-00000014 | PARTNER  |                           | comercialização
+ ITES-00000015 | OTHER    | Representante comunitário | apoio administrativo
+ ITES-00000016 | OTHER    | Representante comunitário | apoio administrativo
+ ITES-00000022 | OTHER    | Representante comunitário | comercialização
+ ITES-00000024 | FORUM    |                           | parceria
+ ITES-00000026 | OTHER    | Representante comunitário | comunicação
+ ITES-00000030 | OTHER    | Representante comunitário | formação
+(10 rows)
+
+SELECT slug, title
+FROM pages
+WHERE published_version_id IS NOT NULL
+ORDER BY slug;
+         slug         |             title
+----------------------+--------------------------------
+ agenda               | Agenda de eventos
+ biblioteca           | Biblioteca
+ comercializacao      | Comercialização em rede
+ como-atuamos         | Como atuamos
+ comunicacao          | Comunicação comunitária
+ contato              | Contato
+ empreendimentos      | Empreendimentos solidários
+ feira-solidaria      | Feira de economia solidária
+ ferramentas          | Aplicativos e ferramentas
+ formacao             | Formação em economia solidária
+ inicio               | Início
+ memoria-territorial  | Memória e território
+ noticias             | Notícias
+ parcerias            | Parcerias institucionais
+ perguntas-frequentes | Perguntas frequentes
+ projetos             | Projetos apoiados
+ publicacoes          | Publicações
+ quem-somos           | Quem somos
+ submeter-demanda     | Solicitar apoio
+ tecnologia-social    | Tecnologia social
+(20 rows)
+
+SELECT o.name AS organizacao,
+       d.status AS situacao,
+       count(*) AS total
+FROM organizations o
+JOIN demands d ON d.organization_id = o.id
+WHERE d.status NOT IN ('Recusada', 'Cancelada')
+GROUP BY o.id, o.name, d.status
+ORDER BY o.name, d.status;
+             organizacao             |        situacao         | total
+-------------------------------------+-------------------------+-------
+ Associação Artes da Região          | Aceita para atendimento |     1
+ Associação Ecos da Serra            | Pendente                |     1
+ Associação Feira Popular            | Pendente                |     1
+ Associação Maré Viva                | Em atendimento          |     1
+ Coletivo Cultura em Rede            | Aceita para atendimento |     1
+ Coletivo Raízes do Morro            | Pendente                |     1
+ Cooperativa Sementes de Itaipu      | Pendente                |     1
+ Cooperativa de Reciclagem Horizonte | Concluída               |     1
+ Grupo Cerâmica da Costa             | Concluída               |     1
+ Grupo Mãos da Baía                  | Aceita para atendimento |     1
+ Grupo Mãos da Baía                  | Concluída               |     1
+ Grupo Sabores de Niterói            | Em atendimento          |     1
+ Rede de Agricultura Urbana          | Em atendimento          |     1
+ Rede de Alimentação Comunitária     | Em atendimento          |     1
+ Rede de Costura Solidária           | Concluída               |     1
+ Rede de Produção Local              | Aceita para atendimento |     1
+(16 rows)
+
+SELECT u.name AS responsavel,
+       count(*) AS decisoes,
+       count(*) FILTER (WHERE e.new_status = 'Recusada') AS recusas
+FROM users u
+JOIN demand_events e ON e.actor_id = u.id
+WHERE e.new_status IN ('Aceita para atendimento', 'Recusada')
+GROUP BY u.id, u.name
+ORDER BY decisoes DESC;
+      responsavel      | decisoes | recusas
+-----------------------+----------+---------
+ Helena Coutinho Prado |       10 |       5
+(1 row)
+
+SELECT o.economic_sector AS setor,
+       d.service AS servico,
+       count(*) AS total
+FROM organizations o
+JOIN demands d ON d.organization_id = o.id
+GROUP BY o.economic_sector, d.service
+HAVING count(*) > 1
+ORDER BY total DESC, setor, servico;
+    setor    |       servico        | total
+-------------+----------------------+-------
+ artesanato  | formação             |     6
+ agricultura | comunicação          |     5
+ alimentação | apoio administrativo |     5
+ cultura     | comercialização      |     5
+ serviços    | parceria             |     5
+(5 rows)
+
+SELECT o.name
+FROM organizations o
+WHERE EXISTS (
+        SELECT 1
+        FROM demands d
+        WHERE d.organization_id = o.id
+          AND d.status = 'Aceita para atendimento'
+      )
+ORDER BY o.name;
+            name
+----------------------------
+ Associação Artes da Região
+ Coletivo Cultura em Rede
+ Grupo Mãos da Baía
+ Rede de Produção Local
+(4 rows)
+
+SELECT u.name,
+       (SELECT count(*) FROM demands d WHERE d.requester_id = u.id) AS demandas
+FROM users u
+WHERE (SELECT count(*) FROM demands d WHERE d.requester_id = u.id) >
+      (SELECT avg(c) FROM (SELECT count(*) AS c FROM demands GROUP BY requester_id) q)
+ORDER BY demandas DESC, u.name;
+          name          | demandas
+------------------------+----------
+ Ana Paula Ferreira     |        2
+ Carlos Eduardo Martins |        2
+ Fernanda Alves Costa   |        2
+ Juliana Rocha Lima     |        2
+ Marcos Vinícius Souza  |        2
+(5 rows)
+
+SELECT u.name
+FROM users u
+WHERE u.id IN (
+        SELECT d.requester_id
+        FROM demands d
+        WHERE d.urgency = 'HIGH'
+          AND d.organization_id IN (
+                SELECT o.id
+                FROM organizations o
+                WHERE o.economic_sector = 'artesanato'
+              )
+      )
+ORDER BY u.name;
+          name
+------------------------
+ Felipe Rezende Azevedo
+ Fernanda Alves Costa
+(2 rows)
+

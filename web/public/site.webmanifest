@@ -1,0 +1,20 @@
+{
+  "name": "ITES · IFRJ Campus Niterói",
+  "short_name": "ITES",
+  "description": "Portal da Incubadora Tecnológica de Economia Solidária do IFRJ Campus Niterói.",
+  "icons": [
+    {
+      "src": "/ites-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#24724f",
+  "background_color": "#f5f7ef",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
+  "lang": "pt-BR"
+}

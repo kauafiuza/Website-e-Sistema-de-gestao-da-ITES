@@ -1,0 +1,74 @@
+{
+  "id": "experience-timeline",
+  "name": "Experiência — Trajetória",
+  "category": "experience",
+  "categoryName": "Experiência",
+  "variant": "timeline",
+  "description": "Linha do tempo profissional editável.",
+  "defaults": {
+    "title": "Experiência",
+    "description": "",
+    "button": "Baixar currículo",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "experience-1",
+        "title": "Pessoa desenvolvedora sênior",
+        "description": "Liderança no desenvolvimento de aplicações web e apoio ao crescimento da equipe.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/company/fictional-company-logo-2.svg",
+        "value": "Empresa exemplo",
+        "features": [
+          "Set 2025 — atual"
+        ]
+      },
+      {
+        "id": "experience-2",
+        "title": "Pessoa desenvolvedora full stack",
+        "description": "Desenvolvimento e manutenção de sites e plataformas digitais em colaboração com equipes multidisciplinares.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/company/fictional-company-logo-3.svg",
+        "value": "Estúdio exemplo",
+        "features": [
+          "Mar 2023 — ago 2025"
+        ]
+      },
+      {
+        "id": "experience-3",
+        "title": "Pessoa desenvolvedora front-end",
+        "description": "Criação de interfaces responsivas com foco em desempenho e acessibilidade.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/company/fictional-company-logo-4.svg",
+        "value": "Produto exemplo",
+        "features": [
+          "Jan 2021 — fev 2023"
+        ]
+      },
+      {
+        "id": "experience-4",
+        "title": "Pessoa desenvolvedora júnior",
+        "description": "Contribuição em projetos web, revisões de código e adoção de boas práticas.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/company/fictional-company-logo-5.svg",
+        "value": "Equipe exemplo",
+        "features": [
+          "Jun 2019 — dez 2020"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "ExperienceTimelineBlock",
+    "sourceFile": "sections/experience-timeline/experience-timeline.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 88
+}

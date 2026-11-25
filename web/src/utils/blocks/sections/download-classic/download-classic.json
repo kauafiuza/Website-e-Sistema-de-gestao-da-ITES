@@ -1,0 +1,33 @@
+{
+  "id": "download-classic",
+  "name": "Downloads — Clássico",
+  "category": "download",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "button"
+  ],
+  "export": {
+    "componentName": "DownloadClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/download-classic/download-classic.tsx"
+  },
+  "defaults": {
+    "title": "Materiais para seu próximo projeto.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Downloads",
+  "order": 42
+}

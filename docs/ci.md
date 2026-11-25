@@ -1,0 +1,7 @@
+# Integração contínua e bloqueio de pull requests
+
+O workflow `.github/workflows/ci.yml` executa em pull requests para `main`, em atualizações de `main` e manualmente. O job `CI / web` instala dependências e executa verificação TypeScript, lint sem avisos, testes e build. `CI / server` executa `./mvnw verify`, incluindo testes PostgreSQL via Testcontainers. `CI / deployment` valida o Compose, constrói as imagens, inicia os três serviços, aguarda os health checks, verifica o portal em pt-BR, as seis páginas institucionais restantes e o bloqueio de uma rota protegida. Também confirma a retenção de um registro após recriar os contêineres. Esse job apenas valida a implantação local no runner da CI.
+
+O job agregado `CI / ci-success` falha se qualquer uma dessas etapas estiver com falha, cancelada ou ignorada. A CI não aciona implantação de produção nem usa credenciais do Dokploy. A implantação em uma VPS é uma operação separada, descrita em [implantação](deployment.md).
+
+Para bloquear efetivamente merges no GitHub, uma pessoa administradora do repositório precisa ativar proteção da branch ou ruleset para `main` e tornar `CI / ci-success` uma verificação obrigatória. Ative exigência de pull request, branch atualizada antes do merge e bloqueio de merges quando a verificação estiver pendente ou falhar. A configuração remota não pode ser criada pelo workflow e precisa ser conferida nas configurações do repositório.

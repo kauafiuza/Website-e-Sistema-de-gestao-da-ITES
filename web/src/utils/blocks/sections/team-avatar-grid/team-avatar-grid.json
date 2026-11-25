@@ -1,0 +1,33 @@
+{
+  "id": "team-avatar-grid",
+  "name": "Equipe — Grade de avatares",
+  "category": "team",
+  "categoryName": "Equipe",
+  "variant": "avatar-grid",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Conheça a equipe",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      { "id": "member-1", "title": "Pessoa da equipe 1", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-2", "title": "Pessoa da equipe 2", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar2.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-3", "title": "Pessoa da equipe 3", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-4", "title": "Pessoa da equipe 4", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar4.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-5", "title": "Pessoa da equipe 5", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar5.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-6", "title": "Pessoa da equipe 6", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar6.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-7", "title": "Pessoa da equipe 7", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar7.webp", "value": "Função de exemplo", "features": [] },
+      { "id": "member-8", "title": "Pessoa da equipe 8", "description": "", "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar8.webp", "value": "Função de exemplo", "features": [] }
+    ]
+  },
+  "editableProperties": ["title", "description", "items"],
+  "export": {
+    "componentName": "TeamAvatarGridBlock",
+    "sourceFile": "sections/team-avatar-grid/team-avatar-grid.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 72
+}

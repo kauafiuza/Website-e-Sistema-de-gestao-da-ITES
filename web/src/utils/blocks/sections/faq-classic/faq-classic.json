@@ -1,0 +1,61 @@
+{
+  "id": "faq-classic",
+  "name": "Perguntas frequentes — Clássico",
+  "category": "faq",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "items",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "FaqClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/faq-classic/faq-classic.tsx"
+  },
+  "defaults": {
+    "title": "Dúvidas frequentes",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "faq-0",
+        "title": "Pergunta frequente 1",
+        "description": "Encontre aqui uma resposta para esta dúvida comum.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "faq-1",
+        "title": "Pergunta frequente 2",
+        "description": "Encontre aqui uma resposta para esta dúvida comum.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "faq-2",
+        "title": "Pergunta frequente 3",
+        "description": "Encontre aqui uma resposta para esta dúvida comum.",
+        "href": "#",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Perguntas frequentes",
+  "order": 14
+}

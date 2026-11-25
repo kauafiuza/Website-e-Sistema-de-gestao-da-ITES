@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-disabled",
+  "name": "Button — Disabled",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-10: Disabled button.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonDisabledBlock",
+    "sourceFile": "reui/reui-button-disabled/reui-button-disabled.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 221
+}

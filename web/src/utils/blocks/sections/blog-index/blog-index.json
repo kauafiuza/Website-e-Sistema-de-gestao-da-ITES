@@ -1,0 +1,31 @@
+{
+  "id": "blog-index",
+  "name": "Blog — Artigos",
+  "category": "blog-index",
+  "categoryName": "Blog",
+  "variant": "editorial-grid",
+  "description": "Página de artigos com categorias, datas, resumos e capas editáveis.",
+  "defaults": {
+    "eyebrow": "IDEIAS EM CONSTRUÇÃO",
+    "title": "Notas sobre tecnologia e produto",
+    "description": "Artigos sobre engenharia de software, arquitetura, interfaces e o trabalho diário de criar para a web.",
+    "button": "",
+    "href": "#",
+    "layoutWidth": "wide",
+    "layoutGutter": 24,
+    "blockAnimation": "fade-up",
+    "items": [
+      { "id": "blog-urls", "title": "Como construir URLs legíveis", "description": "Pequenas decisões de roteamento que deixam uma aplicação mais clara para quem usa e para quem mantém.", "href": "/blog-article", "value": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85", "features": ["12 ago. 2026", "Arquitetura", "Pessoas colaborando em um espaço de trabalho"] },
+      { "id": "blog-boundaries", "title": "Limites que ajudam a manter o código", "description": "Como organizar responsabilidades sem transformar cada módulo em uma arquitetura difícil de mudar.", "href": "#", "value": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=85", "features": ["28 jul. 2026", "Engenharia", "Notebook com editor de código aberto"] },
+      { "id": "blog-interface", "title": "Interfaces que continuam rápidas", "description": "Práticas simples para reduzir trabalho no navegador e manter interações responsivas.", "href": "#", "value": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=85", "features": ["05 jul. 2026", "Frontend", "Tela de computador com linhas de código"] }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "description", "items"],
+  "export": {
+    "componentName": "BlogIndexBlock",
+    "sourceFile": "sections/blog-index/blog-index.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 119
+}

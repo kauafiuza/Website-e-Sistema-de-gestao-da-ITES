@@ -1,0 +1,63 @@
+{
+  "id": "testimonials-editorial",
+  "name": "Depoimentos — Citações editoriais",
+  "category": "testimonials",
+  "variant": "editorial",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Experiências de quem usa.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "quote-0",
+        "title": "Pessoa usuária 1",
+        "description": "Uma experiência simples, clara e útil para o dia a dia.",
+        "href": "#",
+        "value": "Pessoa usuária · Empresa exemplo",
+        "features": []
+      },
+      {
+        "id": "quote-1",
+        "title": "Pessoa usuária 2",
+        "description": "Uma experiência simples, clara e útil para o dia a dia.",
+        "href": "#",
+        "value": "Pessoa usuária · Empresa exemplo",
+        "features": []
+      },
+      {
+        "id": "quote-2",
+        "title": "Pessoa usuária 3",
+        "description": "Uma experiência simples, clara e útil para o dia a dia.",
+        "href": "#",
+        "value": "Pessoa usuária · Empresa exemplo",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "TestimonialsEditorialBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/testimonials-editorial/testimonials-editorial.tsx"
+  },
+  "categoryName": "Depoimentos",
+  "order": 50
+}

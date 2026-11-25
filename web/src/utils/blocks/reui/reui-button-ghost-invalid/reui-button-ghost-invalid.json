@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-ghost-invalid",
+  "name": "Button — Ghost invalid",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-33: Ghost button with an invalid state.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonGhostInvalidBlock",
+    "sourceFile": "reui/reui-button-ghost-invalid/reui-button-ghost-invalid.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 225
+}

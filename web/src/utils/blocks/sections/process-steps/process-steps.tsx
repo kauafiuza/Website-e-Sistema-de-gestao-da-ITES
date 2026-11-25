@@ -1,0 +1,9 @@
+import { Asterisk } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import type { BlockProps } from "@/utils/blocks/types"
+import { InlineText, type InlineEditor } from "@/utils/blocks/shared/inline-editing"
+import { safeHref } from "@/utils/blocks/shared/urls"
+
+export function ProcessStepsBlock({props:p,editor}:{props:BlockProps;editor?:InlineEditor}) {
+ return <section className="builder-block builder-block--spacious bg-background"><div className="container mx-auto grid gap-8 @lg:grid-cols-3"><header className="h-fit @lg:sticky @lg:top-8"><h2 className="relative w-fit text-4xl font-semibold @md:text-6xl"><InlineText editor={editor} target={{kind:"property",key:"title"}} value={p.title} label="título"/><Asterisk className="absolute -right-8 -top-2 size-6 text-primary"/></h2><InlineText editor={editor} target={{kind:"property",key:"description"}} value={p.description} label="descrição" as="p" className="mt-5 text-muted-foreground" multiline/><Button className="mt-6" variant="outline" render={<a href={safeHref(p.href)}/>} nativeButton={false}><InlineText editor={editor} target={{kind:"property",key:"button"}} value={p.button} label="texto do link" focusable={false}/></Button></header><ol className="@lg:col-span-2">{(p.items??[]).map((item,i)=><li key={item.id} className="grid gap-4 border-t py-8 @md:grid-cols-[4rem_1fr]"><span className="flex size-12 items-center justify-center bg-muted font-mono text-lg">{item.href||String(i+1).padStart(2,"0")}</span><div><h3 className="mb-3 text-2xl font-semibold"><InlineText editor={editor} target={{kind:"item",id:item.id,key:"title"}} value={item.title} label="etapa"/></h3><InlineText editor={editor} target={{kind:"item",id:item.id,key:"description"}} value={item.description} label="descrição da etapa" as="p" className="text-muted-foreground" multiline/></div></li>)}</ol></div></section>
+}

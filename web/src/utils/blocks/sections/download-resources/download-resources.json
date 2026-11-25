@@ -1,0 +1,56 @@
+{
+  "id": "download-resources",
+  "name": "Downloads — Biblioteca de recursos",
+  "category": "download",
+  "variant": "resources",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Materiais para seu próximo projeto.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "guide",
+        "title": "Material 1",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "checklist",
+        "title": "Material 2",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "items"
+  ],
+  "export": {
+    "componentName": "DownloadResourcesBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/download-resources/download-resources.tsx"
+  },
+  "categoryName": "Downloads",
+  "order": 58
+}

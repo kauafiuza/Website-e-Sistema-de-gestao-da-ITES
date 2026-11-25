@@ -1,0 +1,32 @@
+{
+  "id": "compare-classic",
+  "name": "Comparação de planos — Clássico",
+  "category": "compare",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow"
+  ],
+  "export": {
+    "componentName": "CompareClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/compare-classic/compare-classic.tsx"
+  },
+  "defaults": {
+    "title": "Escolha a opção ideal.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Comparação de planos",
+  "order": 37
+}

@@ -1,0 +1,28 @@
+{
+  "id": "careers-intro",
+  "name": "Carreiras — Introdução",
+  "category": "careers",
+  "categoryName": "Carreiras",
+  "variant": "intro",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Conteúdo de exemplo",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque",
+    "items": [
+      { "id": "reason-1", "title": "Benefício 1", "description": "Mais autonomia, colaboração e espaço para aprender.", "href": "#", "value": "", "features": [] },
+      { "id": "reason-2", "title": "Benefício 2", "description": "Mais autonomia, colaboração e espaço para aprender.", "href": "#", "value": "", "features": [] },
+      { "id": "reason-3", "title": "Benefício 3", "description": "Mais autonomia, colaboração e espaço para aprender.", "href": "#", "value": "", "features": [] }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "description", "button", "href", "items"],
+  "export": {
+    "componentName": "CareersIntroBlock",
+    "sourceFile": "sections/careers-intro/careers-intro.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 74
+}

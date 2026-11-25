@@ -1,0 +1,27 @@
+{
+  "id": "reui-button-outline",
+  "name": "Button — Outline",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "outline",
+  "description": "ReUI Button example c-button-3 using the project's existing Base UI button primitive.",
+  "defaults": {
+    "title": "Outline",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonOutlineBlock",
+    "sourceFile": "reui/reui-button-outline/reui-button-outline.tsx",
+    "dependencies": ["react"],
+    "tailwindVersion": 4
+  },
+  "order": 214
+}

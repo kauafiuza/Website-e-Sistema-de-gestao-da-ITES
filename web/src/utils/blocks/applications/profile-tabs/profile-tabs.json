@@ -1,0 +1,93 @@
+{
+  "id": "profile-tabs",
+  "name": "Perfil — Abas de projetos",
+  "category": "profile",
+  "variant": "tabs",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Perfil de exemplo",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "imageUrl": "",
+    "imageAlt": "",
+    "items": [
+      {
+        "id": "record-0",
+        "title": "Projeto 1",
+        "description": "Atualizado recentemente",
+        "href": "#",
+        "value": "Em andamento",
+        "features": []
+      },
+      {
+        "id": "record-1",
+        "title": "Projeto 2",
+        "description": "Atualizado recentemente",
+        "href": "#",
+        "value": "Concluído",
+        "features": []
+      },
+      {
+        "id": "record-2",
+        "title": "Projeto 3",
+        "description": "Atualizado recentemente",
+        "href": "#",
+        "value": "Em andamento",
+        "features": []
+      },
+      {
+        "id": "record-3",
+        "title": "Projeto 4",
+        "description": "Atualizado recentemente",
+        "href": "#",
+        "value": "Concluído",
+        "features": []
+      },
+      {
+        "id": "record-4",
+        "title": "Projeto 5",
+        "description": "Atualizado recentemente",
+        "href": "#",
+        "value": "Em andamento",
+        "features": []
+      },
+      {
+        "id": "record-5",
+        "title": "Projeto 6",
+        "description": "Atualizado recentemente",
+        "href": "#",
+        "value": "Concluído",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "ProfileTabsBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/profile-tabs/profile-tabs.tsx"
+  },
+  "categoryName": "Perfil",
+  "order": 59
+}

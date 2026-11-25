@@ -1,0 +1,32 @@
+{
+  "id": "navbar-dock",
+  "name": "Navegação — Dock flutuante",
+  "category": "navbar",
+  "categoryName": "Navegação",
+  "variant": "dock",
+  "description": "Navegação compacta em formato dock, posicionada na parte inferior da tela.",
+  "defaults": {
+    "title": "Seu portfólio",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "scrollBehavior": "normal",
+    "smoothScroll": true,
+    "showThemeToggle": false,
+    "items": [
+      { "id": "dock-about", "title": "Sobre", "description": "", "href": "#sobre", "value": "user", "features": [] },
+      { "id": "dock-experience", "title": "Experiência", "description": "", "href": "#experiencia", "value": "briefcase", "features": [] },
+      { "id": "dock-projects", "title": "Projetos", "description": "", "href": "#projetos", "value": "layers", "features": [] },
+      { "id": "dock-blog", "title": "Blog", "description": "", "href": "#blog", "value": "file-text", "features": [] }
+    ]
+  },
+  "editableProperties": ["title", "items", "showThemeToggle"],
+  "export": {
+    "componentName": "NavbarDockBlock",
+    "sourceFile": "navbars/navbar-dock/navbar-dock.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 120
+}

@@ -1,0 +1,27 @@
+{
+  "id": "back-to-top",
+  "name": "Navegação — Voltar ao topo",
+  "category": "back-to-top",
+  "categoryName": "Navegação",
+  "variant": "floating-button",
+  "description": "Botão flutuante que aparece após a rolagem e retorna ao início da página.",
+  "defaults": {
+    "title": "Voltar ao topo",
+    "description": "",
+    "button": "Voltar ao topo",
+    "href": "#topo",
+    "eyebrow": "",
+    "blockAnimation": "none",
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "items": []
+  },
+  "editableProperties": ["button"],
+  "export": {
+    "componentName": "BackToTopBlock",
+    "sourceFile": "sections/back-to-top/back-to-top.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 121
+}

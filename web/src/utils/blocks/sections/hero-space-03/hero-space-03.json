@@ -1,0 +1,31 @@
+{
+  "id": "hero-space-03",
+  "name": "Hero — Cinemático Space 03",
+  "category": "hero-space",
+  "categoryName": "Hero Space",
+  "variant": "space-03",
+  "description": "Abertura cinematográfica com vídeo de fundo, menu expansível e chamada de ação.",
+  "defaults": {
+    "title": "Ideias que transformam o futuro",
+    "description": "Criamos experiências digitais que ajudam marcas a crescer e se conectar com as pessoas.",
+    "button": "Conheça nosso trabalho",
+    "href": "#trabalho",
+    "eyebrow": "Estúdio",
+    "imageUrl": "",
+    "imageAlt": "Imagem de capa do vídeo",
+    "items": [
+      { "id": "inicio", "title": "Início", "description": "", "href": "#inicio", "value": "active", "features": [] },
+      { "id": "trabalho", "title": "Trabalho", "description": "", "href": "#trabalho", "value": "", "features": [] },
+      { "id": "sobre", "title": "Sobre", "description": "", "href": "#sobre", "value": "", "features": [] },
+      { "id": "contato", "title": "Contato", "description": "", "href": "#contato", "value": "", "features": [] }
+    ]
+  },
+  "editableProperties": ["title", "description", "button", "href", "eyebrow", "imageUrl", "imageAlt", "items"],
+  "export": {
+    "componentName": "HeroSpace03Block",
+    "sourceFile": "sections/hero-space-03/hero-space-03.tsx",
+    "dependencies": ["react", "motion", "lucide-react"],
+    "tailwindVersion": 4
+  },
+  "order": 227
+}

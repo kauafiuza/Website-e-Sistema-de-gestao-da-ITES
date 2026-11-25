@@ -1,0 +1,61 @@
+{
+  "id": "case-studies",
+  "name": "Estudos de caso — Resultados",
+  "category": "case-studies",
+  "categoryName": "Estudos de caso",
+  "variant": "results",
+  "description": "Depoimentos e indicadores editáveis para apresentar resultados.",
+  "defaults": {
+    "title": "Resultados reais de pessoas reais",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "Mais de 4.500 clientes satisfeitos",
+    "items": [
+      {
+        "id": "case-study-1",
+        "title": "Pessoa cliente 1",
+        "description": "A ferramenta facilitou a colaboração da equipe. O fluxo de trabalho ficou mais claro, as reuniões ficaram mais curtas e conseguimos avançar mais em conjunto.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/portraits/portrait-action-1-3x4.jpg",
+        "value": "Diretoria de produto",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/company/fictional-company-logo-2.svg",
+          "Logotipo da empresa parceira 1",
+          "98%",
+          "Satisfação das pessoas clientes",
+          "Com base em avaliações verificadas",
+          "3,8×",
+          "Melhoria no retorno",
+          "No primeiro trimestre",
+          "Retrato da pessoa cliente 1"
+        ]
+      },
+      {
+        "id": "case-study-2",
+        "title": "Pessoa cliente 2",
+        "description": "A interface é simples de adaptar às necessidades da equipe. A implementação foi rápida, exigiu pouco treinamento e trouxe melhorias para o trabalho diário.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/portraits/portrait-action-2-3x4.jpg",
+        "value": "Liderança de operações",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/company/fictional-company-logo-3.svg",
+          "Logotipo da empresa parceira 2",
+          "4,2×",
+          "Eficiência da equipe",
+          "Ganho de produtividade observado",
+          "72%",
+          "Redução do tempo por tarefa",
+          "Em diferentes projetos",
+          "Retrato da pessoa cliente 2"
+        ]
+      }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "items"],
+  "export": {
+    "componentName": "CaseStudiesBlock",
+    "sourceFile": "sections/case-studies/case-studies.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 85
+}

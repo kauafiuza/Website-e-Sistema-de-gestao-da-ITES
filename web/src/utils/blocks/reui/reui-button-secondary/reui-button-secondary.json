@@ -1,0 +1,27 @@
+{
+  "id": "reui-button-secondary",
+  "name": "Button — Secondary",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "secondary",
+  "description": "ReUI Button example c-button-2 using the project's existing Base UI button primitive.",
+  "defaults": {
+    "title": "Secondary",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonSecondaryBlock",
+    "sourceFile": "reui/reui-button-secondary/reui-button-secondary.tsx",
+    "dependencies": ["react"],
+    "tailwindVersion": 4
+  },
+  "order": 213
+}

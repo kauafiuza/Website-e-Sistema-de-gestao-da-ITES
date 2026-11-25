@@ -1,0 +1,122 @@
+{
+  "id": "logos-static-row",
+  "name": "Marcas — Linha estática",
+  "category": "logos-static",
+  "categoryName": "Marcas",
+  "group": "logos",
+  "variant": "static-row",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "logo-1",
+        "title": "Marca 1",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-1.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-2",
+        "title": "Marca 2",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-2.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-3",
+        "title": "Marca 3",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-3.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-4",
+        "title": "Marca 4",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-4.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-5",
+        "title": "Marca 5",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-5.svg",
+        "features": ["", "small"]
+      },
+      {
+        "id": "logo-6",
+        "title": "Marca 6",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-6.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-7",
+        "title": "Marca 7",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-7.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-8",
+        "title": "Marca 8",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-8.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-9",
+        "title": "Marca 9",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-9.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-10",
+        "title": "Marca 10",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-10.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-11",
+        "title": "Marca 11",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-11.svg",
+        "features": ["", "regular"]
+      },
+      {
+        "id": "logo-12",
+        "title": "Marca 12",
+        "description": "",
+        "href": "https://www.shadcnblocks.com",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/logos/fictional-company-logo-12.svg",
+        "features": ["", "regular"]
+      }
+    ]
+  },
+  "editableProperties": ["items"],
+  "export": {
+    "componentName": "LogosStaticRowBlock",
+    "sourceFile": "sections/logos-static-row/logos-static-row.tsx",
+    "dependencies": ["react", "lucide-react"],
+    "tailwindVersion": 4
+  },
+  "order": 81
+}

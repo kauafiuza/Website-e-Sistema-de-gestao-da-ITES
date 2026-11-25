@@ -1,0 +1,39 @@
+{
+  "id": "profile-about",
+  "name": "Portfólio — Perfil editorial",
+  "category": "profile-about",
+  "categoryName": "Portfólio",
+  "variant": "compact-profile",
+  "description": "Seção escura e compacta com retrato circular, apresentação e conteúdo editorial.",
+  "defaults": {
+    "eyebrow": "Sobre",
+    "title": "Quem somos",
+    "description": "A Incubadora Tecnológica de Economia Solidária do IFRJ Campus Niterói apoia empreendimentos, coletivos e iniciativas comunitárias.\n\nPromovemos formação, articulação e desenvolvimento de soluções em diálogo com os territórios e com os princípios da economia solidária.",
+    "button": "",
+    "href": "#sobre",
+    "imageUrl": "",
+    "imageAlt": "Imagem institucional da ITES",
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-up",
+    "items": []
+  },
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "ProfileAboutBlock",
+    "sourceFile": "sections/profile-about/profile-about.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 202
+}

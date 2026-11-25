@@ -1,0 +1,63 @@
+{
+  "id": "bento-metrics",
+  "name": "Grade Bento — Recursos",
+  "category": "bento",
+  "variant": "metrics",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Um espaço para suas ideias.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "feature-0",
+        "title": "Recurso 1",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "Foco",
+        "features": []
+      },
+      {
+        "id": "feature-1",
+        "title": "Recurso 2",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "Conexão",
+        "features": []
+      },
+      {
+        "id": "feature-2",
+        "title": "Recurso 3",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "Crescimento",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "BentoMetricsBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/bento-metrics/bento-metrics.tsx"
+  },
+  "categoryName": "Grade Bento",
+  "order": 54
+}

@@ -1,0 +1,49 @@
+{
+  "id": "reviews-list",
+  "name": "Avaliações — Lista",
+  "category": "reviews-list",
+  "categoryName": "Avaliações",
+  "variant": "list",
+  "description": "Lista de avaliações com nota média, autoria e verificação de compra.",
+  "defaults": {
+    "title": "Avaliações de clientes",
+    "description": "Opiniões de quem já comprou e usou o produto.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "review-1",
+        "title": "Qualidade que surpreende",
+        "description": "O produto chegou rápido e correspondeu às expectativas. A qualidade dos materiais é ótima.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+        "value": "5",
+        "features": ["Pessoa cliente", "10 dez. 2024", "sim", "Retrato da pessoa cliente"]
+      },
+      {
+        "id": "review-2",
+        "title": "Boa compra para o dia a dia",
+        "description": "Funciona bem e tem bom custo-benefício. A embalagem poderia ser mais resistente.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar2.webp",
+        "value": "4",
+        "features": ["Outra pessoa cliente", "8 dez. 2024", "sim", "Retrato de outra pessoa cliente"]
+      },
+      {
+        "id": "review-3",
+        "title": "Recomendado",
+        "description": "Uso todos os dias e o produto continua como novo. Compraria novamente.",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp",
+        "value": "5",
+        "features": ["Mais uma pessoa cliente", "5 dez. 2024", "não", "Retrato de mais uma pessoa cliente"]
+      }
+    ]
+  },
+  "editableProperties": ["title", "description", "items"],
+  "export": {
+    "componentName": "ReviewsListBlock",
+    "sourceFile": "sections/reviews-list/reviews-list.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 99
+}

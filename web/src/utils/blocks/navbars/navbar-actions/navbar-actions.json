@@ -1,0 +1,73 @@
+{
+  "id": "navbar-actions",
+  "name": "Navegação — Navegação com ações",
+  "category": "navbar",
+  "variant": "actions",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Estúdio",
+    "imageUrl": "",
+    "imageAlt": "Logo do site",
+    "logoHref": "#",
+    "showThemeToggle": false,
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "features",
+        "title": "Link 1",
+        "description": "",
+        "href": "#features",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "pricing",
+        "title": "Link 2",
+        "description": "",
+        "href": "#pricing",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "contact",
+        "title": "Link 3",
+        "description": "",
+        "href": "#contact",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "imageUrl",
+    "imageAlt",
+    "logoHref",
+    "showThemeToggle",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "NavbarActionsBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "navbars/navbar-actions/navbar-actions.tsx"
+  },
+  "categoryName": "Navegação",
+  "order": 56
+}

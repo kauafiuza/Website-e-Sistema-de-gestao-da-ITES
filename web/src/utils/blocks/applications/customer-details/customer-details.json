@@ -1,0 +1,33 @@
+{
+  "id": "customer-details",
+  "name": "Detalhes do cliente — Formulário",
+  "category": "customer-record",
+  "categoryName": "Clientes",
+  "variant": "details",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Editar cadastro",
+    "description": "",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "customer-1742",
+        "title": "Pessoa cliente 1",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "pessoa@exemplo.com",
+        "value": "active",
+        "features": ["Pessoa", "Exemplo", "+55 (11) 99999-9999", "Empresa Exemplo"]
+      }
+    ]
+  },
+  "editableProperties": ["title", "eyebrow", "button", "items"],
+  "export": {
+    "componentName": "CustomerDetailsBlock",
+    "sourceFile": "applications/customer-details/customer-details.tsx",
+    "dependencies": ["react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 76
+}

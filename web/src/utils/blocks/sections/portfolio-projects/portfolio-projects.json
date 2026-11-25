@@ -1,0 +1,31 @@
+{
+  "id": "portfolio-projects",
+  "name": "Portfólio — Projetos",
+  "category": "portfolio-projects",
+  "categoryName": "Portfólio",
+  "variant": "image-cards",
+  "description": "Projetos editáveis com imagens genéricas, tecnologias e links.",
+  "defaults": {
+    "eyebrow": "SELEÇÃO",
+    "title": "Projetos em destaque",
+    "description": "Produtos, experimentos e soluções construídos com foco em pessoas e resultados.",
+    "button": "",
+    "href": "#",
+    "layoutWidth": "wide",
+    "layoutGutter": 24,
+    "blockAnimation": "fade-up",
+    "items": [
+      { "id": "project-product", "title": "Plataforma de gestão", "description": "Produto digital para operações do dia a dia", "href": "https://example.com/projeto-1", "value": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=85", "features": ["Estação de trabalho com notebook e código", "React Native · Node.js", "https://example.com/repositorio-1"] },
+      { "id": "project-research", "title": "Portal de pesquisa", "description": "Plataforma de divulgação de conhecimento", "href": "https://example.com/projeto-2", "value": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85", "features": ["Equipe colaborando em torno de um computador", "React · JavaScript", "https://example.com/repositorio-2"] },
+      { "id": "project-open-source", "title": "Ferramentas open source", "description": "Experimentos e utilitários de software", "href": "https://example.com/projeto-3", "value": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=85", "features": ["Editor de código em uma tela", "Java · TypeScript", "https://example.com/repositorio-3"] }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "description", "items"],
+  "export": {
+    "componentName": "PortfolioProjectsBlock",
+    "sourceFile": "sections/portfolio-projects/portfolio-projects.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 118
+}

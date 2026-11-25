@@ -1,0 +1,29 @@
+{
+  "id": "reui-button-home-link",
+  "name": "Button — Home link",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "Official ReUI example c-button-27: Button rendered as a Next.js Link.",
+  "defaults": {
+    "title": "",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonHomeLinkBlock",
+    "sourceFile": "reui/reui-button-home-link/reui-button-home-link.tsx",
+    "dependencies": [
+      "react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 223
+}

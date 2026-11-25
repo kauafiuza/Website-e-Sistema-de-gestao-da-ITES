@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npm run typecheck
+        working-directory: web
+      - run: npm run lint -- --max-warnings=0
+        working-directory: web
+      - run: npm test
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: server/pom.xml
+      - run: ./mvnw --batch-mode verify
+        working-directory: server
+
+  deployment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Validar Compose
+        env:
+          DB_PASSWORD: ci-dummy-password
+          AUTH_JWT_SECRET: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+          AUTH_TOTP_ENCRYPTION_KEY: ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=
+        run: docker compose config --quiet
+      - name: Construir imagens
+        env:
+          DB_PASSWORD: ci-dummy-password
+          AUTH_JWT_SECRET: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+          AUTH_TOTP_ENCRYPTION_KEY: ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=
+        run: docker compose build
+      - name: Iniciar a aplicação e aguardar os health checks
+        env:
+          DB_PASSWORD: ci-dummy-password
+          AUTH_JWT_SECRET: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+          AUTH_TOTP_ENCRYPTION_KEY: ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=
+        run: docker compose up --detach --wait --wait-timeout 180
+      - name: Validar portal, catálogo público e proteção da API
+        run: |
+          python3 - <<'PY'
+          import json
+          from urllib.error import HTTPError
+          from urllib.request import urlopen
+
+          base_url = "http://localhost:3000"
+          with urlopen(f"{base_url}/health") as response:
+              assert response.status == 200
+          with urlopen(f"{base_url}/") as response:
+              assert response.status == 200
+              assert 'lang="pt-BR"' in response.read().decode()
+          with urlopen(f"{base_url}/api/ites/pages") as response:
+              pages = json.load(response)
+              assert response.status == 200 and len(pages) == 6
+          try:
+              urlopen(f"{base_url}/api/ites/demands")
+          except HTTPError as error:
+              assert error.code == 401
+          else:
+              raise AssertionError("A rota protegida aceitou uma chamada anônima")
+          PY
+      - name: Confirmar persistência do banco após recriar os contêineres
+        env:
+          DB_DATABASE: ites
+          DB_USERNAME: ites
+          DB_PASSWORD: ci-dummy-password
+          AUTH_JWT_SECRET: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+          AUTH_TOTP_ENCRYPTION_KEY: ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=
+        run: |
+          docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U "$DB_USERNAME" -d "$DB_DATABASE" \
+            -c "INSERT INTO institutional_pages(slug,title) VALUES ('ci-volume-probe','Verificação de volume')"
+          docker compose down
+          docker compose up --detach --wait --wait-timeout 180
+          persisted=$(docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U "$DB_USERNAME" -d "$DB_DATABASE" \
+            -tA -c "SELECT count(*) FROM institutional_pages WHERE slug='ci-volume-probe'")
+          test "$persisted" = 1
+      - name: Encerrar os serviços de CI
+        if: always()
+        env:
+          DB_PASSWORD: ci-dummy-password
+          AUTH_JWT_SECRET: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+          AUTH_TOTP_ENCRYPTION_KEY: ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=
+        run: docker compose down --volumes --remove-orphans
+
+  ci-success:
+    if: always()
+    needs: [web, server, deployment]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exigir sucesso de todas as verificações
+        env:
+          WEB_RESULT: ${{ needs.web.result }}
+          SERVER_RESULT: ${{ needs.server.result }}
+          DEPLOYMENT_RESULT: ${{ needs.deployment.result }}
+        run: |
+          test "$WEB_RESULT" = success
+          test "$SERVER_RESULT" = success
+          test "$DEPLOYMENT_RESULT" = success

@@ -1,0 +1,32 @@
+{
+  "id": "integrations-classic",
+  "name": "Integrações — Clássico",
+  "category": "integrations",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow"
+  ],
+  "export": {
+    "componentName": "IntegrationsClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/integrations-classic/integrations-classic.tsx"
+  },
+  "defaults": {
+    "title": "Ferramentas conectadas.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Integrações",
+  "order": 36
+}

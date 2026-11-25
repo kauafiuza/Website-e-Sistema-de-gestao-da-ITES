@@ -1,0 +1,63 @@
+{
+  "id": "features-tabs",
+  "name": "Recursos — Abas interativas",
+  "category": "features",
+  "variant": "tabs",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Recursos pensados para o seu dia a dia.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "feature-0",
+        "title": "Recurso 1",
+        "description": "Uma descrição breve do recurso e de como ele ajuda no trabalho.",
+        "href": "#",
+        "value": "Foco",
+        "features": []
+      },
+      {
+        "id": "feature-1",
+        "title": "Recurso 2",
+        "description": "Uma descrição breve do recurso e de como ele ajuda no trabalho.",
+        "href": "#",
+        "value": "Conexão",
+        "features": []
+      },
+      {
+        "id": "feature-2",
+        "title": "Recurso 3",
+        "description": "Uma descrição breve do recurso e de como ele ajuda no trabalho.",
+        "href": "#",
+        "value": "Crescimento",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "FeaturesTabsBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/features-tabs/features-tabs.tsx"
+  },
+  "categoryName": "Recursos",
+  "order": 47
+}

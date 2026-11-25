@@ -1,0 +1,63 @@
+{
+  "id": "dashboard-tabs",
+  "name": "Painel — Visão geral e registros",
+  "category": "dashboard",
+  "variant": "tabs",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Visão geral do espaço",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "metric-0",
+        "title": "Indicador 1",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "10k+",
+        "features": []
+      },
+      {
+        "id": "metric-1",
+        "title": "Indicador 2",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "4.9/5",
+        "features": []
+      },
+      {
+        "id": "metric-2",
+        "title": "Indicador 3",
+        "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.",
+        "href": "#",
+        "value": "120+",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "DashboardTabsBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/dashboard-tabs/dashboard-tabs.tsx"
+  },
+  "categoryName": "Painel",
+  "order": 65
+}

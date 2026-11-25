@@ -1,0 +1,86 @@
+{
+  "id": "hero-social-proof",
+  "name": "Cabeçalho — Prova social",
+  "category": "hero-social-proof",
+  "categoryName": "Cabeçalho",
+  "group": "hero",
+  "variant": "social-proof",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Uma solução feita para equipes.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "secondary-action",
+        "title": "Ação de exemplo 1",
+        "description": "",
+        "href": "#",
+        "value": "secondary-button",
+        "features": ["secondary-button", ""]
+      },
+      {
+        "id": "review-summary",
+        "title": "Ação de exemplo 2",
+        "description": "",
+        "href": "",
+        "value": "4.9",
+        "features": ["reviews", "Pessoa autora"]
+      },
+      {
+        "id": "reviewer-1",
+        "title": "Ação de exemplo 3",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+        "value": "",
+        "features": ["avatar", "Pessoa autora"]
+      },
+      {
+        "id": "reviewer-2",
+        "title": "Ação de exemplo 4",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar2.webp",
+        "value": "",
+        "features": ["avatar", "Pessoa autora"]
+      },
+      {
+        "id": "reviewer-3",
+        "title": "Ação de exemplo 5",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp",
+        "value": "",
+        "features": ["avatar", "Pessoa autora"]
+      },
+      {
+        "id": "reviewer-4",
+        "title": "Ação de exemplo 6",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar4.webp",
+        "value": "",
+        "features": ["avatar", "Pessoa autora"]
+      },
+      {
+        "id": "reviewer-5",
+        "title": "Ação de exemplo 7",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar5.webp",
+        "value": "",
+        "features": ["avatar", "Pessoa autora"]
+      }
+    ]
+  },
+  "editableProperties": ["title", "description", "button", "href", "items"],
+  "export": {
+    "componentName": "HeroSocialProofBlock",
+    "sourceFile": "sections/hero-social-proof/hero-social-proof.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 78
+}

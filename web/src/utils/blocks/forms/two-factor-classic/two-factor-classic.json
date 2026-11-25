@@ -1,0 +1,33 @@
+{
+  "id": "two-factor-classic",
+  "name": "Autenticação em duas etapas — Clássico",
+  "category": "two-factor",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "button"
+  ],
+  "export": {
+    "componentName": "TwoFactorClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/two-factor-classic/two-factor-classic.tsx"
+  },
+  "defaults": {
+    "title": "Confirme sua identidade",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Autenticação em duas etapas",
+  "order": 35
+}

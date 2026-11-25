@@ -1,0 +1,51 @@
+{
+  "id": "profile-projects",
+  "name": "Portfólio — Projetos em mosaico",
+  "category": "profile-projects",
+  "categoryName": "Portfólio",
+  "variant": "masonry-text-cards",
+  "description": "Lista editorial de projetos em duas colunas, com cartões textuais e tecnologias.",
+  "defaults": {
+    "eyebrow": "Iniciativas",
+    "title": "Projetos e empreendimentos apoiados",
+    "description": "Conheça as iniciativas acompanhadas pela ITES.",
+    "button": "",
+    "href": "",
+    "itemsApiUrl": "",
+    "itemsApiPath": "",
+    "itemsApiTitleKey": "name",
+    "itemsApiDescriptionKey": "description",
+    "itemsApiHrefKey": "html_url",
+    "itemsApiValueKey": "language",
+    "itemsApiFeaturesKey": "topics",
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "fade-up",
+    "items": []
+  },
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "items",
+    "itemsApiUrl",
+    "itemsApiPath",
+    "itemsApiTitleKey",
+    "itemsApiDescriptionKey",
+    "itemsApiHrefKey",
+    "itemsApiValueKey",
+    "itemsApiFeaturesKey"
+  ],
+  "export": {
+    "componentName": "ProfileProjectsBlock",
+    "sourceFile": "sections/profile-projects/profile-projects.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 204
+}

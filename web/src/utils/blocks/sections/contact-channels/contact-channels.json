@@ -1,0 +1,73 @@
+{
+  "id": "contact-channels",
+  "name": "Contato — Canais",
+  "category": "contact-channels",
+  "categoryName": "Contato",
+  "variant": "cards",
+  "description": "Cartões editáveis com diferentes canais de contato.",
+  "defaults": {
+    "title": "Fale com a gente",
+    "description": "Escolha um canal para conversar com a equipe.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "contact-email",
+        "title": "E-mail",
+        "description": "Respondemos às mensagens em até um dia útil.",
+        "href": "mailto:contato@exemplo.com",
+        "value": "email",
+        "features": [
+          "contato@exemplo.com"
+        ]
+      },
+      {
+        "id": "contact-office",
+        "title": "Escritório",
+        "description": "Agende uma conversa com a equipe.",
+        "href": "#",
+        "value": "office",
+        "features": [
+          "Endereço de exemplo, São Paulo — SP"
+        ]
+      },
+      {
+        "id": "contact-phone",
+        "title": "Telefone",
+        "description": "Atendimento em dias úteis, durante o horário comercial.",
+        "href": "tel:+551100000000",
+        "value": "phone",
+        "features": [
+          "+55 11 0000-0000"
+        ]
+      },
+      {
+        "id": "contact-chat",
+        "title": "Atendimento por chat",
+        "description": "Fale com a equipe para receber ajuda.",
+        "href": "#",
+        "value": "chat",
+        "features": [
+          "Iniciar conversa"
+        ]
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "items"
+  ],
+  "export": {
+    "componentName": "ContactChannelsBlock",
+    "sourceFile": "sections/contact-channels/contact-channels.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 95
+}

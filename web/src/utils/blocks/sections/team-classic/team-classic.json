@@ -1,0 +1,69 @@
+{
+  "id": "team-classic",
+  "name": "Equipe — Clássico",
+  "category": "team",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "TeamClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/team-classic/team-classic.tsx"
+  },
+  "defaults": {
+    "title": "Conheça a equipe",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "member-alex",
+        "title": "Pessoa da equipe 1",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+        "value": "Função de exemplo",
+        "features": []
+      },
+      {
+        "id": "member-jamie",
+        "title": "Pessoa da equipe 2",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar2.webp",
+        "value": "Função de exemplo",
+        "features": []
+      },
+      {
+        "id": "member-sam",
+        "title": "Pessoa da equipe 3",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar3.webp",
+        "value": "Função de exemplo",
+        "features": []
+      },
+      {
+        "id": "member-taylor",
+        "title": "Pessoa da equipe 4",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar4.webp",
+        "value": "Função de exemplo",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Equipe",
+  "order": 10
+}

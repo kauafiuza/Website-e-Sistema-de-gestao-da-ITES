@@ -1,0 +1,61 @@
+{
+  "id": "gallery-classic",
+  "name": "Galeria — Clássico",
+  "category": "gallery",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "GalleryClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/gallery-classic/gallery-classic.tsx"
+  },
+  "defaults": {
+    "title": "Inspiração para novas ideias",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "gallery-1",
+        "title": "Imagem de exemplo 1",
+        "description": "Uma imagem ilustrativa para apresentar este tema.",
+        "href": "#",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/block/brutalist-architecture/photo-1551250928-243dc937c49d.jpg",
+        "features": []
+      },
+      {
+        "id": "gallery-2",
+        "title": "Imagem de exemplo 2",
+        "description": "Uma imagem ilustrativa para apresentar este tema.",
+        "href": "#",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/block/brutalist-architecture/photo-1548324215-9133768e4094.jpg",
+        "features": []
+      },
+      {
+        "id": "gallery-3",
+        "title": "Imagem de exemplo 3",
+        "description": "Uma imagem ilustrativa para apresentar este tema.",
+        "href": "#",
+        "value": "https://cdn.shadcnblocks.com/shadcnblocks/block/brutalist-architecture/photo-1550070881-a5d71eda5800.jpg",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Galeria",
+  "order": 15
+}

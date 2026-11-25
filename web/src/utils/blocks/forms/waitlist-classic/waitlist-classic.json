@@ -1,0 +1,35 @@
+{
+  "id": "waitlist-classic",
+  "name": "Lista de espera — Clássico",
+  "category": "waitlist",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "WaitlistClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/waitlist-classic/waitlist-classic.tsx"
+  },
+  "defaults": {
+    "title": "Entre na lista de espera",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Lista de espera",
+  "order": 30
+}

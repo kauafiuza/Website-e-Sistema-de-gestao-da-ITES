@@ -1,0 +1,108 @@
+/* Shared outer spacing for authored blocks in the editor, previews, and exports. */
+.builder-block {
+  --builder-block-padding-inline: 1.75rem;
+  --builder-block-padding-block: 3.5rem;
+  padding-inline: var(--builder-block-padding-inline);
+  padding-block: var(--builder-block-padding-block);
+  overflow-wrap: anywhere;
+}
+@container (min-width: 28rem) {
+  .builder-block {
+    --builder-block-padding-inline: 3rem;
+  }
+}
+.builder-block--spacious {
+  --builder-block-padding-block: 5rem;
+}
+.builder-block--compact {
+  --builder-block-padding-block: 1.25rem;
+}
+.builder-block--footer {
+  --builder-block-padding-block: 2.5rem;
+}
+
+/* DESIGN.md adaptations are scoped; installed shadcn primitives remain reusable. */
+.builder-block [data-slot="card"] {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: none;
+  --card-spacing: 24px;
+}
+.builder-block [data-slot="card-header"],
+.builder-block [data-slot="card-footer"],
+.builder-block [data-slot="accordion"] {
+  border-radius: 12px;
+}
+.builder-block [data-slot="button"],
+.builder-block [data-slot="input"],
+.builder-block [data-slot="textarea"],
+.builder-block [data-slot="tabs-list"],
+.builder-block [data-slot="tabs-trigger"] {
+  border-radius: 8px;
+}
+.builder-block [data-slot="button"],
+.builder-block [data-slot="tabs-trigger"],
+.builder-block [data-slot="switch"] {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+.builder-block :focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.builder-block :is(input, textarea, select):focus-visible {
+  outline: none;
+}
+.builder-block h2 {
+  text-wrap: balance;
+}
+@media (prefers-reduced-motion: reduce) {
+  .builder-block *,
+  .builder-block *::before,
+  .builder-block *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+.builder-block [data-slot="card"][data-featured="true"] {
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--primary) 5%, var(--card));
+}
+.builder-block [data-slot="card"][data-accent="primary"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.builder-block [data-slot="card"][data-accent="muted"] {
+  background-color: var(--muted);
+}
+.builder-block
+  [data-slot="card"][data-accent="primary"]
+  [data-slot="card-description"] {
+  color: inherit;
+}
+
+/* Project theme values stay inside authored blocks and exported pages. */
+.builder-block { font-family: var(--builder-body-font, "Inter Variable"), system-ui, sans-serif; font-size: calc(1em * var(--builder-body-scale, 1)); line-height: var(--builder-line-height, 1.5); letter-spacing: var(--builder-letter-spacing, 0); }
+.builder-block :is(h1, h2, h3, h4) { font-family: var(--builder-heading-font, "Inter Variable"), system-ui, sans-serif; zoom: var(--builder-heading-scale, 1); }
+.builder-block [data-slot="card"] { border-radius: var(--builder-radius, 12px); box-shadow: var(--builder-shadow, none); }
+.builder-block :is([data-slot="button"], [data-slot="input"], [data-slot="textarea"], [data-slot="tabs-list"], [data-slot="tabs-trigger"]) { border-radius: var(--builder-radius, 8px); }
+.profile-media-reveal {
+  animation: profile-media-reveal 520ms ease-out both;
+  will-change: opacity;
+}
+
+@keyframes profile-media-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-media-reveal {
+    animation: none;
+    opacity: 1;
+    will-change: auto;
+  }
+}
+

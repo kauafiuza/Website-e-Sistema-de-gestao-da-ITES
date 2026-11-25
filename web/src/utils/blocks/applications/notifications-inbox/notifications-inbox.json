@@ -1,0 +1,63 @@
+{
+  "id": "notifications-inbox",
+  "name": "Notificações — Caixa de entrada",
+  "category": "notifications",
+  "variant": "inbox",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Acompanhe as novidades da equipe.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "event-0",
+        "title": "Atualização 1",
+        "description": "Uma atualização de exemplo para a equipe.",
+        "href": "#",
+        "value": "há 1 hora",
+        "features": []
+      },
+      {
+        "id": "event-1",
+        "title": "Atualização 2",
+        "description": "Uma atualização de exemplo para a equipe.",
+        "href": "#",
+        "value": "há 2 horas",
+        "features": []
+      },
+      {
+        "id": "event-2",
+        "title": "Atualização 3",
+        "description": "Uma atualização de exemplo para a equipe.",
+        "href": "#",
+        "value": "há 3 horas",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "NotificationsInboxBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/notifications-inbox/notifications-inbox.tsx"
+  },
+  "categoryName": "Notificações",
+  "order": 61
+}

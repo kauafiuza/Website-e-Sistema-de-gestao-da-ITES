@@ -1,0 +1,94 @@
+[data-block-animation] {
+  transition:
+    opacity 650ms cubic-bezier(.22, 1, .36, 1),
+    transform 650ms cubic-bezier(.22, 1, .36, 1);
+}
+
+[data-block-animation="fade-up"][data-visible="false"] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+[data-block-animation="fade-in"][data-visible="false"] {
+  opacity: 0;
+}
+
+[data-block-animation="slide-left"][data-visible="false"] {
+  opacity: 0;
+  transform: translateX(28px);
+}
+
+[data-block-animation="slide-right"][data-visible="false"] {
+  opacity: 0;
+  transform: translateX(-28px);
+}
+
+.builder-block-frame {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-family: var(--builder-body-font, "Inter Variable"), system-ui, sans-serif;
+  font-size: calc(1em * var(--builder-body-scale, 1));
+  line-height: var(--builder-line-height, 1.5);
+  letter-spacing: var(--builder-letter-spacing, 0);
+}
+.builder-block-frame :is(h1, h2, h3, h4) {
+  text-wrap: balance;
+  font-family: var(--builder-heading-font, "Inter Variable"), system-ui, sans-serif;
+  zoom: var(--builder-heading-scale, 1);
+}
+.builder-block-frame [data-slot="button"] {
+  transition-property: color, background-color, border-color, opacity, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+.builder-block-frame :focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.builder-block-frame [data-slot="card"] {
+  border-color: var(--border);
+  border-radius: var(--builder-radius, 12px);
+  box-shadow: var(--builder-shadow, none);
+}
+.builder-block-frame :is([data-slot="input"], [data-slot="textarea"], [data-slot="tabs-list"], [data-slot="tabs-trigger"]) {
+  border-radius: var(--builder-radius, 8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-block-animation] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* A block can opt into a coordinated button treatment without changing its
+   individual layout or interaction behavior. */
+[data-block-button-style="solid"] [data-slot="button"] {
+  border-color: var(--primary) !important;
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+[data-block-button-style="soft"] [data-slot="button"] {
+  border-color: var(--border) !important;
+  background-color: var(--secondary) !important;
+  color: var(--secondary-foreground) !important;
+}
+[data-block-button-style="outline"] [data-slot="button"] {
+  border: 1px solid var(--border) !important;
+  background-color: transparent !important;
+  color: var(--foreground) !important;
+}
+[data-block-button-style="ghost"] [data-slot="button"] {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  color: var(--muted-foreground) !important;
+}
+[data-block-custom-button-bg="true"] [data-slot="button"] {
+  border-color: var(--builder-button-color) !important;
+  background-color: var(--builder-button-color) !important;
+}
+[data-block-custom-button-text="true"] [data-slot="button"] {
+  color: var(--builder-button-text-color) !important;
+}

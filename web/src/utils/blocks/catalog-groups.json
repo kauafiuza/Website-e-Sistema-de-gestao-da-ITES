@@ -1,0 +1,10 @@
+[
+  { "id": "marketing", "name": "Marketing", "categories": ["hero", "hero-space", "hero-feature-slider", "hero-phone-showcase", "hero-social-proof", "features", "pricing", "testimonials", "testimonial-quote", "testimonial-social-grid", "social", "cta", "logos", "logos-static", "faq", "stats", "bento", "integrations", "compare", "download", "industries", "trust-strip", "portfolio-hero", "profile-hero"] },
+  { "id": "content", "name": "Conteúdo", "categories": ["about", "about-editorial", "awards", "background-pattern", "blog", "blog-article", "blog-index", "career-openings", "careers", "case-studies", "case-study-article", "changelog", "code-example", "company-benefits", "experience", "gallery", "help-center", "portfolio", "process", "project-showcase", "service-content", "services-grid", "team", "timeline", "portfolio-about", "portfolio-experience", "portfolio-projects", "profile-about", "editorial-blog-index", "profile-experience", "profile-projects", "institutional-contact"] },
+  { "id": "commerce", "name": "Comércio", "categories": ["checkout-demo", "compare-products", "download-app", "order-summary", "product", "product-detail", "product-gallery", "reviews-list", "store-footer", "wishlist"] },
+  { "id": "forms", "name": "Formulários e contato", "categories": ["accept-invite", "auth", "contact", "contact-channels", "demo-form", "forgot-password", "form", "multi-step", "register", "reset-password", "two-factor", "verify-email", "waitlist"] },
+  { "id": "navigation", "name": "Navegação e rodapés", "categories": ["footer", "navbar", "navbar-rich", "back-to-top"] },
+  { "id": "application", "name": "Aplicativos", "categories": ["account", "activity", "application", "calendar", "charts", "customer-record", "dashboard", "data-table", "blocks-so-dialog", "empty", "error", "issues", "notifications", "onboarding", "profile", "profile-settings", "settings", "sidebar-application"] },
+  { "id": "motion", "name": "Motion", "categories": ["motion"] },
+  { "id": "reui", "name": "ReUI", "categories": ["reui-button"] }
+]

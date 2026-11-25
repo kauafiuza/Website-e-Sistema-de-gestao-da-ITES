@@ -1,0 +1,33 @@
+{
+  "id": "navbar-editorial-dock",
+  "name": "Navegação — Dock compacto",
+  "category": "navbar",
+  "categoryName": "Navegação",
+  "variant": "portfolio-icon-dock",
+  "description": "Dock discreto de ícones em formato cápsula, fixo ao centro da base da tela.",
+  "defaults": {
+    "title": "Navegação principal",
+    "eyebrow": "",
+    "description": "",
+    "button": "",
+    "href": "#hero",
+    "smoothScroll": true,
+    "scrollBehavior": "normal",
+    "items": [
+      { "id": "dock-home", "title": "Início", "description": "", "href": "#hero", "value": "home", "features": [] },
+      { "id": "dock-about", "title": "Sobre", "description": "", "href": "#sobre", "value": "about", "features": [] },
+      { "id": "dock-experience", "title": "Experiência", "description": "", "href": "#experiencia", "value": "experience", "features": [] },
+      { "id": "dock-projects", "title": "Projetos", "description": "", "href": "#projetos", "value": "projects", "features": [] },
+      { "id": "dock-contact", "title": "Contato", "description": "", "href": "#contato", "value": "contact", "features": [] },
+      { "id": "dock-blog", "title": "Blog", "description": "", "href": "/blog", "value": "blog", "features": [] }
+    ]
+  },
+  "editableProperties": ["title", "smoothScroll", "items"],
+  "export": {
+    "componentName": "EditorialDockNavbarBlock",
+    "sourceFile": "navbars/navbar-editorial-dock/navbar-editorial-dock.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 206
+}

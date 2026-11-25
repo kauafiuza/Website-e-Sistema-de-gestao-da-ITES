@@ -1,0 +1,39 @@
+Provisão interativa em PostgreSQL 16; senhas temporárias de teste foram descartadas ao remover o contêiner e não foram registradas.
+          rolname          | rolcanlogin
+---------------------------+-------------
+ ites_app_login            | t
+ ites_database_admin_login | t
+ ites_migration_login      | t
+ ites_reporting_login      | t
+(4 rows)
+
+
+Conexão autenticada como runtime e leitura autorizada:
+  current_user  | demands
+----------------+---------
+ ites_app_login |      31
+(1 row)
+
+
+Tentativa de alterar situação diretamente como runtime (negada):
+ERROR:  permission denied for table demands
+
+Conexão de relatórios e leitura autorizada da visão agregada:
+     current_user     | groups
+----------------------+--------
+ ites_reporting_login |     30
+(1 row)
+
+
+Tentativa de ler hash de senha como relatório (negada):
+ERROR:  permission denied for table users
+
+Criação e remoção de tabela de teste como migração:
+CREATE TABLE
+DROP TABLE
+
+Permissão administrativa de leitura:
+       current_user        | can_read_users
+---------------------------+----------------
+ ites_database_admin_login | t
+(1 row)

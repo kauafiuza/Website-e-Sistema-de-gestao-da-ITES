@@ -1,0 +1,35 @@
+{
+  "id": "testimonial-quote",
+  "name": "Depoimento — Citação",
+  "category": "testimonial-quote",
+  "categoryName": "Depoimentos",
+  "variant": "quote",
+  "description": "Depoimento em destaque com avatar e identificação da pessoa autora.",
+  "defaults": {
+    "title": "Pessoa cliente",
+    "description": "A experiência foi muito positiva. A equipe tornou cada etapa simples e entregou um resultado que atende às nossas necessidades.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+    "imageAlt": "Retrato da pessoa cliente",
+    "items": [
+      {
+        "id": "testimonial-author",
+        "title": "Pessoa cliente",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/avatars/avatar1.webp",
+        "value": "Cargo ou empresa",
+        "features": ["Retrato da pessoa cliente"]
+      }
+    ]
+  },
+  "editableProperties": ["title", "description", "imageUrl", "imageAlt", "items"],
+  "export": {
+    "componentName": "TestimonialQuoteBlock",
+    "sourceFile": "sections/testimonial-quote/testimonial-quote.tsx",
+    "dependencies": ["react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 98
+}

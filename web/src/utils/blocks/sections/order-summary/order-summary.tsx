@@ -1,0 +1,10 @@
+import { CheckCircle, Package } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import type { BlockProps } from "@/utils/blocks/types"
+import { InlineText, type InlineEditor } from "@/utils/blocks/shared/inline-editing"
+
+export function OrderSummaryBlock({props:p,editor}:{props:BlockProps;editor?:InlineEditor}) {
+ const items=(p.items??[]).filter(x=>x.value==="item")
+ return <section className="builder-block builder-block--spacious bg-background"><div className="container mx-auto max-w-4xl"><header className="mb-8 text-center"><CheckCircle className="mx-auto mb-3 size-10 text-primary"/><h1 className="text-3xl font-bold"><InlineText editor={editor} target={{kind:"property",key:"title"}} value={p.title} label="título" /></h1><InlineText editor={editor} target={{kind:"property",key:"description"}} value={p.description} label="descrição" as="p" className="mt-2 text-muted-foreground" /></header><Card><CardHeader><CardTitle className="flex items-center gap-2"><Package className="size-5"/>Itens do pedido</CardTitle></CardHeader><CardContent>{items.map((item,i)=><div key={item.id}><div className="flex justify-between gap-4 py-3"><div><InlineText editor={editor} target={{kind:"item",id:item.id,key:"title"}} value={item.title} label="produto"/><p className="text-sm text-muted-foreground">{item.features.map((feature,index)=><span key={index}>{index>0&&" · "}<InlineText editor={editor} target={{kind:"item-feature",id:item.id,index}} value={feature} label="variação ou quantidade" /></span>)}</p></div><InlineText editor={editor} target={{kind:"item",id:item.id,key:"description"}} value={item.description} label="subtotal do item" /></div>{i<items.length-1&&<Separator/>}</div>)}<Separator className="my-3"/><div className="flex justify-between font-semibold"><span>Total do pedido</span><InlineText editor={editor} target={{kind:"property",key:"button"}} value={p.button} label="total" /></div></CardContent></Card></div></section>
+}

@@ -1,0 +1,38 @@
+{
+  "id": "contact-panel",
+  "name": "Contato — Painel de conversa",
+  "category": "contact",
+  "variant": "panel",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Vamos conversar?",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "mailto:hello@example.com",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default"
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "button",
+    "href"
+  ],
+  "export": {
+    "componentName": "ContactPanelBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/contact-panel/contact-panel.tsx"
+  },
+  "categoryName": "Contato",
+  "order": 55
+}

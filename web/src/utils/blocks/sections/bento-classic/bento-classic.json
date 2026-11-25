@@ -1,0 +1,32 @@
+{
+  "id": "bento-classic",
+  "name": "Grade Bento — Clássico",
+  "category": "bento",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow"
+  ],
+  "export": {
+    "componentName": "BentoClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/bento-classic/bento-classic.tsx"
+  },
+  "defaults": {
+    "title": "Um espaço para suas ideias.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Grade Bento",
+  "order": 44
+}

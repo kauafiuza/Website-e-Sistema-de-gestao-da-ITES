@@ -1,0 +1,149 @@
+{
+  "id": "help-center",
+  "name": "Central de ajuda — Categorias",
+  "category": "help-center",
+  "categoryName": "Ajuda",
+  "variant": "center",
+  "description": "Central de ajuda com categorias e tópicos populares editáveis.",
+  "defaults": {
+    "title": "Central de ajuda",
+    "description": "Como podemos ajudar você?",
+    "button": "Fale com o suporte",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "cat-orders",
+        "title": "Pedidos",
+        "description": "Acompanhe ou atualize seus pedidos.",
+        "href": "",
+        "value": "category",
+        "features": [
+          "package",
+          "12"
+        ]
+      },
+      {
+        "id": "cat-shipping",
+        "title": "Envio",
+        "description": "Opções de entrega e acompanhamento.",
+        "href": "",
+        "value": "category",
+        "features": [
+          "truck",
+          "8"
+        ]
+      },
+      {
+        "id": "cat-returns",
+        "title": "Trocas e reembolsos",
+        "description": "Consulte políticas e etapas de devolução.",
+        "href": "",
+        "value": "category",
+        "features": [
+          "return",
+          "15"
+        ]
+      },
+      {
+        "id": "cat-payments",
+        "title": "Pagamentos",
+        "description": "Formas de pagamento e suporte.",
+        "href": "",
+        "value": "category",
+        "features": [
+          "payment",
+          "10"
+        ]
+      },
+      {
+        "id": "cat-account",
+        "title": "Conta",
+        "description": "Perfil, acesso e preferências.",
+        "href": "",
+        "value": "category",
+        "features": [
+          "user",
+          "7"
+        ]
+      },
+      {
+        "id": "cat-products",
+        "title": "Produtos",
+        "description": "Informações sobre itens e disponibilidade.",
+        "href": "",
+        "value": "category",
+        "features": [
+          "product",
+          "9"
+        ]
+      },
+      {
+        "id": "topic-order",
+        "title": "Como acompanhar um pedido?",
+        "description": "",
+        "href": "#",
+        "value": "topic",
+        "features": []
+      },
+      {
+        "id": "topic-return",
+        "title": "Como solicitar uma devolução?",
+        "description": "",
+        "href": "#",
+        "value": "topic",
+        "features": []
+      },
+      {
+        "id": "topic-password",
+        "title": "Como redefinir minha senha?",
+        "description": "",
+        "href": "#",
+        "value": "topic",
+        "features": []
+      },
+      {
+        "id": "topic-payment",
+        "title": "O pagamento não foi concluído.",
+        "description": "",
+        "href": "#",
+        "value": "topic",
+        "features": []
+      },
+      {
+        "id": "topic-size",
+        "title": "Onde encontro o guia de tamanhos?",
+        "description": "",
+        "href": "#",
+        "value": "topic",
+        "features": []
+      },
+      {
+        "id": "topic-shipping",
+        "title": "Quais opções de envio estão disponíveis?",
+        "description": "",
+        "href": "#",
+        "value": "topic",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "href",
+    "items"
+  ],
+  "export": {
+    "componentName": "HelpCenterBlock",
+    "sourceFile": "sections/help-center/help-center.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 91
+}

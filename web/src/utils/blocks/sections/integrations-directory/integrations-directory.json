@@ -1,0 +1,55 @@
+{
+  "id": "integrations-directory",
+  "name": "Integrações — Diretório",
+  "category": "integrations",
+  "variant": "directory",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Ferramentas conectadas.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "github",
+        "title": "Integração 1",
+        "description": "Conecte suas ferramentas ao seu espaço de trabalho.",
+        "href": "https://docs.github.com",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "figma",
+        "title": "Integração 2",
+        "description": "Conecte suas ferramentas ao seu espaço de trabalho.",
+        "href": "https://help.figma.com",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "IntegrationsDirectoryBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/integrations-directory/integrations-directory.tsx"
+  },
+  "categoryName": "Integrações",
+  "order": 51
+}

@@ -1,0 +1,63 @@
+{
+  "id": "onboarding-checklist",
+  "name": "Configuração inicial — Lista de verificação",
+  "category": "onboarding",
+  "variant": "checklist",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Primeiros passos",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "step-0",
+        "title": "Etapa 1",
+        "description": "Conclua esta etapa para continuar.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "step-1",
+        "title": "Etapa 2",
+        "description": "Conclua esta etapa para continuar.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "step-2",
+        "title": "Etapa 3",
+        "description": "Conclua esta etapa para continuar.",
+        "href": "#",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "OnboardingChecklistBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/onboarding-checklist/onboarding-checklist.tsx"
+  },
+  "categoryName": "Configuração inicial",
+  "order": 63
+}

@@ -1,0 +1,58 @@
+{
+  "id": "footer-split",
+  "name": "Rodapé — Dividido",
+  "category": "footer",
+  "variant": "split",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "items"
+  ],
+  "export": {
+    "componentName": "FooterSplitBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "footers/footer-split/footer-split.tsx"
+  },
+  "defaults": {
+    "title": "Minha empresa",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "features",
+        "title": "Link 1",
+        "description": "",
+        "href": "#features",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "pricing",
+        "title": "Link 2",
+        "description": "",
+        "href": "#pricing",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "contact",
+        "title": "Link 3",
+        "description": "",
+        "href": "#contact",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "categoryName": "Rodapé",
+  "order": 22
+}

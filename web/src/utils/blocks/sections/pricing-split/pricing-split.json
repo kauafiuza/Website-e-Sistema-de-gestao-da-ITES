@@ -1,0 +1,75 @@
+{
+  "id": "pricing-split",
+  "name": "Preços — Dividido",
+  "category": "pricing",
+  "variant": "split",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "items",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "PricingSplitBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/pricing-split/pricing-split.tsx"
+  },
+  "defaults": {
+    "title": "Planos claros para cada necessidade.",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "plan-0",
+        "title": "Plano 1",
+        "description": "Recursos para atender às necessidades da sua equipe.",
+        "href": "#contact",
+        "value": "0",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "plan-1",
+        "title": "Plano 2",
+        "description": "Recursos para atender às necessidades da sua equipe.",
+        "href": "#contact",
+        "value": "29",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      },
+      {
+        "id": "plan-2",
+        "title": "Plano 3",
+        "description": "Recursos para atender às necessidades da sua equipe.",
+        "href": "#contact",
+        "value": "99",
+        "features": [
+          "Informação de exemplo em português",
+          "Informação de exemplo em português",
+          "Informação de exemplo em português"
+        ]
+      }
+    ]
+  },
+  "categoryName": "Preços",
+  "order": 6
+}

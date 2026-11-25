@@ -1,0 +1,63 @@
+{
+  "id": "faq-support",
+  "name": "Perguntas frequentes — Painel de suporte",
+  "category": "faq",
+  "variant": "support",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Dúvidas frequentes",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "alignment": "left",
+    "appearance": "default",
+    "items": [
+      {
+        "id": "faq-0",
+        "title": "Pergunta frequente 1",
+        "description": "Encontre aqui uma resposta para esta dúvida comum.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "faq-1",
+        "title": "Pergunta frequente 2",
+        "description": "Encontre aqui uma resposta para esta dúvida comum.",
+        "href": "#",
+        "value": "",
+        "features": []
+      },
+      {
+        "id": "faq-2",
+        "title": "Pergunta frequente 3",
+        "description": "Encontre aqui uma resposta para esta dúvida comum.",
+        "href": "#",
+        "value": "",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "FaqSupportBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/faq-support/faq-support.tsx"
+  },
+  "categoryName": "Perguntas frequentes",
+  "order": 49
+}

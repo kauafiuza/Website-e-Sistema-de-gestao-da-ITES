@@ -1,0 +1,32 @@
+{
+  "id": "data-table-classic",
+  "name": "Tabela de dados — Clássico",
+  "category": "data-table",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "title",
+    "description",
+    "eyebrow"
+  ],
+  "export": {
+    "componentName": "DataTableClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "applications/data-table-classic/data-table-classic.tsx"
+  },
+  "defaults": {
+    "title": "Seus projetos",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Tabela de dados",
+  "order": 40
+}

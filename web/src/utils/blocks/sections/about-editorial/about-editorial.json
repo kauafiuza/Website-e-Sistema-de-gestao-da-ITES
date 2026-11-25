@@ -1,0 +1,110 @@
+{
+  "id": "about-editorial",
+  "name": "Sobre — História editorial",
+  "category": "about-editorial",
+  "categoryName": "Sobre",
+  "group": "about",
+  "variant": "editorial-story",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Sobre a organização",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "",
+    "href": "#",
+    "eyebrow": "",
+    "items": [
+      {
+        "id": "about-photo-1",
+        "title": "Conteúdo institucional 1",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/about/photo-1-16x9.jpg",
+        "value": "",
+        "features": ["photo", "Texto alternativo da imagem"]
+      },
+      {
+        "id": "about-photo-2",
+        "title": "Conteúdo institucional 2",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/about/photo-2-16x9.jpg",
+        "value": "",
+        "features": ["photo", "Texto alternativo da imagem"]
+      },
+      {
+        "id": "about-photo-3",
+        "title": "Conteúdo institucional 3",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/about/photo-3-16x9.jpg",
+        "value": "",
+        "features": ["photo", "Texto alternativo da imagem"]
+      },
+      {
+        "id": "about-photo-4",
+        "title": "Conteúdo institucional 4",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/about/photo-4-16x9.jpg",
+        "value": "",
+        "features": ["photo", "Texto alternativo da imagem"]
+      },
+      {
+        "id": "about-photo-5",
+        "title": "Conteúdo institucional 5",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/about/photo-5-16x9.jpg",
+        "value": "",
+        "features": ["photo", "Texto alternativo da imagem"]
+      },
+      {
+        "id": "about-photo-6",
+        "title": "Conteúdo institucional 6",
+        "description": "",
+        "href": "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/about/photo-6-16x9.jpg",
+        "value": "",
+        "features": ["photo", "Texto alternativo da imagem"]
+      },
+      {
+        "id": "about-section-1",
+        "title": "Conteúdo institucional 7",
+        "description": "Conteúdo institucional de exemplo para apresentar a organização.",
+        "href": "",
+        "value": "",
+        "features": ["section", ""]
+      },
+      {
+        "id": "about-section-2",
+        "title": "Conteúdo institucional 8",
+        "description": "Conteúdo institucional de exemplo para apresentar a organização.",
+        "href": "",
+        "value": "",
+        "features": ["section", ""]
+      },
+      {
+        "id": "about-section-3",
+        "title": "Conteúdo institucional 9",
+        "description": "Conteúdo institucional de exemplo para apresentar a organização.",
+        "href": "",
+        "value": "Nossa missão",
+        "features": ["section", ""]
+      },
+      {
+        "id": "about-section-4",
+        "title": "Conteúdo institucional 10",
+        "description": "Conteúdo institucional de exemplo para apresentar a organização.",
+        "href": "",
+        "value": "O que nos move",
+        "features": ["section", ""]
+      }
+    ]
+  },
+  "editableProperties": ["title", "description", "items"],
+  "export": {
+    "componentName": "AboutEditorialBlock",
+    "sourceFile": "sections/about-editorial/about-editorial.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 77
+}

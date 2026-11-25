@@ -1,0 +1,94 @@
+{
+  "id": "accept-invite",
+  "name": "Convite — Acesso",
+  "category": "accept-invite",
+  "categoryName": "Convites",
+  "variant": "form",
+  "description": "Página de demonstração para acessar um espaço de trabalho por e-mail.",
+  "defaults": {
+    "title": "Boas-vindas ao seu espaço",
+    "description": "Acesse sua área de trabalho com seu e-mail.",
+    "button": "Continuar",
+    "href": "#",
+    "eyebrow": "",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/shadcnblocks-logo-word.svg",
+    "imageAlt": "Marca do espaço de trabalho",
+    "items": [
+      {
+        "id": "invite-description-1",
+        "title": "Uma plataforma flexível para organizar tarefas e colaborar com sua equipe.",
+        "description": "",
+        "href": "",
+        "value": "parágrafo",
+        "features": []
+      },
+      {
+        "id": "invite-description-2",
+        "title": "Acesse projetos, compartilhe atualizações e acompanhe o progresso em um só lugar.",
+        "description": "",
+        "href": "",
+        "value": "parágrafo",
+        "features": []
+      },
+      {
+        "id": "invite-disclaimer",
+        "title": "Ao informar seu e-mail, você concorda em receber atualizações relacionadas à sua conta.",
+        "description": "",
+        "href": "",
+        "value": "aviso",
+        "features": []
+      },
+      {
+        "id": "invite-privacy",
+        "title": "política de privacidade",
+        "description": "",
+        "href": "#",
+        "value": "link",
+        "features": []
+      },
+      {
+        "id": "invite-copyright",
+        "title": "© 2026 · Nome da empresa",
+        "description": "",
+        "href": "",
+        "value": "copyright",
+        "features": []
+      },
+      {
+        "id": "invite-footer-privacy",
+        "title": "Privacidade",
+        "description": "",
+        "href": "#",
+        "value": "footer",
+        "features": []
+      },
+      {
+        "id": "invite-footer-support",
+        "title": "Suporte",
+        "description": "",
+        "href": "#",
+        "value": "footer",
+        "features": []
+      }
+    ]
+  },
+  "editableProperties": [
+    "title",
+    "description",
+    "button",
+    "imageUrl",
+    "imageAlt",
+    "items"
+  ],
+  "export": {
+    "componentName": "AcceptInviteBlock",
+    "sourceFile": "forms/accept-invite/accept-invite.tsx",
+    "dependencies": [
+      "react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4
+  },
+  "order": 96
+}

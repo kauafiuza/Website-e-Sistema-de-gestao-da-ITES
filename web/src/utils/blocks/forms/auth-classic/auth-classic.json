@@ -1,0 +1,35 @@
+{
+  "id": "auth-classic",
+  "name": "Autenticação — Clássico",
+  "category": "auth",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "AuthClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "forms/auth-classic/auth-classic.tsx"
+  },
+  "defaults": {
+    "title": "Boas-vindas",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Enviar",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Autenticação",
+  "order": 23
+}

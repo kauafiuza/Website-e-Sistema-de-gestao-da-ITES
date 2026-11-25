@@ -1,0 +1,32 @@
+{
+  "id": "portfolio-experience",
+  "name": "Portfólio — Experiência",
+  "category": "portfolio-experience",
+  "categoryName": "Portfólio",
+  "variant": "timeline",
+  "description": "Linha do tempo editável de trabalho, formação e pesquisa.",
+  "defaults": {
+    "eyebrow": "TRAJETÓRIA",
+    "title": "Experiência",
+    "description": "Uma trajetória entre desenvolvimento de produtos, formação e pesquisa.",
+    "button": "",
+    "href": "#",
+    "layoutWidth": "standard",
+    "layoutGutter": 24,
+    "blockAnimation": "fade-up",
+    "items": [
+      { "id": "experience-current", "title": "Equipe de tecnologia", "description": "Desenvolvimento full-stack", "href": "", "value": "2026 — atual", "features": ["Desenvolvimento de aplicações com Java Spring Boot e React TypeScript.", "Otimização de consultas e APIs usadas diariamente por equipes internas."] },
+      { "id": "experience-previous", "title": "Produto digital", "description": "Desenvolvimento de software", "href": "", "value": "2025 — 2026", "features": ["Implementação de interfaces reutilizáveis em React e TypeScript.", "Prototipagem de fluxos e componentes de produto."] },
+      { "id": "experience-education", "title": "Formação em computação", "description": "Engenharia de software e sistemas", "href": "", "value": "2025 — atual", "features": ["Estudos em engenharia de software, algoritmos e sistemas."] },
+      { "id": "experience-research", "title": "Pesquisa e inovação", "description": "Projetos acadêmicos e experimentais", "href": "", "value": "2023 — 2024", "features": ["Desenvolvimento de projetos de pesquisa, educação financeira e tecnologia para diferentes setores."] }
+    ]
+  },
+  "editableProperties": ["eyebrow", "title", "description", "items"],
+  "export": {
+    "componentName": "PortfolioExperienceBlock",
+    "sourceFile": "sections/portfolio-experience/portfolio-experience.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 117
+}

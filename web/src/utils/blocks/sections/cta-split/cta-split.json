@@ -1,0 +1,36 @@
+{
+  "id": "cta-split",
+  "name": "Chamada para ação — Dividido",
+  "category": "cta",
+  "variant": "split",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "button",
+    "href",
+    "alignment",
+    "appearance"
+  ],
+  "export": {
+    "componentName": "CtaSplitBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/cta-split/cta-split.tsx"
+  },
+  "defaults": {
+    "title": "Vamos começar?",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque"
+  },
+  "categoryName": "Chamada para ação",
+  "order": 12
+}

@@ -1,0 +1,70 @@
+{
+  "id": "portfolio-classic",
+  "name": "Portfólio — Clássico",
+  "category": "portfolio",
+  "variant": "classic",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "editableProperties": [
+    "eyebrow",
+    "title",
+    "description",
+    "alignment",
+    "appearance",
+    "items"
+  ],
+  "export": {
+    "componentName": "PortfolioClassicBlock",
+    "dependencies": [
+      "react",
+      "@base-ui/react",
+      "lucide-react",
+      "shadcn/ui (see generated imports)"
+    ],
+    "tailwindVersion": 4,
+    "sourceFile": "sections/portfolio-classic/portfolio-classic.tsx"
+  },
+  "defaults": {
+    "title": "Projetos em destaque",
+    "description": "Conteúdo de exemplo em português, pronto para adaptar à sua marca e às necessidades da sua equipe.",
+    "button": "Saiba mais",
+    "href": "#contact",
+    "eyebrow": "Destaque",
+    "items": [
+      {
+        "id": "project-1",
+        "title": "Projeto 1",
+        "description": "Descrição breve do projeto e de seus objetivos.",
+        "href": "#",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-5-16x9.jpg",
+          "Texto alternativo da imagem"
+        ]
+      },
+      {
+        "id": "project-2",
+        "title": "Projeto 2",
+        "description": "Descrição breve do projeto e de seus objetivos.",
+        "href": "#",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-6-16x9.jpg",
+          "Texto alternativo da imagem"
+        ]
+      },
+      {
+        "id": "project-3",
+        "title": "Projeto 3",
+        "description": "Descrição breve do projeto e de seus objetivos.",
+        "href": "#",
+        "value": "",
+        "features": [
+          "https://cdn.shadcnblocks.com/shadcnblocks/image-set/modern/blog-corporate/photo-7-16x9.jpg",
+          "Texto alternativo da imagem"
+        ]
+      }
+    ]
+  },
+  "categoryName": "Portfólio",
+  "order": 9
+}

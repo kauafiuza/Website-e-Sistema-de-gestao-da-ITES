@@ -1,0 +1,63 @@
+import { useState } from "react"
+import { Palette, RotateCcw, X, Save } from "lucide-react"
+import { Button } from "@/components/motion/button/base"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/motion/tabs"
+import { Input } from "@/components/motion/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/motion/select"
+import { Slider } from "@/components/ui/slider"
+import type { SavedTheme } from "@/services/projects/theme.service"
+import { CenterMorphModal, CenterMorphModalContent, CenterMorphModalTrigger } from "@/components/motion/center-morph-modal"
+import { colorKeys, defaultProjectTheme, themePresets, themeVariables, type ColorKey, type ProjectTheme } from "../lib/project-theme"
+import { ColorPicker } from "@/components/reui/color-picker"
+
+const labels: Record<ColorKey, string> = { primary: "Primary", secondary: "Secondary", accent: "Accent", background: "Background", foreground: "Foreground", card: "Card", border: "Border", muted: "Muted", success: "Success", destructive: "Destructive" }
+const fonts = ["Inter", "Nunito Sans", "Roboto", "system-ui"]
+function Range({ label, value, min, max, step = 1, unit = "", onChange }: { label: string; value: number; min: number; max: number; step?: number; unit?: string; onChange: (value: number) => void }) {
+  return <div className="block space-y-2 text-xs"><label className="flex justify-between" htmlFor={`theme-range-${label}`}><span>{label}</span><span className="font-mono text-muted-foreground">{value}{unit}</span></label><Slider id={`theme-range-${label}`} min={min} max={max} step={step} value={[value]} onValueChange={values => onChange(Array.isArray(values) ? values[0] ?? min : values)} /></div>
+}
+function ColorField({ label, value, onChange, onReset }: { label: string; value: string; onChange: (value: string) => void; onReset: () => void }) {
+  const [draft, setDraft] = useState(value)
+  const [pickerDraft, setPickerDraft] = useState(value)
+  const commit = () => { if (/^#[0-9a-fA-F]{6}$/.test(draft)) onChange(draft); else setDraft(value) }
+  return <div className="flex items-center gap-2"><label htmlFor={`color-${label}`} className="w-20 text-xs">{label}</label><ColorPicker aria-label={`Selecionar cor ${label}`} value={pickerDraft} onValueChange={color => { if (color) setPickerDraft(color) }} onValueCommit={color => { if (color) { setPickerDraft(color); onChange(color) } }} className="size-8 cursor-pointer rounded border border-border bg-transparent p-0.5" /><Input aria-label={`Valor hexadecimal de ${label}`} value={draft} onChange={setDraft} onBlur={commit} onKeyDown={event => { if (event.key === "Enter") event.currentTarget.blur() }} maxLength={7} className="min-w-0 flex-1 font-mono text-xs" /><button type="button" title={`Restaurar ${label}`} aria-label={`Restaurar ${label}`} onClick={onReset} className="text-muted-foreground hover:text-foreground"><RotateCcw size={14} /></button></div>
+}
+export function ThemeLab({ theme, savedThemes, onSavePreset, onChange, onClose, onApply }: { theme: ProjectTheme; savedThemes: SavedTheme[]; onSavePreset: (name: string) => Promise<boolean>; onChange: (theme: ProjectTheme) => void; onClose: () => void; onApply: () => void }) {
+  const [tab, setTab] = useState("colors")
+  const [confirmReset, setConfirmReset] = useState(false)
+  const [presetModalOpen, setPresetModalOpen] = useState(false)
+  const [presetName, setPresetName] = useState("")
+  const [savingPreset, setSavingPreset] = useState(false)
+  const [presetError, setPresetError] = useState("")
+  const palette = theme[theme.mode]
+  const set = (changes: Partial<ProjectTheme>) => onChange({ ...theme, ...changes, presetId: "mode" in changes ? theme.presetId : undefined })
+  const setColor = (key: ColorKey, color: string) => {
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) return
+    const current = { ...palette, [key]: color }
+    onChange({ ...theme, preset: "Custom", presetId: undefined, [theme.mode]: current })
+  }
+  const savePreset = async () => {
+    const name = presetName.trim()
+    if (!name) { setPresetError("Informe um nome para o tema."); return }
+    if (name.length > 80) { setPresetError("Use até 80 caracteres."); return }
+    setPresetError("")
+    setSavingPreset(true)
+    const saved = await onSavePreset(name)
+    setSavingPreset(false)
+    if (saved) { setPresetModalOpen(false); setPresetName("") }
+    else setPresetError("Verifique sua conta e tente novamente.")
+  }
+  return <aside aria-label="Meus temas" className="theme-lab builder-ui flex h-full w-[360px] max-w-[100vw] flex-col border-l border-border bg-card text-foreground max-lg:fixed max-lg:inset-y-0 max-lg:right-0 max-lg:z-50 max-lg:shadow-2xl">
+    <header className="flex items-start gap-3 border-b border-border p-4"><Palette className="mt-0.5 size-4 text-[#8db7da]" /><div className="min-w-0 flex-1"><h2 className="text-sm font-semibold">Meus temas</h2><p className="mt-1 text-xs text-muted-foreground">Ajuste o sistema visual do projeto em tempo real</p></div><Button variant="ghost" size="icon" aria-label="Fechar temas" onClick={onClose}><X size={16} /></Button></header>
+    <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4">
+      <section aria-label="Temas predefinidos"><h3 className="mb-2 text-xs font-medium">Comece com um tema</h3><div className="grid grid-cols-5 gap-1.5">{Object.entries(themePresets).map(([name, preset]) => <button key={name} type="button" aria-label={`Selecionar tema ${name}`} aria-pressed={!theme.presetId && theme.preset === name} onClick={() => onChange({ ...theme, preset: name, presetId: undefined, light: { ...preset.light }, dark: { ...preset.dark } })} className="rounded-md border border-border p-1 text-[10px] aria-pressed:border-[#8db7da] aria-pressed:ring-1 aria-pressed:ring-[#8db7da]"><span className="mb-1 flex h-9 overflow-hidden rounded-sm" style={{ background: preset[theme.mode].background }}><span className="m-1 w-2 rounded-sm" style={{ background: preset[theme.mode].primary }} /><span className="my-1 mr-1 flex-1 rounded-sm" style={{ background: preset[theme.mode].card }} /></span>{name}</button>)}{savedThemes.map(saved => <button key={saved.id} type="button" aria-label={`Selecionar tema ${saved.name}`} aria-pressed={theme.presetId === saved.id} onClick={() => onChange({ ...saved.configuration, preset: saved.name, presetId: saved.id })} className="rounded-md border border-border p-1 text-[10px] aria-pressed:border-[#8db7da] aria-pressed:ring-1 aria-pressed:ring-[#8db7da]"><span className="mb-1 flex h-9 overflow-hidden rounded-sm" style={{ background: saved.configuration[theme.mode].background }}><span className="m-1 w-2 rounded-sm" style={{ background: saved.configuration[theme.mode].primary }} /><span className="my-1 mr-1 flex-1 rounded-sm" style={{ background: saved.configuration[theme.mode].card }} /></span><span className="block truncate" title={saved.name}>{saved.name}</span></button>)}</div></section>
+      <section className="space-y-3 rounded-lg border border-border p-3"><div className="flex items-center justify-between"><span className="text-xs font-medium">Aparência do projeto</span><div className="flex rounded-md border border-border p-0.5 text-xs">{(["light", "dark"] as const).map(mode => <button key={mode} type="button" aria-pressed={theme.mode === mode} onClick={() => set({ mode })} className="rounded px-2 py-1 aria-pressed:bg-[#344e8c] aria-pressed:text-white">{mode === "light" ? "Claro" : "Escuro"}</button>)}</div></div></section>
+      <Tabs value={tab} onValueChange={setTab} variant="underline"><TabsList className="text-xs">{[["colors","Cores"],["type","Tipografia"],["radius","Radius"],["shadow","Sombras"]].map(([value,label]) => <TabsTrigger key={value} value={value} className="px-2 text-[11px]">{label}</TabsTrigger>)}</TabsList>
+        <TabsContent value="colors" className="space-y-2 pt-4">{colorKeys.map(key => <ColorField key={`${theme.mode}-${key}-${palette[key]}`} label={labels[key]} value={palette[key]} onChange={value => setColor(key, value)} onReset={() => setColor(key, defaultProjectTheme()[theme.mode][key])} />)}</TabsContent>
+        <TabsContent value="type" className="space-y-4 pt-4">{(["headingFont","bodyFont"] as const).map(key => <div key={key} className="space-y-1 text-xs"><span className="block">{key === "headingFont" ? "Fonte dos títulos" : "Fonte do corpo"}</span><Select value={theme[key]} onValueChange={value => set({ [key]: value })}><SelectTrigger className="h-8 w-full text-xs"><SelectValue /></SelectTrigger><SelectContent>{fonts.map(font => <SelectItem key={font} value={font}>{font}</SelectItem>)}</SelectContent></Select></div>)}<Range label="Escala de títulos" value={theme.headingSize} min={75} max={150} unit="%" onChange={headingSize => set({ headingSize })} /><Range label="Escala do corpo" value={theme.bodySize} min={75} max={150} unit="%" onChange={bodySize => set({ bodySize })} /><Range label="Altura de linha" value={theme.lineHeight} min={1} max={2} step={0.05} onChange={lineHeight => set({ lineHeight })} /><Range label="Espaçamento" value={theme.letterSpacing} min={-2} max={4} step={0.1} unit="px" onChange={letterSpacing => set({ letterSpacing })} /></TabsContent>
+        <TabsContent value="radius" className="space-y-4 pt-4"><Range label="Arredondamento" value={theme.radius} min={0} max={32} unit="px" onChange={radius => set({ radius })} /><div className="flex gap-2">{[0, 8, 16, 32].map(value => <button type="button" key={value} onClick={() => set({ radius: value })} className="flex-1 rounded-md border border-border p-2 text-xs aria-pressed:border-[#8db7da]" aria-pressed={theme.radius === value}>{value}px</button>)}</div></TabsContent>
+        <TabsContent value="shadow" className="space-y-4 pt-4"><Range label="Elevação" value={theme.shadow} min={0} max={32} unit="px" onChange={shadow => set({ shadow })} /><p className="text-xs text-muted-foreground">Aplica uma sombra consistente aos cards e superfícies do projeto.</p></TabsContent>
+      </Tabs>
+      <section className="space-y-2 border-t border-border pt-4"><h3 className="text-xs font-medium">Prévia de componentes</h3><div className="builder-authored-content theme-lab-preview space-y-2 rounded-lg border border-border bg-background p-3" style={themeVariables(theme)}><div className="flex gap-2"><button className="rounded-[var(--builder-radius)] bg-primary px-3 py-1.5 text-xs text-primary-foreground">Primário</button><button className="rounded-[var(--builder-radius)] bg-secondary px-3 py-1.5 text-xs text-secondary-foreground">Secundário</button></div><input aria-label="Campo de exemplo" placeholder="Campo de exemplo" className="h-8 w-full rounded-[var(--builder-radius)] border border-border bg-card px-2 text-xs" /><span className="inline-block rounded-full bg-accent px-2 py-0.5 text-xs text-accent-foreground">Badge</span></div></section>
+    </div><footer className="flex flex-wrap gap-2 border-t border-border p-3"><Button variant="ghost" size="sm" onClick={() => { if (!confirmReset) { setConfirmReset(true); return } onChange(defaultProjectTheme()); setConfirmReset(false) }}>{confirmReset ? "Confirmar reset" : "Resetar"}</Button><CenterMorphModal open={presetModalOpen} onOpenChange={open => { setPresetModalOpen(open); if (open) { setPresetName(theme.preset === "Custom" ? "" : `${theme.preset} personalizado`); setPresetError("") } }}><CenterMorphModalTrigger><Button variant="secondary" size="sm"><Save size={13} /> Salvar preset</Button></CenterMorphModalTrigger><CenterMorphModalContent ariaLabel="Salvar preset de tema" closeButtonLabel="Fechar" className="builder-ui rounded-xl border-border bg-card p-5 text-foreground" backdropClassName="bg-black/60"><form onSubmit={event => { event.preventDefault(); void savePreset() }} className="space-y-4"><div><h3 className="text-base font-semibold">Salvar preset</h3><p className="mt-1 text-xs text-muted-foreground">O tema ficará disponível para seus outros projetos.</p></div><Input autoFocus label="Nome do preset" value={presetName} onChange={value => { setPresetName(value); setPresetError("") }} maxLength={80} error={presetError || undefined} /><div className="flex justify-end gap-2"><Button type="button" variant="ghost" size="sm" onClick={() => setPresetModalOpen(false)}>Cancelar</Button><Button type="submit" variant="primary" size="sm" disabled={savingPreset} className="bg-[#344e8c] text-white">{savingPreset ? "Salvando…" : "Salvar preset"}</Button></div></form></CenterMorphModalContent></CenterMorphModal><Button variant="primary" size="sm" className="ml-auto bg-[#344e8c] text-white hover:bg-[#4d65f9]" onClick={onApply}>Aplicar tema</Button></footer>
+  </aside>
+}

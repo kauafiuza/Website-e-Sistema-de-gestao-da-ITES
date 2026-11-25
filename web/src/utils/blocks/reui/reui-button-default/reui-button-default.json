@@ -1,0 +1,27 @@
+{
+  "id": "reui-button-default",
+  "name": "Button — Default",
+  "category": "reui-button",
+  "categoryName": "Botões",
+  "variant": "default",
+  "description": "ReUI Button example c-button-1 using the project's existing Base UI button primitive.",
+  "defaults": {
+    "title": "Default",
+    "description": "",
+    "button": "",
+    "href": "",
+    "eyebrow": "",
+    "items": [],
+    "layoutWidth": "full",
+    "layoutGutter": 0,
+    "blockAnimation": "none"
+  },
+  "editableProperties": [],
+  "export": {
+    "componentName": "ReuiButtonDefaultBlock",
+    "sourceFile": "reui/reui-button-default/reui-button-default.tsx",
+    "dependencies": ["react"],
+    "tailwindVersion": 4
+  },
+  "order": 212
+}

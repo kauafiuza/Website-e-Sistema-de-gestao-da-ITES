@@ -1,0 +1,44 @@
+{
+  "id": "navbar-mega-menu",
+  "name": "Navegação — Mega menu",
+  "category": "navbar-rich",
+  "categoryName": "Navegação",
+  "variant": "mega-menu",
+  "description": "Bloco editável com conteúdo de exemplo em português.",
+  "defaults": {
+    "title": "Minha empresa",
+    "description": "",
+    "button": "Saiba mais",
+    "href": "https://www.shadcnblocks.com",
+    "eyebrow": "",
+    "imageUrl": "https://cdn.shadcnblocks.com/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
+    "imageAlt": "Imagem ilustrativa do conteúdo.",
+    "logoHref": "https://www.shadcnblocks.com",
+    "showThemeToggle": false,
+    "items": [
+      { "id": "home", "title": "Link 1", "description": "", "href": "#", "value": "nav", "features": [] },
+      { "id": "products", "title": "Link 2", "description": "", "href": "#", "value": "nav", "features": [] },
+      { "id": "blog", "title": "Link 3", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["products", "book"] },
+      { "id": "company", "title": "Link 4", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["products", "trees"] },
+      { "id": "careers", "title": "Link 5", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["products", "sunset"] },
+      { "id": "support", "title": "Link 6", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["products", "zap"] },
+      { "id": "resources", "title": "Link 7", "description": "", "href": "#", "value": "nav", "features": [] },
+      { "id": "help-center", "title": "Link 8", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["resources", "zap"] },
+      { "id": "contact-us", "title": "Link 9", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["resources", "sunset"] },
+      { "id": "status", "title": "Link 10", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["resources", "trees"] },
+      { "id": "terms", "title": "Link 11", "description": "Conteúdo de exemplo em português, pensado para ser facilmente personalizado.", "href": "#", "value": "nav", "features": ["resources", "book"] },
+      { "id": "pricing", "title": "Link 12", "description": "", "href": "#", "value": "nav", "features": [] },
+      { "id": "blog-link", "title": "Link 13", "description": "", "href": "#", "value": "nav", "features": [] },
+      { "id": "login", "title": "Link 14", "description": "", "href": "#", "value": "login", "features": [] },
+      { "id": "signup", "title": "Link 15", "description": "", "href": "#", "value": "signup", "features": [] }
+    ]
+  },
+  "editableProperties": ["title", "logoHref", "imageUrl", "imageAlt", "showThemeToggle", "items"],
+  "export": {
+    "componentName": "NavbarMegaMenuBlock",
+    "sourceFile": "navbars/navbar-mega-menu/navbar-mega-menu.tsx",
+    "dependencies": ["react", "lucide-react", "shadcn/ui (see generated imports)"],
+    "tailwindVersion": 4
+  },
+  "order": 71
+}
